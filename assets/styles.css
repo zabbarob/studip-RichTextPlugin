@@ -10,7 +10,7 @@ h2 {
 
 small {
   display: block;
-  margin-top: 40px;
+  margin-top: 0px;
   font-size: 9px;
 }
 
@@ -36,7 +36,7 @@ a {
 
 textarea {
   height: 280px;
-  border: 2px solid green;
+  border: 1px solid gray;
   box-sizing: boder-box;
   -webkit-box-sizing: border-box;
   -ms-box-sizing: border-box;
@@ -47,7 +47,7 @@ textarea {
 
 textarea:focus {
   color: black;
-  border: 2px solid black;
+  border: 1px solid black;
 }
 
 .wysihtml5-command-active {
