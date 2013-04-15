@@ -15,10 +15,10 @@
 (function ($) {
     // make sure code is only called after DOM structure is fully loaded
     $(function() {
-        var editor = new wysihtml5.Editor("wysihtml5-textarea", {
-            toolbar:      "wysihtml5-toolbar",
-            parserRules:  wysihtml5ParserRules,
-            stylesheets:  "/studip/plugins_packages/virtUOS/RichTextPlugin/assets/editor.css"
+        var editor = new wysihtml5.Editor("wysihtml5-editor", {
+            toolbar:     "wysihtml5-editor-toolbar",
+            stylesheets: ["http://yui.yahooapis.com/2.9.0/build/reset/reset-min.css", "/studip/plugins_packages/virtUOS/RichTextPlugin/assets/editor.css"],
+            parserRules: wysihtml5ParserRules
         });
     });
 }(jQuery));

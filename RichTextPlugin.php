@@ -42,7 +42,7 @@ class RichTextPlugin extends StudIPPlugin implements StandardPlugin
     public function initialize () {
         $assets = $this->getPluginURL() . '/assets/';
         PageLayout::addStylesheet($assets . 'styles.css');
-        PageLayout::addScript($assets . 'simple.js');
+        PageLayout::addScript($assets . 'advanced.js');
         PageLayout::addScript($assets . 'wysihtml5-0.3.0.js');
         PageLayout::addScript($assets . 'script.js');
     }
