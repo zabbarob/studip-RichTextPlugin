@@ -17,7 +17,8 @@
     $(function() {
         var editor = new wysihtml5.Editor("wysihtml5-textarea", {
             toolbar:      "wysihtml5-toolbar",
-            parserRules:  wysihtml5ParserRules
+            parserRules:  wysihtml5ParserRules,
+            stylesheets:  "/studip/plugins_packages/virtUOS/RichTextPlugin/assets/editor.css"
         });
     });
 }(jQuery));

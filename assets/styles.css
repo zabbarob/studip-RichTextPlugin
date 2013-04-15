@@ -34,15 +34,6 @@ textarea {
   -moz-box-sizing: border-box;
 }
 
-.wysiwyg-color-red {
-  color: red;
-}
-.wysiwyg-color-green {
-  color: green;
-}
-.wysiwyg-color-blue {
-  color: blue;
-}
 .wysihtml5-command-active {
   font-weight: bold;
 }
