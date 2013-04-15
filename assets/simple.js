@@ -28,5 +28,10 @@ var wysihtml5ParserRules = {
         href:   "url" // important to avoid XSS
       }
     }
+  },
+  classes: {
+    "wysiwyg-color-blue": 1,
+    "wysiwyg-color-green": 1,
+    "wysiwyg-color-red": 1
   }
 };
