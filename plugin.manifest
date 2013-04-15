@@ -1,0 +1,9 @@
+# Rich Text  v0.1a by Robert Costa <zabbarob@gmail.com>
+pluginname=Rich Text 
+pluginclassname=RichTextPlugin
+origin=virtUOS
+version=0.1a
+description=A single-page rich text editor for Stud.IP.
+studipMinVersion=2.0
+dbscheme=sql/install.sql
+uninstalldbscheme=sql/uninstall.sql
