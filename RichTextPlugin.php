@@ -13,6 +13,7 @@
  * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
  * @category    Stud.IP
  */
+require 'Utils.php';
 
 /**
  * Initializes and displays the plugin.
@@ -63,13 +64,59 @@ class RichTextPlugin extends StudIPPlugin implements StandardPlugin
      * Sets the fields in the plugin's show.php template to correct values.
      */
     public function show_action() {
+        if (Request::submitted('save')) {
+            $this->setContents(Request::get('text'));
+        }
+
         $template = $this->template_factory->open('show');
         $template->set_layout($GLOBALS['template_factory']->open('layouts/base'));
 
-        // currently there are no fields that need to be set
-        // $template->answer = 'Yes';
+        $template->title = $this->getPluginName();
+        $template->icon_url = $this->getPluginURL() . '/images/icon.gif';
+        $template->body = $this->getBody();
+
+        $template->admin_url = URLHelper::getURL('#edit_box', array('edit' => 1));
+        $template->admin_title = 'Inhalt bearbeiten';
 
         echo $template->render();
+    }
+
+    /**
+     * Sets the fields in the plugin's show.php template to correct values.
+     */
+    public function edit_action() {
+        $template = $this->template_factory->open('edit');
+        $template->set_layout($GLOBALS['template_factory']->open('layouts/base'));
+
+        $template->title = $this->getPluginName();
+        $template->icon_url = $this->getPluginURL() . '/images/icon.gif';
+        $template->body = $this->getBody();
+
+        $template->admin_url = URLHelper::getURL('#edit_box', array('edit' => 1));
+        $template->admin_title = 'Inhalt bearbeiten';
+
+        echo $template->render();
+    }
+
+    /**
+     * Retrieve text body from database.
+     */
+    protected function getBody() {
+        return "none";
+        $db = DBManager::get();
+        $stmt = $db->prepare('SELECT body FROM plugin_rich_text WHERE range_id = ?');
+        $stmt->execute(array(Utils::getSeminarId()));
+        return $stmt->fetchColumn();
+    }
+
+    /**
+     * Store text body in database.
+     */
+    protected function setBody($body) {
+        return;
+        $db = DBManager::get();
+        $stmt = $db->prepare("REPLACE INTO plugin_rich_text VALUES(?, ?)");
+        $stmt->execute(array(Utils::getSeminarId(), $body));
     }
 }
 
