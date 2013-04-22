@@ -1,6 +1,6 @@
 <?php
 /**
- * Utils.php - Utility functions needed by the ExternalLink plugin.
+ * RichTextPluginUtils.php - Utility functions needed by the RichText plugin.
  *
  * Even though these functions are included with the ExternalLink plugin they 
  * are not specific to it and might be useful in other projects as well.
@@ -18,7 +18,7 @@
 /**
  * Encapsulates various utility functions under the Utils class namespace.
  */
-class Utils {
+class RichTextPluginUtils {
 
     /**
      * Get the current URL as called by the web client.

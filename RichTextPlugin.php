@@ -13,7 +13,7 @@
  * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
  * @category    Stud.IP
  */
-require 'Utils.php';
+include_once 'RichTextPluginUtils.php';
 
 /**
  * Initializes and displays the plugin.
@@ -105,7 +105,7 @@ class RichTextPlugin extends StudIPPlugin implements StandardPlugin
         return "none";
         $db = DBManager::get();
         $stmt = $db->prepare('SELECT body FROM plugin_rich_text WHERE range_id = ?');
-        $stmt->execute(array(Utils::getSeminarId()));
+        $stmt->execute(array(RichTextPluginUtils::getSeminarId()));
         return $stmt->fetchColumn();
     }
 
@@ -116,7 +116,7 @@ class RichTextPlugin extends StudIPPlugin implements StandardPlugin
         return;
         $db = DBManager::get();
         $stmt = $db->prepare("REPLACE INTO plugin_rich_text VALUES(?, ?)");
-        $stmt->execute(array(Utils::getSeminarId(), $body));
+        $stmt->execute(array(RichTextPluginUtils::getSeminarId(), $body));
     }
 }
 
