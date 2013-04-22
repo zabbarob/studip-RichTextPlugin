@@ -66,7 +66,7 @@ class RichTextPlugin extends StudIPPlugin implements StandardPlugin
      */
     public function show_action() {
         if (Request::submitted('save')) {
-            $this->setBody(RichTextPlugin::purify(Request::get('body')));
+            $this->setBody(Request::get('body'));
         }
 
         $template = $this->template_factory->open('show');
@@ -95,6 +95,30 @@ class RichTextPlugin extends StudIPPlugin implements StandardPlugin
     }
 
     /**
+     * Retrieve text body from database.
+     * 
+     * @return mixed  Text from database or FALSE if there is no text.
+     */
+    protected function getBody() {
+        $db = DBManager::get();
+        $stmt = $db->prepare('SELECT body FROM plugin_rich_text WHERE range_id = ?');
+        $stmt->execute(array(RichTextPluginUtils::getSeminarId()));
+        return RichTextPlugin::purify($stmt->fetchColumn());
+    }
+
+    /**
+     * Store text body in database.
+     *
+     * @param string $body  Text that is stored in the database.
+     */
+    protected function setBody($body) {
+        $clean_body = RichTextPlugin::purify($body);
+        $db = DBManager::get();
+        $stmt = $db->prepare("REPLACE INTO plugin_rich_text VALUES(?, ?)");
+        $stmt->execute(array(RichTextPluginUtils::getSeminarId(), $clean_body));
+    }
+
+    /**
      * Call HTMLPurifier to create safe HTML.
      *
      * @param string $dirty_html Unsafe or 'uncleaned' HTML code.
@@ -106,28 +130,5 @@ class RichTextPlugin extends StudIPPlugin implements StandardPlugin
         $purifier = new HTMLPurifier($config);
         return $purifier->purify($dirty_html);
      }
-
-    /**
-     * Retrieve text body from database.
-     * 
-     * @return mixed  Text from database or FALSE if there is no text.
-     */
-    protected function getBody() {
-        $db = DBManager::get();
-        $stmt = $db->prepare('SELECT body FROM plugin_rich_text WHERE range_id = ?');
-        $stmt->execute(array(RichTextPluginUtils::getSeminarId()));
-        return $stmt->fetchColumn();
-    }
-
-    /**
-     * Store text body in database.
-     *
-     * @param string $body  Text that is stored in the database.
-     */
-    protected function setBody($body) {
-        $db = DBManager::get();
-        $stmt = $db->prepare("REPLACE INTO plugin_rich_text VALUES(?, ?)");
-        $stmt->execute(array(RichTextPluginUtils::getSeminarId(), $body));
-    }
 }
 
