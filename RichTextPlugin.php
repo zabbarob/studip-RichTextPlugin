@@ -65,18 +65,16 @@ class RichTextPlugin extends StudIPPlugin implements StandardPlugin
      */
     public function show_action() {
         if (Request::submitted('save')) {
-            $this->setContents(Request::get('text'));
+            $this->setBody(Request::get('body'));
         }
 
         $template = $this->template_factory->open('show');
         $template->set_layout($GLOBALS['template_factory']->open('layouts/base'));
 
-        $template->title = $this->getPluginName();
-        $template->icon_url = $this->getPluginURL() . '/images/icon.gif';
         $template->body = $this->getBody();
-
-        $template->admin_url = URLHelper::getURL('#edit_box', array('edit' => 1));
-        $template->admin_title = 'Inhalt bearbeiten';
+        if (!$template->body) {
+            $template->nothing = _('Bisher wurde noch kein Text eingetragen.');
+        }
 
         echo $template->render();
     }
@@ -92,17 +90,15 @@ class RichTextPlugin extends StudIPPlugin implements StandardPlugin
         $template->icon_url = $this->getPluginURL() . '/images/icon.gif';
         $template->body = $this->getBody();
 
-        $template->admin_url = URLHelper::getURL('#edit_box', array('edit' => 1));
-        $template->admin_title = 'Inhalt bearbeiten';
-
         echo $template->render();
     }
 
     /**
      * Retrieve text body from database.
+     * 
+     * @return mixed  Text from database or FALSE if there is no text.
      */
     protected function getBody() {
-        return "none";
         $db = DBManager::get();
         $stmt = $db->prepare('SELECT body FROM plugin_rich_text WHERE range_id = ?');
         $stmt->execute(array(RichTextPluginUtils::getSeminarId()));
@@ -111,9 +107,10 @@ class RichTextPlugin extends StudIPPlugin implements StandardPlugin
 
     /**
      * Store text body in database.
+     *
+     * @param string $body  Text that is stored in the database.
      */
     protected function setBody($body) {
-        return;
         $db = DBManager::get();
         $stmt = $db->prepare("REPLACE INTO plugin_rich_text VALUES(?, ?)");
         $stmt->execute(array(RichTextPluginUtils::getSeminarId(), $body));

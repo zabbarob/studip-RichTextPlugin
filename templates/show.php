@@ -38,4 +38,4 @@ $infobox = array(
 <form id="edit_box" action="<?= URLHelper::getLink('/studip/plugins.php/richtextplugin/edit') ?>" method="POST">
     <?= makeButton('bearbeiten', 'input', false, 'edit') ?>
 </form>
-
+<div><?=htmlReady($nothing)?></div>
