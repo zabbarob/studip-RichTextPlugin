@@ -34,10 +34,11 @@ $infobox = array(
 
 // show the current text from the database
 ?>
-<div id="body"><?=htmlReady($body)?></div>
+<div id="body"><?=$body?></div>
 <form id="edit_box" action="<?= URLHelper::getLink('/studip/plugins.php/richtextplugin/edit') ?>" method="POST">
     <?= makeButton('bearbeiten', 'input', false, 'edit') ?>
 </form>
 <div><?=
 htmlReady($nothing) // contains message if there is no text in database
 ?></div>
+
