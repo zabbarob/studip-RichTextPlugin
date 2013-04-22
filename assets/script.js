@@ -15,10 +15,19 @@
 (function ($) {
     // make sure code is only called after DOM structure is fully loaded
     $(function() {
+        // initialize and configure editor
         var editor = new wysihtml5.Editor("wysihtml5-editor", {
             toolbar:     "wysihtml5-editor-toolbar",
             stylesheets: ["http://yui.yahooapis.com/2.9.0/build/reset/reset-min.css", "/studip/plugins_packages/virtUOS/RichTextPlugin/assets/editor.css"],
             parserRules: wysihtml5ParserRules
+        });
+
+        // give user the option to undo clicking 'cancel' button
+        $('input[name="cancel"]').click(function(e){
+            var warning = 'If you select "OK" your edits will not be saved! Select "Cancel" to continue editing.';
+            if (!confirm(warning)) {
+                e.preventDefault();
+            }
         });
     });
 }(jQuery));
