@@ -35,6 +35,7 @@ $infobox = array(
 // show the current text from the database
 ?>
 <div id="body"><?=$body?></div>
+<br>
 <hr>
 <form id="edit_box" action="<?= URLHelper::getLink('/studip/plugins.php/richtextplugin/edit') ?>" method="POST">
     <?= makeButton('bearbeiten', 'input', false, 'edit') ?>
