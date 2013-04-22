@@ -84,7 +84,7 @@ $infobox = array(
 
 <!-- the editor -->
 <form id="edit_box" action="<?= URLHelper::getLink('/studip/plugins.php/richtextplugin/show') ?>" method="POST">
-    <textarea id="wysihtml5-editor" spellcheck="false" wrap="off" autofocus placeholder="Enter text..."><?=htmlReady($body);?></textarea>
+    <textarea id="wysihtml5-editor" spellcheck="false" wrap="off" autofocus placeholder="Enter text..." name="body"><?=htmlReady($body);?></textarea>
     <?= makeButton('uebernehmen', 'input', false, 'save') ?>
     <?= makeButton('abbrechen', 'input', false, 'cancel') ?>
 </form>

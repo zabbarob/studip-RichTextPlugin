@@ -13,7 +13,8 @@
  * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
  * @category    Stud.IP
  */
-include_once 'RichTextPluginUtils.php';
+require_once 'HTMLPurifier/HTMLPurifier.auto.php';
+require_once 'RichTextPluginUtils.php';
 
 /**
  * Initializes and displays the plugin.
@@ -65,7 +66,7 @@ class RichTextPlugin extends StudIPPlugin implements StandardPlugin
      */
     public function show_action() {
         if (Request::submitted('save')) {
-            $this->setBody(Request::get('body'));
+            $this->setBody(RichTextPlugin::purify(Request::get('body')));
         }
 
         $template = $this->template_factory->open('show');
@@ -92,6 +93,19 @@ class RichTextPlugin extends StudIPPlugin implements StandardPlugin
 
         echo $template->render();
     }
+
+    /**
+     * Call HTMLPurifier to create safe HTML.
+     *
+     * @param string $dirty_html Unsafe or 'uncleaned' HTML code.
+     *
+     * @return string  Clean and safe HTML code.
+     */
+    protected static function purify($dirty_html) {
+        $config = HTMLPurifier_Config::createDefault();
+        $purifier = new HTMLPurifier($config);
+        return $purifier->purify($dirty_html);
+     }
 
     /**
      * Retrieve text body from database.
