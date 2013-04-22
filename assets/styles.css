@@ -254,7 +254,7 @@ header {
   border: 1px solid #ccc;
   padding: 5px 10px;
   background: #FFFBE0;
-  position: absolute;
+  /*position: absolute;*/
   /*width: 320px;*/
   text-align: center;
   top: 45px;
