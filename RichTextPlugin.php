@@ -43,8 +43,9 @@ class RichTextPlugin extends StudIPPlugin implements StandardPlugin
      */
     public function initialize () {
         $assets = $this->getPluginURL() . '/assets/';
-        PageLayout::addStylesheet($assets . 'styles.css');
         PageLayout::addStylesheet($assets . 'editor.css');
+        //PageLayout::addStylesheet('http://yui.yahooapis.com/2.9.0/build/reset/reset-min.css');
+        PageLayout::addStylesheet($assets . 'styles.css');
         PageLayout::addScript($assets . 'advanced.js');
         PageLayout::addScript($assets . 'wysihtml5-0.3.0.js');
         PageLayout::addScript($assets . 'script.js');
