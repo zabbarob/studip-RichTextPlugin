@@ -54,13 +54,25 @@ class RichTextPlugin extends StudIPPlugin implements StandardPlugin
     /**
      * Implements abstract method of base class.
      */
-    public function getIconNavigation($course_id, $last_visit) {
+    public function getIconNavigation($course_id, $last_visit, $user_id) {
     }
 
     /**
      * Implements abstract method of base class.
      */
     public function getInfoTemplate($course_id) {
+    }
+
+    /**
+     * Implements abstract method of base class.
+     */
+    public function getTabNavigation($course_id) {
+    }
+ 
+    /**
+     * Implements abstract method of base class.
+     */
+    public function getNotificationObjects($course_id, $since, $user_id) {
     }
 
     /**
