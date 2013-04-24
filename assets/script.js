@@ -13,12 +13,21 @@
  * @category    Stud.IP
  */
 (function ($) {
+    // Get URL path of the currently executed script.
+    // This is needed for locating the flash file that ZeroClipboard needs.
+    // taken from http://stackoverflow.com/a/2161748
+    var scripts = document.getElementsByTagName('script');
+    var path = scripts[scripts.length - 1].src.split('?')[0]; // remove ?query
+    var dir = path.split('/').slice(0, -1).join('/') + '/'; // remove filename
+
     // make sure code is only called after DOM structure is fully loaded
     $(function() {
         // initialize and configure editor
         var editor = new wysihtml5.Editor("wysihtml5-editor", {
             toolbar:     "wysihtml5-editor-toolbar",
-            stylesheets: ["http://yui.yahooapis.com/2.9.0/build/reset/reset-min.css", "/studip/plugins_packages/virtUOS/RichTextPlugin/assets/editor.css"],
+            stylesheets: [
+                "http://yui.yahooapis.com/2.9.0/build/reset/reset-min.css",
+                dir + "editor.css"],
             parserRules: wysihtml5ParserRules
         });
 

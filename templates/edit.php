@@ -83,7 +83,7 @@ $infobox = array(
 </div>
 
 <!-- the editor -->
-<form style="padding:10px" id="edit_box" action="<?= URLHelper::getLink('/studip/plugins.php/richtextplugin/show') ?>" method="POST">
+<form style="padding:10px" id="edit_box" action="<?=PluginEngine::getLink('richtextplugin/show')?>" method="POST">
     <textarea id="wysihtml5-editor" spellcheck="false" wrap="off" autofocus placeholder="Enter text..." name="body"><?=htmlReady($body);?></textarea>
     <br>
     <p style="margin:10px">

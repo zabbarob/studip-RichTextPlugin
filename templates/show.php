@@ -37,7 +37,7 @@ $infobox = array(
 <div id="body"><?=$body?></div>
 <br>
 <hr>
-<form id="edit_box" action="<?= URLHelper::getLink('/studip/plugins.php/richtextplugin/edit') ?>" method="POST">
+<form id="edit_box" action="<?= PluginEngine::getLink('richtextplugin/edit') ?>" method="POST">
     <?= makeButton('bearbeiten', 'input', false, 'edit') ?>
 </form>
 <div><?=
