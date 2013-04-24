@@ -108,6 +108,126 @@ class RichTextPlugin extends StudIPPlugin implements StandardPlugin
         echo $template->render();
     }
 
+    public function post_file_action() {
+        $context = RichTextPluginUtils::getSeminarId();
+        // TODO security-check?
+/*
+        $context = Request::option("context") ? Request::get("context") : $GLOBALS['user']->id;
+        $context_type = Request::option("context_type");
+        if (!Request::isPost()
+                || ($context_type === "course" && !$GLOBALS['perm']->have_studip_perm("autor", $context))) {
+            throw new AccessDeniedException("Kein Zugriff");
+        }
+ */
+        $db = DBManager::get();
+
+        // get file folder, create if it doesn't exist
+        $folder_id = md5("RichText_" . $context);
+
+        $folder = $db->query(
+            "SELECT * " .
+            "FROM folder " .
+            "WHERE folder_id = " . $db->quote($folder_id) . " " .
+            "")->fetch(PDO::FETCH_COLUMN, 0);
+
+        if (!$folder) {
+            $db->exec(
+                "INSERT IGNORE INTO folder " .
+                    "SET folder_id = " . $db->quote($folder_id) . ", " .
+                    "range_id = " . $db->quote($context) . ", "  .
+                    "user_id = " . $db->quote($GLOBALS['user']->id) . ", " .
+                    "name = " . $db->quote("RichText") . ", " .
+                    "permission = '7', " .
+                    "mkdate = " . $db->quote(time()) . ", " .
+                    "chdate = " . $db->quote(time()) . " " .
+                    "");
+        }
+
+
+/*
+        //check folders
+        $db = DBManager::get();
+        $folder_id = md5("Blubber_".$context."_".$GLOBALS['user']->id);
+        $parent_folder_id = md5("Blubber_".$context);
+        if ($context_type !== "course") {
+            $folder_id = $parent_folder_id;
+        }
+        $folder = $db->query(
+            "SELECT * " .
+            "FROM folder " .
+            "WHERE folder_id = ".$db->quote($folder_id)." " .
+        "")->fetch(PDO::FETCH_COLUMN, 0);
+        if (!$folder) {
+            $folder = $db->query(
+                "SELECT * " .
+                "FROM folder " .
+                "WHERE folder_id = ".$db->quote($parent_folder_id)." " .
+            "")->fetch(PDO::FETCH_COLUMN, 0);
+            if (!$folder) {
+                $db->exec(
+                    "INSERT IGNORE INTO folder " .
+                    "SET folder_id = ".$db->quote($parent_folder_id).", " .
+                        "range_id = ".$db->quote($context).", " .
+                        "user_id = ".$db->quote($GLOBALS['user']->id).", " .
+                        "name = ".$db->quote("BlubberDateien").", " .
+                        "permission = '7', " .
+                        "mkdate = ".$db->quote(time()).", " .
+                        "chdate = ".$db->quote(time())." " .
+                "");
+            }
+            if ($context_type === "course") {
+                $db->exec(
+                    "INSERT IGNORE INTO folder " .
+                    "SET folder_id = ".$db->quote($folder_id).", " .
+                        "range_id = ".$db->quote($parent_folder_id).", " .
+                        "user_id = ".$db->quote($GLOBALS['user']->id).", " .
+                        "name = ".$db->quote(get_fullname()).", " .
+                        "permission = '7', " .
+                        "mkdate = ".$db->quote(time()).", " .
+                        "chdate = ".$db->quote(time())." " .
+                "");
+            }
+        }
+
+        $output = array();
+
+        foreach ($_FILES as $file) {
+            $GLOBALS['msg'] = '';
+            if ($context_type === "course") {
+                validate_upload($file);
+                if ($GLOBALS['msg']) {
+                    $output['errors'][] = $file['name'] . ': ' . studip_utf8encode(decodeHTML(trim(substr($GLOBALS['msg'],6), '§')));
+                    continue;
+                }
+            }
+            if ($file['size']) {
+                $document['name'] = $document['filename'] = studip_utf8decode(strtolower($file['name']));
+                $document['user_id'] = $GLOBALS['user']->id;
+                $document['author_name'] = get_fullname();
+                $document['seminar_id'] = $context;
+                $document['range_id'] = $context_type === "course" ? $folder_id : $parent_folder_id;
+                $document['filesize'] = $file['size'];
+                if ($newfile = StudipDocument::createWithFile($file['tmp_name'], $document)) {
+                    $type = null;
+                    strpos($file['type'], 'image') === false || $type = "img";
+                    strpos($file['type'], 'video') === false || $type = "video";
+                    if (strpos($file['type'], 'audio') !== false || strpos($document['filename'], '.ogg') !== false) {
+                         $type = "audio";
+                    }
+                    $url = GetDownloadLink($newfile->getId(), $newfile['filename']);
+                    if ($type) {
+                        $output['inserts'][] = "[".$type."]".$url;
+                    } else {
+                        $output['inserts'][] = "[".$newfile['filename']."]".$url;
+                    }
+                }
+            }
+        }
+        $this->render_json($output);
+ */
+        echo "done";
+    }
+
     /**
      * Retrieve text body from database.
      * 
