@@ -108,6 +108,27 @@ class RichTextPlugin extends StudIPPlugin implements StandardPlugin
         echo $template->render();
     }
 
+    public static function getFolder($db, $folder_id) {
+        return $db->query(
+            "SELECT * " .
+            "FROM folder " .
+            "WHERE folder_id = " . $db->quote($folder_id) . " " .
+            "")->fetch(PDO::FETCH_COLUMN, 0);
+    }
+
+    public static function createFolder($db, $context, $folder_name, $folder_id) {
+        $db->exec(
+            "INSERT IGNORE INTO folder " .
+                "SET folder_id = " . $db->quote($folder_id) . ", " .
+                "range_id = " . $db->quote($context) . ", "  .
+                "user_id = " . $db->quote($GLOBALS['user']->id) . ", " .
+                "name = " . $db->quote($folder_name) . ", " .
+                "permission = '7', " .
+                "mkdate = " . $db->quote(time()) . ", " .
+                "chdate = " . $db->quote(time()) . " " .
+                "");
+    }
+
     public function post_file_action() {
         $context = RichTextPluginUtils::getSeminarId();
         // TODO security-check?
@@ -123,27 +144,10 @@ class RichTextPlugin extends StudIPPlugin implements StandardPlugin
 
         // get file folder, create if it doesn't exist
         $folder_id = md5("RichText_" . $context);
-
-        $folder = $db->query(
-            "SELECT * " .
-            "FROM folder " .
-            "WHERE folder_id = " . $db->quote($folder_id) . " " .
-            "")->fetch(PDO::FETCH_COLUMN, 0);
-
+        $folder = RichTextPlugin::getFolder($db, $folder_id);
         if (!$folder) {
-            $db->exec(
-                "INSERT IGNORE INTO folder " .
-                    "SET folder_id = " . $db->quote($folder_id) . ", " .
-                    "range_id = " . $db->quote($context) . ", "  .
-                    "user_id = " . $db->quote($GLOBALS['user']->id) . ", " .
-                    "name = " . $db->quote("RichText") . ", " .
-                    "permission = '7', " .
-                    "mkdate = " . $db->quote(time()) . ", " .
-                    "chdate = " . $db->quote(time()) . " " .
-                    "");
+            RichTextPlugin::createFolder($db, $context, "RichText", $folder_id);
         }
-
-
 /*
         //check folders
         $db = DBManager::get();
@@ -188,7 +192,8 @@ class RichTextPlugin extends StudIPPlugin implements StandardPlugin
                 "");
             }
         }
-
+*/
+/*
         $output = array();
 
         foreach ($_FILES as $file) {
