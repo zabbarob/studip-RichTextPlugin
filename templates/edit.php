@@ -83,12 +83,27 @@ $infobox = array(
 </div>
 
 <!-- the editor -->
-<form style="padding:10px" id="edit_box" action="<?=PluginEngine::getLink('richtextplugin/show')?>" method="POST">
+<form enctype="multipart/form-data" style="padding:10px" id="edit_box" action="<?=PluginEngine::getLink('richtextplugin/show')?>" method="POST">
     <textarea id="wysihtml5-editor" spellcheck="false" wrap="off" autofocus placeholder="Enter text..." name="body"><?=htmlReady($body);?></textarea>
     <br>
     <p style="margin:10px">
         <?= makeButton('uebernehmen', 'input', false, 'save') ?>
         <?= makeButton('abbrechen', 'input', false, 'cancel') ?>
     </p>
+</form>
+
+<hr>
+
+<!-- The data encoding type, enctype, MUST be specified as below -->
+<form enctype="multipart/form-data" action="<?=PluginEngine::getLink('richtextplugin/post_file')?>" method="POST">
+<?php/*
+    <!-- MAX_FILE_SIZE must precede the file input field -->
+    <input type="hidden" name="MAX_FILE_SIZE" value="<?=
+        '30000' // TODO detemine max value set in course
+?>" />
+*/?>
+    <!-- Name of input element determines name in $_FILES array -->
+    Send this file: <input name="userfile" type="file" />
+    <input type="submit" value="Send File" />
 </form>
 
