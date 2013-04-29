@@ -108,27 +108,6 @@ class RichTextPlugin extends StudIPPlugin implements StandardPlugin
         echo $template->render();
     }
 
-    public static function getFolder($db, $folder_id) {
-        return $db->query(
-            "SELECT * " .
-            "FROM folder " .
-            "WHERE folder_id = " . $db->quote($folder_id) . " " .
-            "")->fetch(PDO::FETCH_COLUMN, 0);
-    }
-
-    public static function createFolder($db, $context, $folder_name, $folder_id) {
-        $db->exec(
-            "INSERT IGNORE INTO folder " .
-                "SET folder_id = " . $db->quote($folder_id) . ", " .
-                "range_id = " . $db->quote($context) . ", "  .
-                "user_id = " . $db->quote($GLOBALS['user']->id) . ", " .
-                "name = " . $db->quote($folder_name) . ", " .
-                "permission = '7', " .
-                "mkdate = " . $db->quote(time()) . ", " .
-                "chdate = " . $db->quote(time()) . " " .
-                "");
-    }
-
     public function post_file_action() {
         $context = RichTextPluginUtils::getSeminarId();
         /* TODO security-check?
@@ -139,21 +118,20 @@ class RichTextPlugin extends StudIPPlugin implements StandardPlugin
             throw new AccessDeniedException("Kein Zugriff");
         }
         */
-        $db = DBManager::get();
 
         // get file folder, create if it doesn't exist
         $folder_id = md5('RichText_' . $context);
-        $folder = RichTextPlugin::getFolder($db, $folder_id);
-        if (!$folder) {
+        if (!RichTextPluginUtils::getFolder($folder_id)) {
             // TODO add description (shown in studip document browser)
-            RichTextPlugin::createFolder($db, $context, 'RichText', $folder_id);
+            RichTextPluginUtils::createFolder($context, $folder_id, 'RichText');
         }
 
+        // store uploaded files as StudIP documents
         $output = array();
 
         foreach ($_FILES as $file) {
             if (!$file['size']) {
-                continue; // ignore empty files
+                continue; // ignore empty files TODO really?
             }
 
             // retrieve information for creating file
@@ -176,6 +154,7 @@ class RichTextPlugin extends StudIPPlugin implements StandardPlugin
             $url = GetDownloadLink($newfile->getId(), $newfile['filename']);
 
             // determine data type of file / determine markup tag
+            // TODO tags should be created by client-side, server should return mime-type
             $type = null;
             if (strpos($file['type'], 'image')) {
                 $type = "img";

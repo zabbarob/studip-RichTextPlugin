@@ -70,5 +70,28 @@ class RichTextPluginUtils {
         }
         return Request::option('cid');
     }
+
+    public static function getFolder($folder_id) {
+        $db = DBManager::get();
+        return $db->query(
+            "SELECT * " .
+            "FROM folder " .
+            "WHERE folder_id = " . $db->quote($folder_id) . " " .
+            "")->fetch(PDO::FETCH_COLUMN, 0);
+    }
+
+    public static function createFolder($range_id, $folder_id, $folder_name) {
+        $db = DBManager::get();
+        $db->exec(
+            "INSERT IGNORE INTO folder " .
+                "SET folder_id = " . $db->quote($folder_id) . ", " .
+                "range_id = " . $db->quote($range_id) . ", "  .
+                "user_id = " . $db->quote($GLOBALS['user']->id) . ", " .
+                "name = " . $db->quote($folder_name) . ", " .
+                "permission = '7', " .
+                "mkdate = " . $db->quote(time()) . ", " .
+                "chdate = " . $db->quote(time()) . " " .
+                "");
+    }
 }
 
