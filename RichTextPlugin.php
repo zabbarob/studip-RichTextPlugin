@@ -48,6 +48,7 @@ class RichTextPlugin extends StudIPPlugin implements StandardPlugin
         PageLayout::addStylesheet($assets . 'styles.css');
         PageLayout::addScript($assets . 'advanced.js');
         PageLayout::addScript($assets . 'wysihtml5-0.3.0.js');
+        PageLayout::addScript($assets . 'formdata.js');
         PageLayout::addScript($assets . 'script.js');
     }
 
@@ -170,6 +171,7 @@ class RichTextPlugin extends StudIPPlugin implements StandardPlugin
             // return link to file, enclosed in required markup tag
             $output['inserts'][] = "[" . $type . "]" . $url;
         }
+        header('Content-type: application/json; charset=utf-8');
         echo json_encode($output);
     }
 

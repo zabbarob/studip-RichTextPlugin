@@ -35,6 +35,8 @@ $infobox = array(
 // show the toolbar and the actual editor component
 ?>
 
+<div id="dropbox">
+
 <!-- the toolbar -->
 
 <div id="wysihtml5-editor-toolbar" style="padding:10px">
@@ -106,4 +108,6 @@ $infobox = array(
     Send this file: <input name="userfile" type="file" />
     <input type="submit" value="Send File" />
 </form>
+
+</div> <!-- dropbox -->
 
