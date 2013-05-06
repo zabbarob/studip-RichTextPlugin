@@ -13,12 +13,16 @@
  * @category    Stud.IP
  */
 (function ($) {
-    // Get URL path of the currently executed script.
-    // This is needed for locating the flash file that ZeroClipboard needs.
-    // taken from http://stackoverflow.com/a/2161748
-    var scripts = document.getElementsByTagName('script');
-    var path = scripts[scripts.length - 1].src.split('?')[0]; // remove ?query
-    var dir = path.split('/').slice(0, -1).join('/') + '/'; // remove filename
+    var getScriptDir = function() {
+        // get URL path of currently executed script, without filename
+        // http://stackoverflow.com/a/2161748
+        var scripts = document.getElementsByTagName('script');
+        var path = scripts[scripts.length - 1].src.split('?')[0]; // remove ?query
+        return path.split('/').slice(0, -1).join('/') + '/'; // remove filename
+    };
+
+    // needs to be executed when script is loaded to get the script's own dir
+    var dir = getScriptDir();
 
     // make sure code is only called after DOM structure is fully loaded
     $(function() {
