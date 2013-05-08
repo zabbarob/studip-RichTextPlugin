@@ -99,11 +99,11 @@ class RichTextPlugin extends StudIPPlugin implements StandardPlugin
      * Sets the fields in the plugin's show.php template to correct values.
      */
     public function edit_action() {
+        Navigation::activateItem("/course/rich");
+
         $template = $this->template_factory->open('edit');
         $template->set_layout($GLOBALS['template_factory']->open('layouts/base'));
 
-        $template->title = $this->getPluginName();
-        $template->icon_url = $this->getPluginURL() . '/images/icon.gif';
         $template->body = $this->getBody();
 
         echo $template->render();
