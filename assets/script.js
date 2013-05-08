@@ -50,25 +50,15 @@
             e.preventDefault();
             e.stopPropagation();
         };
+
         var textarea = $('#wysihtml5-editor');
         //textarea = $('#dropbox');
         //textarea.on('dragover', ignoreEvent);
         //textarea.on('dragenter', ignoreEvent);
-        textarea.on('drop', function(event) {
-            alert('drop: textarea.on(drop');
-        });
-        wysihtml5.dom.observe(editor.composer.element, 'drop', function(event) {
-            alert('drop: wysihtml5.dom.observe(editor.composer.element');
-        });
-        editor.observe('drop', function(e) {
-            alert('drop: editor.observe(');
-        });
-        var editor_body = $(".wysihtml5-sandbox")[0].contentWindow.document.body;
-        $(editor_body).on('drop', function(e) {
-            alert('drop: $(editor_body)');
-        });
-        $(editor.composer.element).on('drop', function(event) {
-            alert('drop: $(editor.composer.element).on(drop');
+        //
+        var dropHandler = function(event) {
+            var that = this;
+            //alert('drop');
             ignoreEvent(event);
             //event.preventDefault();
             //event.stopPropagation();
@@ -113,7 +103,13 @@
                 'success': function(json) {
                     if (typeof json.inserts === 'object') {
                         $.each(json.inserts, function(index, text) {
-                            textarea.val(textarea.val() + " " + text);
+                            alert(text);
+                            html = text;
+                            if (that == textarea[0]) {
+                                textarea.val(textarea.val() + html);
+                            }
+                            editor.focus();
+                            editor.composer.commands.exec("insertHTML", html);
                         });
                     }
                     if (typeof json.errors === 'object') {
@@ -126,8 +122,14 @@
                 'complete': function() {
                     textarea.removeClass('hovered uploading');
                 }
-            });
-        });
+            }); // $.ajax
+        }; // dropHandler
+
+        //editor.on('paste', dropHandler); // doesn't work
+        //editor.on('drop', dropHandler); // doesn't work
+        textarea.on('drop', dropHandler);
+        var editor_body = $(".wysihtml5-sandbox")[0].contentWindow.document.body;
+        $(editor_body).on('drop', dropHandler);
     }); // $(function() {
 }(jQuery));
 
