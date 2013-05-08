@@ -46,6 +46,9 @@
         });
 
         // drop files
+        var isImage = function(mime_type) {
+            return (typeof mime_type === 'string') && mime_type.match('^image');
+        };
         var ignoreEvent = function(e) {
             e.preventDefault();
             e.stopPropagation();
@@ -55,7 +58,7 @@
         //textarea = $('#dropbox');
         //textarea.on('dragover', ignoreEvent);
         //textarea.on('dragenter', ignoreEvent);
-        //
+
         var dropHandler = function(event) {
             var that = this;
             //alert('drop');
@@ -103,24 +106,53 @@
                 'success': function(json) {
                     if (typeof json.inserts === 'object') {
                         $.each(json.inserts, function(index, file) {
+
                             console.log(file);
 
-                            var html = $('<div>').append($('<a>', {
-                                target: '_blank',
-                                rel: 'nofollow',
-                                text: file.name,
-                                title: file.name,
-                                type: file.type,
-                                href: file.url
-                            })).html();
+                            if (isImage(file.type)) {
 
-                            console.log(html);
+                                console.log('insert image');
 
-                            if (that == textarea[0]) {
-                                textarea.val(textarea.val() + html);
+                                editor.composer.commands.exec('insertImage', {
+                                    src: file.url,
+                                    alt: file.name,
+                                    title: file.name
+                                });
+
+                                // NOTE workaround: if wysihtml is in "show HTML"
+                                // mode then editor.*.exec('insertHTML') does not
+                                // work
+                                if (that == textarea[0]) {
+                                    var html = $('<div>').append($('<img>', {
+                                        src: file.url,
+                                        alt: file.name,
+                                        title: file.name
+                                    })).html();
+                                    textarea.val(textarea.val() + html);
+                                }
+                            } else {
+                                var html = $('<div>').append($('<a>', {
+                                    target: '_blank',
+                                    rel: 'nofollow',
+                                    text: file.name,
+                                    title: file.name,
+                                    type: file.type,
+                                    href: file.url
+                                })).html();
+
+                                console.log(html);
+
+                                // NOTE workaround: if wysihtml is in "show HTML"
+                                // mode then editor.*.exec('insertHTML') does not
+                                // work
+                                if (that == textarea[0]) {
+                                    textarea.val(textarea.val() + html);
+                                }
+
+                                // insert link
+                                editor.focus();
+                                editor.composer.commands.exec('insertHTML', html);
                             }
-                            editor.focus();
-                            editor.composer.commands.exec("insertHTML", html);
                         });
                     }
                     if (typeof json.errors === 'object') {
