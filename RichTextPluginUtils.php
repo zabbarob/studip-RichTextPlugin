@@ -27,8 +27,8 @@ class RichTextPluginUtils {
      * @return string  The current URL.
      */
     public static function getUrl() {
-        $protocol = ($_SERVER['HTTPS'] && $_SERVER['HTTPS'] != "off") ? "https" : "http";
-        return $protocol . "://" . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+        $protocol = ($_SERVER['HTTPS'] && $_SERVER['HTTPS'] != 'off') ? 'https' : 'http';
+        return $protocol . '://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
     }
 
     /**
@@ -73,25 +73,23 @@ class RichTextPluginUtils {
 
     public static function getFolder($folder_id) {
         $db = DBManager::get();
-        return $db->query(
-            "SELECT * " .
-            "FROM folder " .
-            "WHERE folder_id = " . $db->quote($folder_id) . " " .
-            "")->fetch(PDO::FETCH_COLUMN, 0);
+        return $db->query('SELECT * FROM folder WHERE folder_id = '
+            . $db->quote($folder_id)
+        )->fetch(PDO::FETCH_COLUMN, 0);
     }
 
-    public static function createFolder($range_id, $folder_id, $folder_name) {
+    public static function createFolder($range_id, $folder_id, $folder_name, $description=null) {
         $db = DBManager::get();
-        $db->exec(
-            "INSERT IGNORE INTO folder " .
-                "SET folder_id = " . $db->quote($folder_id) . ", " .
-                "range_id = " . $db->quote($range_id) . ", "  .
-                "user_id = " . $db->quote($GLOBALS['user']->id) . ", " .
-                "name = " . $db->quote($folder_name) . ", " .
-                "permission = '7', " .
-                "mkdate = " . $db->quote(time()) . ", " .
-                "chdate = " . $db->quote(time()) . " " .
-                "");
+        $db->exec('INSERT IGNORE INTO folder '
+            . 'SET folder_id = ' . $db->quote($folder_id)
+            . ', range_id = ' . $db->quote($range_id)
+            . ', user_id = ' . $db->quote($GLOBALS['user']->id)
+            . ', name = ' . $db->quote($folder_name)
+            . ', permission = ' . $db->quote(7)
+            . ', mkdate = ' . $db->quote(time())
+            . ', chdate = ' . $db->quote(time())
+            . ', description = ' . $db->quote($description) 
+        );
     }
 }
 

@@ -122,10 +122,8 @@ class RichTextPlugin extends StudIPPlugin implements StandardPlugin
 
         // get file folder, create if it doesn't exist
         $folder_id = md5('RichText_' . $context);
-        if (!RichTextPluginUtils::getFolder($folder_id)) {
-            // TODO add description (shown in studip document browser)
-            RichTextPluginUtils::createFolder($context, $folder_id, 'RichText');
-        }
+        $description = studip_utf8decode(_('Enthält vom RichText-Plugin hochgeladene Dateien.'));
+        RichTextPluginUtils::createFolder($context, $folder_id, 'RichText', $description);
 
         // store uploaded files as StudIP documents
         $output = array();
