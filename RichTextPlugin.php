@@ -129,21 +129,23 @@ class RichTextPlugin extends StudIPPlugin implements StandardPlugin
         $output = array();
 
         foreach ($_FILES as $file) {
+            /*
+            $GLOBALS['msg'] = '';
+            if ($context_type === "course") {
+                validate_upload($file);
+                if ($GLOBALS['msg']) {
+                    $output['errors'][] = $file['name'] . ': ' . studip_utf8encode(decodeHTML(trim(substr($GLOBALS['msg'],6), '§')));
+                    continue;
+                }
+            }
+            */
+
             if (!$file['size']) {
                 continue; // ignore empty files TODO really?
             }
 
-            // retrieve information for creating file
-            $filename = studip_utf8decode($file['name']);
-            $document['name'] = $document['filename'] = $filename;
-            $document['user_id'] = $GLOBALS['user']->id;
-            $document['author_name'] = get_fullname();
-            $document['seminar_id'] = $context;
-            $document['range_id'] = $folder_id;
-            $document['filesize'] = $file['size'];
-
-            // create file
-            // TODO check why README.md was uploaded but then copied with 0 bytes
+            // create studip file
+            $document = RichTextPluginUtils::getStudipDocumentData($context, $folder_id, $file);
             $newfile = StudipDocument::createWithFile($file['tmp_name'], $document);
             if (!$newfile) {
                 continue; // file creation failed TODO store error message

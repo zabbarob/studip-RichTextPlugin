@@ -91,5 +91,16 @@ class RichTextPluginUtils {
             . ', description = ' . $db->quote($description) 
         );
     }
+
+    public static function getStudipDocumentData($seminar_id, $folder_id, $file) {
+        $filename = studip_utf8decode($file['name']);
+        $document['name'] = $document['filename'] = $filename;
+        $document['user_id'] = $GLOBALS['user']->id;
+        $document['author_name'] = get_fullname();
+        $document['seminar_id'] = $seminar_id;
+        $document['range_id'] = $folder_id;
+        $document['filesize'] = $file['size'];
+        return $document;
+    }
 }
 
