@@ -151,25 +151,13 @@ class RichTextPlugin extends StudIPPlugin implements StandardPlugin
                 continue; // file creation failed TODO store error message
             }
 
-            // get download link
             $url = GetDownloadLink($newfile->getId(), $newfile['filename']);
 
-            // determine data type of file / determine markup tag
-            // TODO tags should be created by client-side, server should return mime-type
-            $type = null;
-            if (strpos($file['type'], 'image')) {
-                $type = "img";
-            } else if (strpos($file['type'], 'video')) {
-                $type = "video";
-            } else if (strpos($file['type'], 'audio')) {
-                $type = "audio";
-            } else {
-                // TODO insert link for unknown file types
-                $type = $newfile['filename'];
-            }
-
-            // return link to file, enclosed in required markup tag
-            $output['inserts'][] = "[" . $type . "]" . $url;
+            // return file info (name, type, url)
+            $output['inserts'][] = Array(
+                'name' => $newfile['filename'],
+                'type' => $file['type'],
+                'url' => $url);
         }
         header('Content-type: application/json; charset=utf-8');
         echo json_encode($output);

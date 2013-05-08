@@ -102,9 +102,20 @@
                 },
                 'success': function(json) {
                     if (typeof json.inserts === 'object') {
-                        $.each(json.inserts, function(index, text) {
-                            alert(text);
-                            html = text;
+                        $.each(json.inserts, function(index, file) {
+                            console.log(file);
+
+                            var html = $('<div>').append($('<a>', {
+                                target: '_blank',
+                                rel: 'nofollow',
+                                text: file.name,
+                                title: file.name,
+                                type: file.type,
+                                href: file.url
+                            })).html();
+
+                            console.log(html);
+
                             if (that == textarea[0]) {
                                 textarea.val(textarea.val() + html);
                             }
