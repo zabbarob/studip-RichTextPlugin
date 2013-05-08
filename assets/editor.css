@@ -61,6 +61,11 @@ li img {
   margin: 2px 5px 5px 0;
 }
 
+img {
+    max-width: 33%;
+    max-height: 33%;
+}
+
 .wysiwyg-color-black {
   color: black;
 }
