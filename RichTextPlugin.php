@@ -196,6 +196,16 @@ class RichTextPlugin extends StudIPPlugin implements StandardPlugin
      */
     protected static function purify($dirty_html) {
         $config = HTMLPurifier_Config::createDefault();
+        $config->set('Attr.AllowedFrameTargets', array('_blank'));
+        $config->set('Attr.AllowedRel', array('nofollow'));
+
+        //$attributes = $config->get('HTML.AllowedAttributes');
+        //$attributes[] = 'title';
+        //$config->set('HTML.AllowedAttributes', attributes);
+        //$def =& $config->getHTMLDefinition();
+        //$def->addAttribute('img', 'title', 'URI');
+        //$def->info['img']->attr['title'] = new HTMLPurifier_AttrDef_Text();
+
         $purifier = new HTMLPurifier($config);
         return $purifier->purify($dirty_html);
      }

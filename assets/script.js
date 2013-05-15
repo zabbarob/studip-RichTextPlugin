@@ -146,7 +146,6 @@
                                     target: '_blank',
                                     rel: 'nofollow',
                                     text: file.name,
-                                    title: file.name,
                                     type: file.type,
                                     href: file.url
                                 })).html();
