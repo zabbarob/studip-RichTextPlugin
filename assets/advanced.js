@@ -132,9 +132,9 @@ var wysihtml5ParserRules = {
             }
         },
         "em": {},
-        /*"title": {
+        "title": {
             "remove": 1
-        },*/
+        },
         "multicol": {
             "rename_tag": "div"
         },
