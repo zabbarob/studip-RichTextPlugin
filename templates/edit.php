@@ -35,6 +35,9 @@ $infobox = array(
 // show the toolbar and the actual editor component
 ?>
 
+<input type="hidden" id="post_files_url" value="<?=PluginEngine::getLink('richtextplugin/post_file')?>">
+
+
 <div id="dropbox">
 
 <!-- the toolbar -->

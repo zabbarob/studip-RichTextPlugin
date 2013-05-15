@@ -64,10 +64,8 @@
 
         var dropHandler = function(event) {
             var that = this;
-            //alert('drop');
             ignoreEvent(event);
-            //event.preventDefault();
-            //event.stopPropagation();
+
             var files = 0;
             var file_info = event.originalEvent.dataTransfer.files || {};
             var data = new FormData();
@@ -86,10 +84,9 @@
             // post dropped files to server
             textarea.addClass('uploading');
 
-            //var url = STUDIP.ABSOLUTE_URI_STUDIP + jQuery("#base_url").val() + "/post_files?context=" + context_id + "&context_type=" + context_type;
-            var url = 'http://localhost:8080/studip/plugins.php/richtextplugin/post_file?cid=a07535cf2f8a72df33c12ddfa4b53dde';
-
-             $.ajax({
+            var url = $('#post_files_url').val(); // must be set in view/edit template
+            
+            $.ajax({
                 'url': url,
                 'data': data,
                 'cache': false,
@@ -112,6 +109,7 @@
 
                             console.log(file);
 
+                            // NOTE StudIP sends SVGs as application/octet-stream
                             if (isImage(file.type) && !isSVG(file.type)) {
 
                                 console.log('insert image:');
