@@ -61,6 +61,16 @@
         //textarea = $('#dropbox');
         //textarea.on('dragover', ignoreEvent);
         //textarea.on('dragenter', ignoreEvent);
+        
+        editor.on('change_view', function() {
+            var editor_body = $($(".wysihtml5-sandbox")[0].contentWindow.document.body);
+            var html = editor_body.html();
+            var tags = /<br>|<\/h\d>|<[ou]l>|<\/[ou]l>|<\/li>/gi;
+            html = html.replace(tags, function(match) {
+                return match + '\n';
+            }).replace(/\n\n/g,'\n');
+            editor_body.html(html);
+        });
 
         var dropHandler = function(event) {
             var that = this;
