@@ -47,7 +47,10 @@
 
         // drop files
         var isImage = function(mime_type) {
-            return (typeof mime_type === 'string') && mime_type.match('^image');
+            return (typeof mime_type) === 'string' && mime_type.match('^image');
+        };
+        var isSVG = function(mime_type) {
+            return (typeof mime_type) === 'string' && mime_type === 'image/svg+xml';
         };
         var ignoreEvent = function(e) {
             e.preventDefault();
@@ -109,9 +112,9 @@
 
                             console.log(file);
 
-                            if (isImage(file.type)) {
+                            if (isImage(file.type) && !isSVG(file.type)) {
 
-                                console.log('insert image');
+                                console.log('insert image:');
 
                                 editor.composer.commands.exec('insertImage', {
                                     src: file.url,
