@@ -20,9 +20,6 @@ include 'infobox.php';
 
 <input type="hidden" id="post_files_url" value="<?=PluginEngine::getLink('richtextplugin/post_file')?>">
 
-
-<div id="dropbox">
-
 <!-- the toolbar -->
 
 <div id="wysihtml5-editor-toolbar" style="padding:10px">
@@ -79,21 +76,4 @@ include 'infobox.php';
         <?= makeButton('abbrechen', 'input', false, 'cancel') ?>
     </p>
 </form>
-
-<hr>
-
-<!-- The data encoding type, enctype, MUST be specified as below -->
-<form enctype="multipart/form-data" action="<?=PluginEngine::getLink('richtextplugin/post_file')?>" method="POST">
-<?php/*
-    <!-- MAX_FILE_SIZE must precede the file input field -->
-    <input type="hidden" name="MAX_FILE_SIZE" value="<?=
-        '30000' // TODO detemine max value set in course
-?>" />
-*/?>
-    <!-- Name of input element determines name in $_FILES array -->
-    Send this file: <input name="userfile" type="file" />
-    <input type="submit" value="Send File" />
-</form>
-
-</div> <!-- dropbox -->
 
