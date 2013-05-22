@@ -198,6 +198,7 @@ class RichTextPlugin extends StudIPPlugin implements StandardPlugin
      */
     protected static function purify($dirty_html) {
         $config = HTMLPurifier_Config::createDefault();
+        $config->set('Core.Encoding', 'ISO-8859-1');
         $config->set('Attr.AllowedFrameTargets', array('_blank'));
         $config->set('Attr.AllowedRel', array('nofollow'));
         $purifier = new HTMLPurifier($config);
