@@ -30,11 +30,6 @@ class RichTextPlugin extends StudIPPlugin implements StandardPlugin
     public function __construct() {
         parent::__construct();
 
-        $navigation = new AutoNavigation(_('RichText'));
-        $navigation->setURL(PluginEngine::GetLink($this, array(), 'show'));
-        $navigation->setImage(Assets::image_path('blank.gif'));
-        Navigation::addItem('/course/rich', $navigation);
-
         $this->template_factory = new Flexi_TemplateFactory($this->getPluginPath() . '/templates');
     }
 
@@ -56,6 +51,9 @@ class RichTextPlugin extends StudIPPlugin implements StandardPlugin
      * Implements abstract method of base class.
      */
     public function getIconNavigation($course_id, $last_visit, $user_id) {
+        if (!$this->isActivated($course_id)) {
+            return;
+        }
     }
 
     /**
@@ -68,6 +66,14 @@ class RichTextPlugin extends StudIPPlugin implements StandardPlugin
      * Implements abstract method of base class.
      */
     public function getTabNavigation($course_id) {
+        if (!$this->isActivated($course_id)) {
+            return;
+        }
+        $navigation = new AutoNavigation(_('RichText'));
+        $navigation->setURL(PluginEngine::GetLink($this, array(), 'show'));
+        $navigation->setImage(Assets::image_path('blank.gif'));
+
+        Navigation::addItem('/course/rich', $navigation);
     }
  
     /**
