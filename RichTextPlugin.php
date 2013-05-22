@@ -140,10 +140,6 @@ class RichTextPlugin extends StudIPPlugin implements StandardPlugin
             }
             */
 
-            if (!$file['size']) {
-                continue; // ignore empty files TODO really?
-            }
-
             // create studip file
             $document = RichTextPluginUtils::getStudipDocumentData($context, $folder_id, $file);
             $newfile = StudipDocument::createWithFile($file['tmp_name'], $document);
