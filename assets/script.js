@@ -117,12 +117,12 @@
                     if (typeof json.inserts === 'object') {
                         $.each(json.inserts, function(index, file) {
 
-                            console.log(file);
+                            // console.log(file);
 
                             // NOTE StudIP sends SVGs as application/octet-stream
                             if (isImage(file.type) && !isSVG(file.type)) {
 
-                                console.log('insert image:');
+                                // console.log('insert image:');
 
                                 editor.composer.commands.exec('insertImage', {
                                     src: file.url,
@@ -150,7 +150,7 @@
                                     href: file.url
                                 })).html();
 
-                                console.log(html);
+                                // console.log(html);
 
                                 // NOTE workaround: if wysihtml is in "show HTML"
                                 // mode then editor.*.exec('insertHTML') does not
