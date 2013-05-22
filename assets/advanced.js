@@ -190,7 +190,8 @@ var wysihtml5ParserRules = {
                 "width": "numbers",
                 "alt": "alt",
                 "src": "url",
-                "height": "numbers"
+                "height": "numbers",
+                "title": "alt"
             },
             "add_class": {
                 "align": "align_img"
