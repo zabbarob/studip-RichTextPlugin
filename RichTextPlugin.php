@@ -15,6 +15,55 @@
  */
 require_once 'HTMLPurifier/HTMLPurifier.auto.php';
 require_once 'RichTextPluginUtils.php';
+//include_once 'csrf-magic/csrf-magic.php';
+
+//http://stackoverflow.com/q/2638640/641481
+//http://htmlpurifier.org/phorum/read.php?3,4254
+class HTMLPurifier_AttrTransform_Image_Source extends HTMLPurifier_AttrTransform
+{
+    function transform($attr, $config, $context) {
+        //$this->confiscateAttr($attr, 'src');
+        $attr['src'] = HTMLPurifier_AttrTransform_Image_Source::getMediaUrl($attr['src']);
+        return $attr;
+    }
+
+    /**
+     * Check if media proxy should be used and if so return the respective URL.
+     *
+     * @param string $url URL to media file.
+     * @return string URL to media file or 'proxied' media file.
+     */
+    protected static function getMediaUrl($url) {
+        $studip_path = $GLOBALS['CANONICAL_RELATIVE_PATH_STUDIP'];
+        $LOAD_EXTERNAL_MEDIA = Config::GetInstance()->getValue('LOAD_EXTERNAL_MEDIA');
+
+        $pu = @parse_url($url);
+        $url_is_http = $pu['scheme'] == 'http' || $pu['scheme'] == 'https';
+        $url_is_on_host = $pu['host'] == $_SERVER['HTTP_HOST']
+            || $pu['host'] . ':' . $pu['port'] == $_SERVER['HTTP_HOST'];
+        $url_is_studip = strpos($pu['path'], $studip_path) === 0;
+
+        // NOTE in original code $intern is undefined if not true
+        $intern = $url_is_http && $url_is_on_host && $url_is_studip;
+
+        if ($intern) {
+            $pu_path = substr($pu['path'], strlen($studip_path));
+            list($pu['first_target']) = explode('/', $pu_path);
+            $internal_targets = array('sendfile.php', 'download', 'assets', 'pictures');
+            if (!in_array($pu['first_target'], $internal_targets)) {
+                return ''; // set <img src="">
+            }
+
+            $internal_link = TransformInternalLinks($url);
+            return idna_link($internal_link);
+        } elseif (!$LOAD_EXTERNAL_MEDIA || $LOAD_EXTERNAL_MEDIA === 'deny') {
+            return ''; // set <img src="">
+        } elseif ($LOAD_EXTERNAL_MEDIA === "proxy" && Seminar_Session::is_current_session_authenticated()) {
+            return $GLOBALS['ABSOLUTE_URI_STUDIP'] . 'dispatch.php/media_proxy?url=' . urlencode(idna_link($url));
+        }
+        return $url;
+    }
+}
 
 /**
  * Initializes and displays the plugin.
@@ -199,8 +248,15 @@ class RichTextPlugin extends StudIPPlugin implements StandardPlugin
     protected static function purify($dirty_html) {
         $config = HTMLPurifier_Config::createDefault();
         $config->set('Core.Encoding', 'ISO-8859-1');
+        $config->set('Core.RemoveInvalidImg', true);
         $config->set('Attr.AllowedFrameTargets', array('_blank'));
         $config->set('Attr.AllowedRel', array('nofollow'));
+
+        // avoid <img src="evil_CSRF_stuff">
+        $def = $config->getHTMLDefinition(true);
+        $img = $def->addBlankElement('img');
+        $img->attr_transform_post[] = new HTMLPurifier_AttrTransform_Image_Source();
+
         $purifier = new HTMLPurifier($config);
         return $purifier->purify($dirty_html);
      }
