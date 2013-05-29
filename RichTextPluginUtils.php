@@ -102,5 +102,43 @@ class RichTextPluginUtils {
         $document['filesize'] = $file['size'];
         return $document;
     }
+
+    /**
+     * Check if media proxy should be used and if so return the respective URL.
+     *
+     * @param string $url   URL to media file.
+     * @return mixed        URL string to media file (possibly 'proxied')
+     *                      or NULL if URL is invalid.
+     */
+    public static function getMediaUrl($url) {
+        $studip_path = $GLOBALS['CANONICAL_RELATIVE_PATH_STUDIP'];
+        $LOAD_EXTERNAL_MEDIA = Config::GetInstance()->getValue('LOAD_EXTERNAL_MEDIA');
+
+        $pu = @parse_url($url);
+        $url_is_http = $pu['scheme'] == 'http' || $pu['scheme'] == 'https';
+        $url_is_on_host = $pu['host'] == $_SERVER['HTTP_HOST']
+            || $pu['host'] . ':' . $pu['port'] == $_SERVER['HTTP_HOST'];
+        $url_is_studip = strpos($pu['path'], $studip_path) === 0;
+
+        // NOTE in original code $intern is undefined if not true
+        $intern = $url_is_http && $url_is_on_host && $url_is_studip;
+
+        if ($intern) {
+            $pu_path = substr($pu['path'], strlen($studip_path));
+            list($pu['first_target']) = explode('/', $pu_path);
+            $internal_targets = array('sendfile.php', 'download', 'assets', 'pictures');
+            if (in_array($pu['first_target'], $internal_targets)) {
+                return idna_link(TransformInternalLinks($url));
+            }
+            return NULL; // invalid internal link ==> remove <img src> attribute
+        }
+        if ($LOAD_EXTERNAL_MEDIA === "proxy" && Seminar_Session::is_current_session_authenticated()) {
+            return $GLOBALS['ABSOLUTE_URI_STUDIP'] . 'dispatch.php/media_proxy?url=' . urlencode(idna_link($url));
+        }
+        if ($LOAD_EXTERNAL_MEDIA === 'allow') {
+            return $url;
+        }
+        return NULL; // deny external media ==> remove <img src> attribute
+    }
 }
 
