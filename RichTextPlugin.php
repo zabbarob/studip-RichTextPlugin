@@ -21,6 +21,8 @@ require_once 'RichTextPluginUtils.php';
  **/
 class RichTextPlugin extends StudIPPlugin implements StandardPlugin
 {
+    protected $navlink = '/course/rich';
+
     /**
      * Constructor of the class.
      * 
@@ -54,6 +56,7 @@ class RichTextPlugin extends StudIPPlugin implements StandardPlugin
         if (!$this->isActivated($course_id)) {
             return;
         }
+        return getIcon('white');
     }
 
     /**
@@ -71,21 +74,34 @@ class RichTextPlugin extends StudIPPlugin implements StandardPlugin
         }
         $navigation = new AutoNavigation(_('RichText'));
         $navigation->setURL(PluginEngine::GetLink($this, array(), 'show'));
-        $navigation->setImage(Assets::image_path('blank.gif'));
-
-        Navigation::addItem('/course/rich', $navigation);
+        Navigation::addItem($this->navlink, $navigation);
+        $this->setTabNavigationIcon('white');
     }
- 
+
     /**
      * Implements abstract method of base class.
      */
     public function getNotificationObjects($course_id, $since, $user_id) {
     }
 
+    protected function setTabNavigationIcon($color) {
+        $this->getTabNavigationItem()->setImage($this->getIcon($color));
+    }
+
+    protected function getTabNavigationItem() {
+        return Navigation::getItem($this->navlink);
+    }
+
+    protected function getIcon($color) {
+        return Assets::image_path('icons/16/' . $color . '/forum.png');
+    }
+
     /**
      * Sets the fields in the plugin's show.php template to correct values.
      */
     public function show_action() {
+        $this->setTabNavigationIcon('black');
+
         if (Request::submitted('save')) {
             $this->setBody(Request::get('body'));
         }
@@ -105,6 +121,7 @@ class RichTextPlugin extends StudIPPlugin implements StandardPlugin
      * Sets the fields in the plugin's show.php template to correct values.
      */
     public function edit_action() {
+        $this->setTabNavigationIcon('black');
         Navigation::activateItem("/course/rich");
 
         $template = $this->template_factory->open('edit');
