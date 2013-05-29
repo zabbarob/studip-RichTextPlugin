@@ -50,18 +50,18 @@ class HTMLPurifier_AttrTransform_Image_Source extends HTMLPurifier_AttrTransform
             $pu_path = substr($pu['path'], strlen($studip_path));
             list($pu['first_target']) = explode('/', $pu_path);
             $internal_targets = array('sendfile.php', 'download', 'assets', 'pictures');
-            if (!in_array($pu['first_target'], $internal_targets)) {
-                return NULL; // remove <img src> attribute
+            if (in_array($pu['first_target'], $internal_targets)) {
+                return idna_link(TransformInternalLinks($url));
             }
-
-            $internal_link = TransformInternalLinks($url);
-            return idna_link($internal_link);
-        } elseif (!$LOAD_EXTERNAL_MEDIA || $LOAD_EXTERNAL_MEDIA === 'deny') {
-            return NULL; // remove <img src> attribute
-        } elseif ($LOAD_EXTERNAL_MEDIA === "proxy" && Seminar_Session::is_current_session_authenticated()) {
+            return NULL; // invalid internal link ==> remove <img src> attribute
+        }
+        if ($LOAD_EXTERNAL_MEDIA === "proxy" && Seminar_Session::is_current_session_authenticated()) {
             return $GLOBALS['ABSOLUTE_URI_STUDIP'] . 'dispatch.php/media_proxy?url=' . urlencode(idna_link($url));
         }
-        return $url;
+        if ($LOAD_EXTERNAL_MEDIA === 'allow') {
+            return $url;
+        }
+        return NULL; // deny external media ==> remove <img src> attribute
     }
 }
 
