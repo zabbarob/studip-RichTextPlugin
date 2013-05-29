@@ -21,6 +21,7 @@ include 'infobox.php';
 <br>
 <hr>
 <form id="edit_box" action="<?= PluginEngine::getLink('richtextplugin/edit') ?>" method="POST">
+    <?= CSRFProtection::tokenTag() ?>
     <?= makeButton('bearbeiten', 'input', false, 'edit') ?>
 </form>
 <div><?=

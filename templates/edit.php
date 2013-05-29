@@ -69,6 +69,7 @@ include 'infobox.php';
 
 <!-- the editor -->
 <form enctype="multipart/form-data" style="padding:10px" id="edit_box" action="<?=PluginEngine::getLink('richtextplugin/show')?>" method="POST">
+    <?= CSRFProtection::tokenTag() ?>
     <textarea id="wysihtml5-editor" spellcheck="false" wrap="off" autofocus placeholder="Enter text..." name="body"><?=htmlReady($body);?></textarea>
     <br>
     <p style="margin:10px">

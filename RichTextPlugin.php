@@ -88,11 +88,11 @@ class RichTextPlugin extends StudIPPlugin implements StandardPlugin
      * Sets the fields in the plugin's show.php template to correct values.
      */
     public function show_action() {
-        $this->actionHeader();
-
         if (Request::submitted('save')) {
+            CSRFProtection::verifyUnsafeRequest();
             $this->setBody(Request::get('body'));
         }
+        $this->actionHeader();
 
         $template = $this->template_factory->open('show');
         $template->set_layout($GLOBALS['template_factory']->open('layouts/base'));
@@ -109,6 +109,7 @@ class RichTextPlugin extends StudIPPlugin implements StandardPlugin
      * Sets the fields in the plugin's show.php template to correct values.
      */
     public function edit_action() {
+        CSRFProtection::verifyUnsafeRequest();
         $this->actionHeader();
 
         $template = $this->template_factory->open('edit');
@@ -120,6 +121,7 @@ class RichTextPlugin extends StudIPPlugin implements StandardPlugin
     }
 
     public function post_file_action() {
+        CSRFProtection::verifyUnsafeRequest();
         $context = RichTextPluginUtils::getSeminarId();
         /* TODO security-check?
         $context = Request::option("context") ? Request::get("context") : $GLOBALS['user']->id;
