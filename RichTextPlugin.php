@@ -30,8 +30,9 @@ class HTMLPurifier_AttrTransform_Image_Source extends HTMLPurifier_AttrTransform
     /**
      * Check if media proxy should be used and if so return the respective URL.
      *
-     * @param string $url URL to media file.
-     * @return string URL to media file or 'proxied' media file.
+     * @param string $url   URL to media file.
+     * @return mixed        URL string to media file (possibly 'proxied')
+     *                      or NULL if URL is invalid.
      */
     protected static function getMediaUrl($url) {
         $studip_path = $GLOBALS['CANONICAL_RELATIVE_PATH_STUDIP'];
