@@ -51,13 +51,13 @@ class HTMLPurifier_AttrTransform_Image_Source extends HTMLPurifier_AttrTransform
             list($pu['first_target']) = explode('/', $pu_path);
             $internal_targets = array('sendfile.php', 'download', 'assets', 'pictures');
             if (!in_array($pu['first_target'], $internal_targets)) {
-                return ''; // set <img src="">
+                return NULL; // remove <img src> attribute
             }
 
             $internal_link = TransformInternalLinks($url);
             return idna_link($internal_link);
         } elseif (!$LOAD_EXTERNAL_MEDIA || $LOAD_EXTERNAL_MEDIA === 'deny') {
-            return ''; // set <img src="">
+            return NULL; // remove <img src> attribute
         } elseif ($LOAD_EXTERNAL_MEDIA === "proxy" && Seminar_Session::is_current_session_authenticated()) {
             return $GLOBALS['ABSOLUTE_URI_STUDIP'] . 'dispatch.php/media_proxy?url=' . urlencode(idna_link($url));
         }
