@@ -19,8 +19,7 @@ require_once 'HTMLPurifier/HTMLPurifier.auto.php';
 class AttrTransform_Image_Source extends \HTMLPurifier_AttrTransform
 {
     /**
-     * Change attributes, if necessary. Gets called back by HTML Purifier.
-     * Implements abstract base class method.
+     * Implements abstract method of base class.
      */
     function transform($attr, $config, $context) {
         $attr['src'] = \RichTextPluginUtils::getMediaUrl($attr['src']);

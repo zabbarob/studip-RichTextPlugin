@@ -21,7 +21,7 @@ require_once 'RichTextPluginUtils.php';
  **/
 class RichTextPlugin extends StudIPPlugin implements StandardPlugin
 {
-    protected $navlink = '/course/rich';
+    protected $navlink = '/course/rich'; // plugin location in tab navigation bar
 
     /**
      * Constructor of the class.
@@ -31,7 +31,6 @@ class RichTextPlugin extends StudIPPlugin implements StandardPlugin
      */
     public function __construct() {
         parent::__construct();
-
         $this->template_factory = new Flexi_TemplateFactory($this->getPluginPath() . '/templates');
     }
 
@@ -75,6 +74,7 @@ class RichTextPlugin extends StudIPPlugin implements StandardPlugin
         $navigation = new AutoNavigation(_('RichText'));
         $navigation->setURL(PluginEngine::GetLink($this, array(), 'show'));
         Navigation::addItem($this->navlink, $navigation);
+
         $this->setTabNavigationIcon('white');
     }
 
@@ -84,23 +84,11 @@ class RichTextPlugin extends StudIPPlugin implements StandardPlugin
     public function getNotificationObjects($course_id, $since, $user_id) {
     }
 
-    protected function setTabNavigationIcon($color) {
-        $this->getTabNavigationItem()->setImage($this->getIcon($color));
-    }
-
-    protected function getTabNavigationItem() {
-        return Navigation::getItem($this->navlink);
-    }
-
-    protected function getIcon($color) {
-        return Assets::image_path('icons/16/' . $color . '/forum.png');
-    }
-
     /**
      * Sets the fields in the plugin's show.php template to correct values.
      */
     public function show_action() {
-        $this->setTabNavigationIcon('black');
+        $this->actionHeader();
 
         if (Request::submitted('save')) {
             $this->setBody(Request::get('body'));
@@ -121,8 +109,7 @@ class RichTextPlugin extends StudIPPlugin implements StandardPlugin
      * Sets the fields in the plugin's show.php template to correct values.
      */
     public function edit_action() {
-        $this->setTabNavigationIcon('black');
-        Navigation::activateItem("/course/rich");
+        $this->actionHeader();
 
         $template = $this->template_factory->open('edit');
         $template->set_layout($GLOBALS['template_factory']->open('layouts/base'));
@@ -204,6 +191,40 @@ class RichTextPlugin extends StudIPPlugin implements StandardPlugin
         $db = DBManager::get();
         $stmt = $db->prepare("REPLACE INTO plugin_rich_text VALUES(?, ?)");
         $stmt->execute(array(RichTextPluginUtils::getSeminarId(), $clean_body));
+    }
+
+    /**
+     * Set the plugin icon in Stud.IP's navigation bar.
+     * @param string $color Color in which the icon is displayed.
+     */
+    protected function setTabNavigationIcon($color) {
+        $this->getTabNavigationItem()->setImage($this->getIcon($color));
+    }
+
+    /**
+     * Get the plugin's navigation bar item entry.
+     * @return object Navigation bar item.
+     */
+    protected function getTabNavigationItem() {
+        return Navigation::getItem($this->navlink);
+    }
+
+    /**
+     * Get image path to the plugin icon.
+     * @param string $color The color of the icon.
+     * return string Image path to the icon.
+     */
+    protected function getIcon($color) {
+        return Assets::image_path('icons/16/' . $color . '/forum.png');
+    }
+
+    /**
+     * Executes functions that have to be called by each action handler.
+     */
+    protected function actionHeader() {
+        Navigation::activateItem($this->navlink);
+        $this->setTabNavigationIcon('black');
+        $this->getTabNavigationItem()->addSubNavigation('show', new Navigation(_('RichText'), PluginEngine::getLink($this, array(), 'show')));
     }
 }
 
