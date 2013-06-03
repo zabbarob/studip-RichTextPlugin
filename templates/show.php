@@ -20,7 +20,7 @@ include 'infobox.php';
 <div id="body"><?=$body?></div>
 <br>
 <hr>
-<form id="edit_box" action="<?= PluginEngine::getLink('richtextplugin/edit') ?>" method="POST">
+<form id="edit_box" action="<?= PluginEngine::getLink('richtextplugin/edit_wysihtml5') ?>" method="POST">
     <?= CSRFProtection::tokenTag() ?>
     <?= makeButton('bearbeiten', 'input', false, 'edit') ?>
     <span style="vertical-align:top">with WysiHTML5</span>

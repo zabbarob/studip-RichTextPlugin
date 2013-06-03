@@ -1,6 +1,6 @@
 <?
 /**
- * show.php - Template for displaying the RichText plugin.
+ * edit_wysihtml5.php - Template for editing contents with WysiHTML5.
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -11,11 +11,7 @@
  * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
  * @category    Stud.IP
  */
-
-// show infobox
-include 'infobox.php';
-
-// show the toolbar and the actual editor component
+include 'infobox.php'; // show infobox
 ?>
 
 <input type="hidden" id="post_files_url" value="<?=PluginEngine::getLink('richtextplugin/post_file')?>">
@@ -68,6 +64,7 @@ include 'infobox.php';
 </div>
 
 <!-- the editor -->
+
 <form enctype="multipart/form-data" style="padding:10px" id="edit_box" action="<?=PluginEngine::getLink('richtextplugin/show')?>" method="POST">
     <?= CSRFProtection::tokenTag() ?>
     <textarea id="wysihtml5-editor" spellcheck="false" wrap="off" autofocus placeholder="Enter text..." name="body"><?=htmlReady($body);?></textarea>

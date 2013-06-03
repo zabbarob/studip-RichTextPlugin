@@ -22,6 +22,7 @@ require_once 'RichTextPluginUtils.php';
 class RichTextPlugin extends StudIPPlugin implements StandardPlugin
 {
     protected $navlink = '/course/rich'; // plugin location in tab navigation bar
+    protected $assets; // URL of assets folder; set in __construct()
 
     /**
      * Constructor of the class.
@@ -32,20 +33,18 @@ class RichTextPlugin extends StudIPPlugin implements StandardPlugin
     public function __construct() {
         parent::__construct();
         $this->template_factory = new Flexi_TemplateFactory($this->getPluginPath() . '/templates');
+        $this->assets = $this->getPluginURL() . '/assets/';
     }
 
     /**
      * Loads stylesheets and scripts needed for executing the plugin.
      */
     public function initialize () {
-        $assets = $this->getPluginURL() . '/assets/';
-        PageLayout::addStylesheet($assets . 'editor.css');
-        //PageLayout::addStylesheet('http://yui.yahooapis.com/2.9.0/build/reset/reset-min.css');
-        PageLayout::addStylesheet($assets . 'styles.css');
-        PageLayout::addScript($assets . 'advanced.js');
-        PageLayout::addScript($assets . 'wysihtml5-0.3.0.js');
-        PageLayout::addScript($assets . 'formdata.js');
-        PageLayout::addScript($assets . 'script.js');
+        PageLayout::addStylesheet($this->assets . 'editor.css');
+        PageLayout::addStylesheet($this->assets . 'styles.css');
+        $this->addScript('advanced.js');
+        $this->addScript('formdata.js');
+        $this->addScript('script.js');
     }
 
     /**
@@ -106,13 +105,30 @@ class RichTextPlugin extends StudIPPlugin implements StandardPlugin
     }
 
     /**
-     * Sets the fields in the plugin's edit.php template to correct values.
+     * Initialize edit_wysihtml5.php template for editing the page.
      */
-    public function edit_action() {
+    public function edit_wysihtml5_action() {
+        $this->initializeEditor('wysihtml5-0.3.0.js', 'edit_wysihtml5');
+    }
+
+    /**
+     * Initialize edit_tinymce.php template for editing the page.
+     */
+    public function edit_tinymce_action() {
+        $this->initializeEditor('tinymce/tinymce.min.js', 'edit_tinymce');
+    }
+
+    /**
+     * Initializes the editor given by its script and template.
+     * @param string $script Path to the editor's main JavaScript file.
+     * @param string $template Path to the editor's PHP template file.
+     */
+    public function initializeEditor($script, $template) {
         CSRFProtection::verifyUnsafeRequest();
         $this->actionHeader();
+        $this->addScript($script);
 
-        $template = $this->template_factory->open('edit');
+        $template = $this->template_factory->open($template);
         $template->set_layout($GLOBALS['template_factory']->open('layouts/base'));
 
         $template->body = $this->getBody();
@@ -121,23 +137,8 @@ class RichTextPlugin extends StudIPPlugin implements StandardPlugin
     }
 
     /**
-     * Sets the fields in the plugin's edit_tinymce.php template to correct values.
+     * Handle file upload requests.
      */
-    public function edit_tinymce_action() {
-        CSRFProtection::verifyUnsafeRequest();
-        $this->actionHeader();
-
-        $assets = $this->getPluginURL() . '/assets/';
-        PageLayout::addScript($assets . 'tinymce/tinymce.min.js');
-
-        $template = $this->template_factory->open('edit_tinymce');
-        $template->set_layout($GLOBALS['template_factory']->open('layouts/base'));
-
-        $template->body = $this->getBody();
-
-        echo $template->render();
-    }
-
     public function post_file_action() {
         CSRFProtection::verifyUnsafeRequest();
         $context = RichTextPluginUtils::getSeminarId();
@@ -191,7 +192,6 @@ class RichTextPlugin extends StudIPPlugin implements StandardPlugin
 
     /**
      * Retrieve text body from database.
-     * 
      * @return mixed  Text from database or FALSE if there is no text.
      */
     protected function getBody() {
@@ -203,7 +203,6 @@ class RichTextPlugin extends StudIPPlugin implements StandardPlugin
 
     /**
      * Store text body in database.
-     *
      * @param string $body  Text that is stored in the database.
      */
     protected function setBody($body) {
@@ -211,6 +210,14 @@ class RichTextPlugin extends StudIPPlugin implements StandardPlugin
         $db = DBManager::get();
         $stmt = $db->prepare("REPLACE INTO plugin_rich_text VALUES(?, ?)");
         $stmt->execute(array(RichTextPluginUtils::getSeminarId(), $clean_body));
+    }
+
+    /**
+     * Point to a JavaScript file in HTML <head>.
+     * @param string $path Path to the file. 
+     */
+    protected function addScript($path) {
+        PageLayout::addScript($this->assets . $path);
     }
 
     /**
