@@ -30,6 +30,11 @@ include 'infobox.php';
     <?= makeButton('bearbeiten', 'input', false, 'edit') ?>
     <span style="vertical-align:top">with TinyMCE</span>
 </form>
+<form action="<?= PluginEngine::getLink('richtextplugin/edit_nicedit') ?>" method="POST">
+    <?= CSRFProtection::tokenTag() ?>
+    <?= makeButton('bearbeiten', 'input', false, 'edit') ?>
+    <span style="vertical-align:top">with NicEdit</span>
+</form>
 <div><?=
 htmlReady($nothing) // contains message if there is no text in database
 ?></div>
