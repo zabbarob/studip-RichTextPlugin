@@ -119,6 +119,13 @@ class RichTextPlugin extends StudIPPlugin implements StandardPlugin
     }
 
     /**
+     * Initialize edit_nicedit.php template for editing the page.
+     */
+    public function edit_nicedit_action() {
+        $this->initializeEditor('nicEdit.js', 'edit_nicedit');
+    }
+
+    /**
      * Initializes the editor given by its script and template.
      * @param string $script Path to the editor's main JavaScript file.
      * @param string $template Path to the editor's PHP template file.

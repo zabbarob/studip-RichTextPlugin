@@ -23,6 +23,7 @@
 
     // needs to be executed when script is loaded to get the script's own dir
     var dir = getScriptDir();
+    window.nicEditorIcons = dir + 'nicEditorIcons.gif';
 
     // make sure code is only called after DOM structure is fully loaded
     $(function() {
