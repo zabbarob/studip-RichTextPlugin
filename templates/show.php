@@ -23,6 +23,12 @@ include 'infobox.php';
 <form id="edit_box" action="<?= PluginEngine::getLink('richtextplugin/edit') ?>" method="POST">
     <?= CSRFProtection::tokenTag() ?>
     <?= makeButton('bearbeiten', 'input', false, 'edit') ?>
+    <span style="vertical-align:top">with WysiHTML5</span>
+</form>
+<form action="<?= PluginEngine::getLink('richtextplugin/edit_tinymce') ?>" method="POST">
+    <?= CSRFProtection::tokenTag() ?>
+    <?= makeButton('bearbeiten', 'input', false, 'edit') ?>
+    <span style="vertical-align:top">with TinyMCE</span>
 </form>
 <div><?=
 htmlReady($nothing) // contains message if there is no text in database

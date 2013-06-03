@@ -106,13 +106,31 @@ class RichTextPlugin extends StudIPPlugin implements StandardPlugin
     }
 
     /**
-     * Sets the fields in the plugin's show.php template to correct values.
+     * Sets the fields in the plugin's edit.php template to correct values.
      */
     public function edit_action() {
         CSRFProtection::verifyUnsafeRequest();
         $this->actionHeader();
 
         $template = $this->template_factory->open('edit');
+        $template->set_layout($GLOBALS['template_factory']->open('layouts/base'));
+
+        $template->body = $this->getBody();
+
+        echo $template->render();
+    }
+
+    /**
+     * Sets the fields in the plugin's edit_tinymce.php template to correct values.
+     */
+    public function edit_tinymce_action() {
+        CSRFProtection::verifyUnsafeRequest();
+        $this->actionHeader();
+
+        $assets = $this->getPluginURL() . '/assets/';
+        PageLayout::addScript($assets . 'tinymce/tinymce.min.js');
+
+        $template = $this->template_factory->open('edit_tinymce');
         $template->set_layout($GLOBALS['template_factory']->open('layouts/base'));
 
         $template->body = $this->getBody();
