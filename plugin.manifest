@@ -2,7 +2,7 @@
 pluginname=Rich Text 
 pluginclassname=RichTextPlugin
 origin=virtUOS
-version=0.1a
+version=0.2
 description=A single-page rich text editor for Stud.IP.
 studipMinVersion=2.0
 dbscheme=sql/install.sql
