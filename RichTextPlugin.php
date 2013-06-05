@@ -54,8 +54,8 @@ class RichTextPlugin extends StudIPPlugin implements StandardPlugin
         if (!$this->isActivated($course_id)) {
             return;
         }
-	$icon = new AutoNavigation(_("RichText"), PluginEngine::getLink($this, array(), "show"));
-	$icon->setImage($this->getIcon('grey'));
+        $icon = new AutoNavigation(_("RichText"), PluginEngine::getLink($this, array(), "show"));
+        $icon->setImage($this->getIcon('grey'));
         $icon->setTitle(_("RichText-Editor"));
         return $icon;
     }
