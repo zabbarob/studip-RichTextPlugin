@@ -12,7 +12,17 @@ $infobox_content[] = array(
             'icon' => 'icons/16/black/info.png',
             'text' => _('Dateien k&ouml;nnen per Drag\'n\'Drop hochgeladen werden')),
         array(
-            'text' => _('<small><a href="https://github.com/zabbarob/studip-RichTextPlugin" target="_blank">RichText Plugin source on GitHub</a><a href="https://github.com/zabbarob/studip-RichTextPlugin" target="_blank"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_green_007200.png" alt="Fork me on GitHub"></a><br>powered by <a href="https://github.com/xing/wysihtml5" target="_blank">wysihtml5</a> and <a href="http://htmlpurifier.org/" target="_blank">HTML Purifier</a></small>'))));
+            'text' => _('<small>'
+            . '<a href="https://github.com/zabbarob/studip-RichTextPlugin" target="_blank">RichText plugin source on GitHub.</a>'
+            . '<a href="https://github.com/zabbarob/studip-RichTextPlugin" target="_blank">'
+            . '<img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_green_007200.png" alt="Fork me on GitHub">'
+            . '</a>'
+            . '<br>Powered by '
+            . '<a href="https://github.com/xing/wysihtml5" target="_blank">WysiHTML5</a>'
+            . ', <a href="http://www.tinymce.com/" target="_blank">TinyMCE</a>'
+            . ', <a href="http://nicedit.com/" target="_blank">NicEdit</a>'
+            . ' and <a href="http://htmlpurifier.org/" target="_blank">HTML Purifier</a>.'
+            . '</small>'))));
 
 $infobox = array(
     'picture' => 'infobox/board1.jpg',
