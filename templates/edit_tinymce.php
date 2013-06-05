@@ -11,8 +11,8 @@
  * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
  * @category    Stud.IP
  */
-
 include 'infobox.php'; // show infobox
+include 'errors.php'; // show errors
 ?>
 
 <input type="hidden" id="post_files_url" value="<?=PluginEngine::getLink('richtextplugin/post_file')?>">

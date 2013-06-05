@@ -11,9 +11,8 @@
  * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
  * @category    Stud.IP
  */
-
-// show infobox
-include 'infobox.php';
+include 'infobox.php'; // show infobox
+include 'errors.php'; // show errors
 
 // show the current text from the database
 ?>

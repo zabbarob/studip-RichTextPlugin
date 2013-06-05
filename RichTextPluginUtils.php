@@ -130,6 +130,7 @@ class RichTextPluginUtils {
             if (in_array($pu['first_target'], $internal_targets)) {
                 return idna_link(TransformInternalLinks($url));
             }
+            $GLOBALS['msg'][] = 'Invalid internal link removed: ' . htmlentities($url);
             return NULL; // invalid internal link ==> remove <img src> attribute
         }
         if ($LOAD_EXTERNAL_MEDIA === "proxy" && Seminar_Session::is_current_session_authenticated()) {
@@ -138,6 +139,7 @@ class RichTextPluginUtils {
         if ($LOAD_EXTERNAL_MEDIA === 'allow') {
             return $url;
         }
+        $GLOBALS['msg'][] = 'External media denied: ' . htmlentities($url);
         return NULL; // deny external media ==> remove <img src> attribute
     }
 }
