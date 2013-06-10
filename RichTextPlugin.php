@@ -23,6 +23,7 @@ class RichTextPlugin extends StudIPPlugin implements StandardPlugin
 {
     protected $navlink = '/course/rich'; // plugin location in tab navigation bar
     protected $assets; // URL of assets folder; set in __construct()
+    protected $edit_permission = 'autor'; // minimum permission level for editing
 
     /**
      * Constructor of the class.
@@ -134,7 +135,7 @@ class RichTextPlugin extends StudIPPlugin implements StandardPlugin
      * @param string $template Path to the editor's PHP template file.
      */
     public function initializeEditor($script, $template) {
-        CSRFProtection::verifyUnsafeRequest();
+        $this->verifyUnsafeRequest();
         $this->actionHeader();
         $this->addScript($script);
 
@@ -150,16 +151,10 @@ class RichTextPlugin extends StudIPPlugin implements StandardPlugin
      * Handle file upload requests.
      */
     public function post_file_action() {
-        CSRFProtection::verifyUnsafeRequest();
+        RichTextPluginUtils::verifyPostRequest();
+        $this->verifyUnsafeRequest();
+
         $context = RichTextPluginUtils::getSeminarId();
-        /* TODO security-check?
-        $context = Request::option("context") ? Request::get("context") : $GLOBALS['user']->id;
-        $context_type = Request::option("context_type");
-        if (!Request::isPost()
-                || ($context_type === "course" && !$GLOBALS['perm']->have_studip_perm("autor", $context))) {
-            throw new AccessDeniedException("Kein Zugriff");
-        }
-        */
 
         // get file folder, create if it doesn't exist
         $folder_id = md5('RichText_' . $context);
@@ -262,6 +257,14 @@ class RichTextPlugin extends StudIPPlugin implements StandardPlugin
         Navigation::activateItem($this->navlink);
         $this->setTabNavigationIcon('black');
         $this->getTabNavigationItem()->addSubNavigation('show', new Navigation(_('RichText'), PluginEngine::getLink($this, array(), 'show')));
+    }
+
+    /**
+     * Verify that user has edit permission and correct security token.
+     */
+    public function verifyUnsafeRequest() {
+        RichTextPluginUtils::verifyPermission($this->edit_permission);
+        CSRFProtection::verifyUnsafeRequest();
     }
 }
 

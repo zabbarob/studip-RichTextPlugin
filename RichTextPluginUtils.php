@@ -179,5 +179,25 @@ class RichTextPluginUtils {
         $GLOBALS['msg'][] = 'External media denied: ' . htmlentities($url);
         return NULL; // deny external media ==> remove <img src> attribute
     }
+
+    /**
+     * Verify that user has requested permission, throw exception if not.
+     * @param string $permission Minimum requested permission level.
+     */
+    public function verifyPermission($permission) {
+        $context = RichTextPluginUtils::getSeminarId();
+        if (!$GLOBALS['perm']->have_studip_perm($permission, $context)) {
+            throw new AccessDeniedException(sprintf(studip_utf8decode(_('Es werden mindestens "%s"-Zugriffsrechte benötigt.')), $permission));
+        }
+    }
+
+    /**
+     * Verify that HTTP request was send as HTTP POST, throw exception if not.
+     */
+    public function verifyPostRequest() {
+        if (!Request::isPost()) {
+            throw new AccessDeniedException(_('Die Anfrage muss als HTTP POST gestellt werden.'));
+        }
+    }
 }
 
