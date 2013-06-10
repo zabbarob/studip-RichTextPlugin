@@ -104,6 +104,36 @@ class RichTextPluginUtils {
     }
 
     /**
+     * Test if string starts with prefix.
+     *
+     * @param string $string The string that must start with the prefix.
+     * @param string $prefix The prefix of the string.
+     *
+     * @return boolean  True if string starts with prefix.
+     *                  False if string does not start with prefix.
+     */
+    public static function startsWith($string, $prefix) {
+        return substr($string, 0, strlen($prefix)) === $prefix;
+    }
+
+    /**
+     * Remove prefix from string.
+     *
+     * Does not change the string if it has a different prefix.
+     *
+     * @param string $string The string that must start with the prefix.
+     * @param string $prefix The prefix of the string.
+     *
+     * @return string String without prefix.
+     */
+    public static function removePrefix($string, $prefix) {
+        if (RichTextPluginUtils::startsWith($string, $prefix)) {
+            return substr($string, strlen($prefix));
+        }
+        return $string;
+    }
+
+    /**
      * Check if media proxy should be used and if so return the respective URL.
      *
      * @param string $url   URL to media file.
@@ -111,8 +141,16 @@ class RichTextPluginUtils {
      *                      or NULL if URL is invalid.
      */
     public static function getMediaUrl($url) {
+        // some values we need later
         $studip_path = $GLOBALS['CANONICAL_RELATIVE_PATH_STUDIP'];
         $LOAD_EXTERNAL_MEDIA = Config::GetInstance()->getValue('LOAD_EXTERNAL_MEDIA');
+        $base_url = $GLOBALS['ABSOLUTE_URI_STUDIP'];
+        $media_proxy = $base_url . 'dispatch.php/media_proxy?url=';
+
+        // clean up URLs that already access the media proxy
+        if (RichTextPluginUtils::startsWith($url, $media_proxy)) {
+            $url = urldecode(RichTextPluginUtils::removePrefix($url, $media_proxy));
+        }
 
         $pu = @parse_url($url);
         $url_is_http = $pu['scheme'] == 'http' || $pu['scheme'] == 'https';
@@ -120,10 +158,9 @@ class RichTextPluginUtils {
             || $pu['host'] . ':' . $pu['port'] == $_SERVER['HTTP_HOST'];
         $url_is_studip = strpos($pu['path'], $studip_path) === 0;
 
-        // NOTE in original code $intern is undefined if not true
-        $intern = $url_is_http && $url_is_on_host && $url_is_studip;
+        $url_is_intern = $url_is_http && $url_is_on_host && $url_is_studip;
 
-        if ($intern) {
+        if ($url_is_intern) {
             $pu_path = substr($pu['path'], strlen($studip_path));
             list($pu['first_target']) = explode('/', $pu_path);
             $internal_targets = array('sendfile.php', 'download', 'assets', 'pictures');
@@ -134,7 +171,7 @@ class RichTextPluginUtils {
             return NULL; // invalid internal link ==> remove <img src> attribute
         }
         if ($LOAD_EXTERNAL_MEDIA === "proxy" && Seminar_Session::is_current_session_authenticated()) {
-            return $GLOBALS['ABSOLUTE_URI_STUDIP'] . 'dispatch.php/media_proxy?url=' . urlencode(idna_link($url));
+            return $media_proxy . urlencode(idna_link($url));
         }
         if ($LOAD_EXTERNAL_MEDIA === 'allow') {
             return $url;
