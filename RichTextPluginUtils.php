@@ -78,11 +78,20 @@ class RichTextPluginUtils {
         )->fetch(PDO::FETCH_COLUMN, 0);
     }
 
-    public static function createFolder($range_id, $folder_id, $folder_name, $description=null) {
+    /**
+     * Get ID of a Stud.IP folder, create the folder if it doesn't exist.
+     * @param string $name        Name of the folder.
+     * @param string $description Description of the folder (optional and only 
+     *                            used if folder doesn't exist).
+     * @return string The ID of the Stud.IP folder.
+     */
+    static public function getFolderId($name, $description=null) {
+        $seminar_id = RichTextPluginUtils::getSeminarId();
+        $folder_id = md5($name . '_' . $seminar_id);
         $db = DBManager::get();
-        $db->exec('INSERT IGNORE INTO folder '
-            . 'SET folder_id = ' . $db->quote($folder_id)
-            . ', range_id = ' . $db->quote($range_id)
+        $db->exec('INSERT IGNORE INTO folder SET '
+            . 'folder_id = ' . $db->quote($folder_id)
+            . ', range_id = ' . $db->quote($seminar_id)
             . ', user_id = ' . $db->quote($GLOBALS['user']->id)
             . ', name = ' . $db->quote($folder_name)
             . ', permission = ' . $db->quote(7)
@@ -90,14 +99,68 @@ class RichTextPluginUtils {
             . ', chdate = ' . $db->quote(time())
             . ', description = ' . $db->quote($description) 
         );
+        return $folder_id;
     }
 
-    public static function getStudipDocumentData($seminar_id, $folder_id, $file) {
+    /**
+     * Create a new Stud.IP document from an uploaded file.
+     *
+     * @param array  $file      Metadata of uploaded file.
+     * @param string $folder_id ID of Stud.IP folder to which file is uploaded.
+     *
+     * @return StudipDocument   The created Stud.IP document.
+     * @throws AccessDeniedException if file is forbidden or upload failed.
+     */
+    static public function uploadFile($file, $folder_id) {
+        RichTextPluginUtils::verifyUpload($file); // throw exception if file forbidden
+
+        $newfile = StudipDocument::createWithFile(
+            $file['tmp_name'],
+            RichTextPluginUtils::getStudipDocumentData($folder_id, $file));
+
+        if (!$newfile) { // file creation failed
+            throw new AccessDeniedException(
+                _('Stud.IP-Dokument konnte nicht erstellt werden.'));
+        }
+
+        return $newfile;
+    }
+
+    /**
+     * Verify that it is allowed to upload the file.
+     * @param Array $file PHP file info array of uploaded file.
+     * @throws AccessDeniedException if file is forbidden by Stud.IP settings.
+     */
+    public static function verifyUpload($file) {
+        $GLOBALS['msg'] = ''; // validate_upload will store messages here
+        if (!validate_upload($file)) { // upload is forbidden
+            // remove error pattern from message
+            $error_pattern = utf8_decode('/error§(.+)§/');
+            $message = preg_replace($error_pattern, '$1', $GLOBALS['msg']);
+
+            // clear global messages and throw exception
+            $GLOBALS['msg'] = '';
+            throw new AccessDeniedException(
+                studip_utf8encode(decodeHTML($message)));
+        }
+    }
+
+    /**
+     * Initialize Stud.IP metadata array for creating a new Stud.IP document.
+     *
+     * @param string $folder_id     ID of Stud.IP folder in which the document
+     *                              is generated.
+     * @param array  $file          Array containing metadata of the uploaded
+     *                              file.
+     *
+     * @return array    Stud.IP document metadata
+     */
+    public static function getStudipDocumentData($folder_id, $file) {
         $filename = studip_utf8decode($file['name']);
         $document['name'] = $document['filename'] = $filename;
         $document['user_id'] = $GLOBALS['user']->id;
         $document['author_name'] = get_fullname();
-        $document['seminar_id'] = $seminar_id;
+        $document['seminar_id'] = RichTextPluginUtils::getSeminarId();
         $document['range_id'] = $folder_id;
         $document['filesize'] = $file['size'];
         return $document;
@@ -181,8 +244,9 @@ class RichTextPluginUtils {
     }
 
     /**
-     * Verify that user has requested permission, throw exception if not.
+     * Verify that user has needed permission.
      * @param string $permission Minimum requested permission level.
+     * @throws AccessDeniedException if user does not have permission.
      */
     public function verifyPermission($permission) {
         $context = RichTextPluginUtils::getSeminarId();
@@ -192,7 +256,8 @@ class RichTextPluginUtils {
     }
 
     /**
-     * Verify that HTTP request was send as HTTP POST, throw exception if not.
+     * Verify that HTTP request was send as HTTP POST
+     * @throws AccessDeniedException if request was not send as HTTP POST.
      */
     public function verifyPostRequest() {
         if (!Request::isPost()) {

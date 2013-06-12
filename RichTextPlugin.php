@@ -154,43 +154,25 @@ class RichTextPlugin extends StudIPPlugin implements StandardPlugin
         RichTextPluginUtils::verifyPostRequest();
         $this->verifyUnsafeRequest();
 
-        $context = RichTextPluginUtils::getSeminarId();
-
-        // get file folder, create if it doesn't exist
-        $folder_id = md5('RichText_' . $context);
-        $description = studip_utf8decode(_('Enthält vom RichText-Plugin hochgeladene Dateien.'));
-        RichTextPluginUtils::createFolder($context, $folder_id, 'RichText', $description);
-
         // store uploaded files as StudIP documents
-        $output = array();
+        $output = array(); // data for HTTP response
+        $folder_id = RichTextPluginUtils::getFolderId(
+            'RichText',
+            studip_utf8decode(_('Enthält vom RichText-Plugin hochgeladene Dateien.')));
 
         foreach ($_FILES as $file) {
-            /*
-            $GLOBALS['msg'] = '';
-            if ($context_type === "course") {
-                validate_upload($file);
-                if ($GLOBALS['msg']) {
-                    $output['errors'][] = $file['name'] . ': ' . studip_utf8encode(decodeHTML(trim(substr($GLOBALS['msg'],6), '§')));
-                    continue;
-                }
+            try {
+                $newfile = RichTextPluginUtils::uploadFile($file, $folder_id);
+                $output['inserts'][] = Array(
+                    'name' => $newfile['filename'],
+                    'type' => $file['type'],
+                    'url' => GetDownloadLink($newfile->getId(), $newfile['filename']));
+            } catch (AccessDeniedException $e) { // creation of Stud.IP doc failed
+                // TODO output format for errors should be similar to inserts
+                $output['errors'][] = $file['name'] . ': ' . $e->getMessage();
             }
-            */
-
-            // create studip file
-            $document = RichTextPluginUtils::getStudipDocumentData($context, $folder_id, $file);
-            $newfile = StudipDocument::createWithFile($file['tmp_name'], $document);
-            if (!$newfile) {
-                continue; // file creation failed TODO store error message
-            }
-
-            $url = GetDownloadLink($newfile->getId(), $newfile['filename']);
-
-            // return file info (name, type, url)
-            $output['inserts'][] = Array(
-                'name' => $newfile['filename'],
-                'type' => $file['type'],
-                'url' => $url);
         }
+
         header('Content-type: application/json; charset=utf-8');
         echo json_encode($output);
     }
