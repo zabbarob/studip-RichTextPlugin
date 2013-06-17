@@ -31,12 +31,11 @@ include 'errors.php'; // show errors
 
 <!-- initialize NicEdit -->
 
-<!-- <script src="http://js.nicedit.com/nicEdit-latest.js" type="text/javascript"></script> -->
 <script type="text/javascript">
-bkLib.onDomLoaded(/*nicEditors.allTextAreas*/function(){
+bkLib.onDomLoaded(function(){
     new nicEditor({
         fullPanel: true,
-        iconsPath: window.nicEditorIcons // set in script.js
+        iconsPath: richTextPlugin.dir + 'nicEditorIcons.gif' // set in script.js
     }).panelInstance('nicedit-editor');
 });
 </script>

@@ -76,3 +76,88 @@ include 'errors.php'; // show errors
     </p>
 </form>
 
+<!-- initialize WysiHTML5 -->
+<script type="text/javascript">
+// make sure code is only called after DOM structure is fully loaded
+jQuery(function() {
+    // initialize and configure editor
+    var editor = new wysihtml5.Editor('wysihtml5-editor', {
+        toolbar:     'wysihtml5-editor-toolbar',
+        stylesheets: [
+            'http://yui.yahooapis.com/2.9.0/build/reset/reset-min.css',
+            richTextPlugin.dir + 'editor.css',
+            richTextPlugin.dir + 'wysihtml5-colors.css'],
+        parserRules: wysihtml5ParserRules
+    });
+
+    // insert newlines after <br>, <h1> (<h2>, <h3>, ...), <ol>, <ul>, <li>
+    editor.on('change_view', function() {
+        var editor_body = $($(".wysihtml5-sandbox")[0].contentWindow.document.body);
+        var html = editor_body.html();
+        var tags = /<br>|<\/h\d>|<[ou]l>|<\/[ou]l>|<\/li>/gi;
+        html = html.replace(tags, function(match) {
+            return match + '\n';
+        }).replace(/\n\n/g,'\n');
+        editor_body.html(html);
+    });
+
+    // call-backs for drag'n'drop event handler
+    var callback = {
+        startUpload: function() {
+            textarea.addClass('uploading');
+        },
+        stopUpload: function() {
+            textarea.trigger('keydown');
+            textarea.removeClass('uploading');
+        },
+        insertImage: function(that, file) {
+            var image = {
+                src: file.url,
+                    alt: file.name,
+                    title: file.name
+            };
+
+            editor.composer.commands.exec('insertImage', image);
+
+            // NOTE workaround: if wysihtml is in "show HTML" mode then 
+            // editor.composer.commands.exec('insertImage') does not work
+            if (that == textarea[0]) {
+                var html = $('<div>').append($('<img>', image)).html();
+                textarea.val(textarea.val() + html);
+            }
+        },
+        insertLink: function(that, file) {
+            var html = $('<div>').append($('<a>', {
+                target: '_blank',
+                    rel: 'nofollow',
+                    text: file.name,
+                    type: file.type,
+                    href: file.url
+            })).html();
+
+            editor.focus();
+            editor.composer.commands.exec('insertHTML', html);
+
+            // NOTE workaround: if wysihtml is in "show HTML" mode then 
+            // editor.composer.commands.exec('insertHTML') does not work
+            if (that == textarea[0]) {
+                textarea.val(textarea.val() + html);
+            }
+
+        }
+    };
+
+    // handle drag'n'drop events
+    var dropHandler = richTextPlugin.getDropHandler(callback);
+
+    //editor.on('drop', dropHandler); // doesn't work
+    //editor.on('paste', dropHandler); // doesn't work
+    var editor_body = $(".wysihtml5-sandbox")[0].contentWindow.document.body;
+    $(editor_body).on('drop', dropHandler);
+
+    var textarea = $('#wysihtml5-editor'); // in HTML view mode editor_body doesn't get drop event
+    //textarea.on('dragover', ignoreEvent);
+    //textarea.on('dragenter', ignoreEvent);
+    textarea.on('drop', dropHandler);
+});
+</script>

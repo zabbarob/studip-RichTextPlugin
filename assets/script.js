@@ -21,60 +21,20 @@
         return path.split('/').slice(0, -1).join('/') + '/'; // remove filename
     };
 
-    // needs to be executed when script is loaded to get the script's own dir
-    var dir = getScriptDir();
-    window.nicEditorIcons = dir + 'nicEditorIcons.gif';
+    // drop files
+    var isImage = function(mime_type) {
+        return (typeof mime_type) === 'string' && mime_type.match('^image');
+    };
+    var isSVG = function(mime_type) {
+        return (typeof mime_type) === 'string' && mime_type === 'image/svg+xml';
+    };
+    var ignoreEvent = function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+    };
 
-    // make sure code is only called after DOM structure is fully loaded
-    $(function() {
-
-        // initialize and configure editor
-        var editor = new wysihtml5.Editor('wysihtml5-editor', {
-            toolbar:     'wysihtml5-editor-toolbar',
-            stylesheets: [
-                'http://yui.yahooapis.com/2.9.0/build/reset/reset-min.css',
-                dir + 'editor.css',
-                dir + 'wysihtml5-colors.css'],
-            parserRules: wysihtml5ParserRules
-        });
-
-        // give user the option to undo clicking 'cancel' button
-        $('input[name="cancel"]').click(function(e){
-            // TODO internationalize warning message
-            var warning = 'If you select "OK" your edits will not be saved! Select "Cancel" to continue editing.';
-            if (!confirm(warning)) {
-                e.preventDefault();
-            }
-        });
-
-        // drop files
-        var isImage = function(mime_type) {
-            return (typeof mime_type) === 'string' && mime_type.match('^image');
-        };
-        var isSVG = function(mime_type) {
-            return (typeof mime_type) === 'string' && mime_type === 'image/svg+xml';
-        };
-        var ignoreEvent = function(e) {
-            e.preventDefault();
-            e.stopPropagation();
-        };
-
-        var textarea = $('#wysihtml5-editor');
-        //textarea = $('#dropbox');
-        //textarea.on('dragover', ignoreEvent);
-        //textarea.on('dragenter', ignoreEvent);
-        
-        editor.on('change_view', function() {
-            var editor_body = $($(".wysihtml5-sandbox")[0].contentWindow.document.body);
-            var html = editor_body.html();
-            var tags = /<br>|<\/h\d>|<[ou]l>|<\/[ou]l>|<\/li>/gi;
-            html = html.replace(tags, function(match) {
-                return match + '\n';
-            }).replace(/\n\n/g,'\n');
-            editor_body.html(html);
-        });
-
-        var dropHandler = function(event) {
+    var getDropHandler = function(callBack) {
+        return function(event) {
             var that = this;
             ignoreEvent(event);
 
@@ -94,12 +54,10 @@
             }
 
             // post dropped files to server
-            textarea.addClass('uploading');
+            callBack.startUpload();
 
-            var url = $('#post_files_url').val(); // must be set in view/edit template
-            
             $.ajax({
-                'url': url,
+                'url': $('#post_files_url').val(), // must be set in edit template
                 'data': data,
                 'cache': false,
                 'contentType': false,
@@ -118,52 +76,11 @@
                 'success': function(json) {
                     if (typeof json.inserts === 'object') {
                         $.each(json.inserts, function(index, file) {
-
-                            // console.log(file);
-
                             // NOTE StudIP sends SVGs as application/octet-stream
                             if (isImage(file.type) && !isSVG(file.type)) {
-
-                                // console.log('insert image:');
-
-                                editor.composer.commands.exec('insertImage', {
-                                    src: file.url,
-                                    alt: file.name,
-                                    title: file.name
-                                });
-
-                                // NOTE workaround: if wysihtml is in "show HTML"
-                                // mode then editor.*.exec('insertHTML') does not
-                                // work
-                                if (that == textarea[0]) {
-                                    var html = $('<div>').append($('<img>', {
-                                        src: file.url,
-                                        alt: file.name,
-                                        title: file.name
-                                    })).html();
-                                    textarea.val(textarea.val() + html);
-                                }
+                                callBack.insertImage(that, file);
                             } else {
-                                var html = $('<div>').append($('<a>', {
-                                    target: '_blank',
-                                    rel: 'nofollow',
-                                    text: file.name,
-                                    type: file.type,
-                                    href: file.url
-                                })).html();
-
-                                // console.log(html);
-
-                                // NOTE workaround: if wysihtml is in "show HTML"
-                                // mode then editor.*.exec('insertHTML') does not
-                                // work
-                                if (that == textarea[0]) {
-                                    textarea.val(textarea.val() + html);
-                                }
-
-                                // insert link
-                                editor.focus();
-                                editor.composer.commands.exec('insertHTML', html);
+                                callBack.insertLink(that, file);
                             }
                         });
                     }
@@ -172,19 +89,30 @@
                     } else if (typeof json.inserts !== 'object') {
                         alert('Das Hochladen der Datei(en) ist fehlgeschlagen.');
                     }
-                    textarea.trigger('keydown');
                 },
                 'complete': function() {
-                    textarea.removeClass('hovered uploading');
+                    callBack.stopUpload();
                 }
             }); // $.ajax
         }; // dropHandler
+    }; // getDropHandler
 
-        //editor.on('paste', dropHandler); // doesn't work
-        //editor.on('drop', dropHandler); // doesn't work
-        textarea.on('drop', dropHandler);
-        var editor_body = $(".wysihtml5-sandbox")[0].contentWindow.document.body;
-        $(editor_body).on('drop', dropHandler);
+    // needs to be executed when script is loaded to get the script's own dir
+    window.richTextPlugin = {
+        dir: getScriptDir(),
+        getDropHandler: getDropHandler
+    }
+
+    // make sure code is only called after DOM structure is fully loaded
+    $(function() {
+        // give user the option to undo clicking 'cancel' button
+        $('input[name="cancel"]').click(function(e){
+            // TODO internationalize warning message
+            var warning = 'If you select "OK" your edits will not be saved! Select "Cancel" to continue editing.';
+            if (!confirm(warning)) {
+                e.preventDefault();
+            }
+        });
     }); // $(function() {
 }(jQuery));
 
