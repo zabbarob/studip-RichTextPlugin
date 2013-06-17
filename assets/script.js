@@ -33,7 +33,8 @@
             toolbar:     'wysihtml5-editor-toolbar',
             stylesheets: [
                 'http://yui.yahooapis.com/2.9.0/build/reset/reset-min.css',
-                dir + 'editor.css'],
+                dir + 'editor.css',
+                dir + 'wysihtml5-colors.css'],
             parserRules: wysihtml5ParserRules
         });
 

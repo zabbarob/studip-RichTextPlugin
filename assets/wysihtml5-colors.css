@@ -1,0 +1,77 @@
+/**
+ * wysihtml5-colors.css - CSS styles for editing with WysiHTML5.
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License as
+ * published by the Free Software Foundation; either version 2 of
+ * the License, or (at your option) any later version.
+ *
+ * @author      Robert Costa <zabbarob@gmail.com>
+ * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
+ * @category    Stud.IP
+ */
+
+.wysiwyg-color-black {
+  color: black;
+}
+
+.wysiwyg-color-silver {
+  color: silver;
+}
+
+.wysiwyg-color-gray {
+  color: gray;
+}
+
+.wysiwyg-color-white {
+  color: white;
+}
+
+.wysiwyg-color-maroon {
+  color: maroon;
+}
+
+.wysiwyg-color-red {
+  color: red;
+}
+
+.wysiwyg-color-purple {
+  color: purple;
+}
+
+.wysiwyg-color-fuchsia {
+  color: fuchsia;
+}
+
+.wysiwyg-color-green {
+  color: green;
+}
+
+.wysiwyg-color-lime {
+  color: lime;
+}
+
+.wysiwyg-color-olive {
+  color: olive;
+}
+
+.wysiwyg-color-yellow {
+  color: yellow;
+}
+
+.wysiwyg-color-navy {
+  color: navy;
+}
+
+.wysiwyg-color-blue {
+  color: blue;
+}
+
+.wysiwyg-color-teal {
+  color: teal;
+}
+
+.wysiwyg-color-aqua {
+  color: aqua;
+}
+

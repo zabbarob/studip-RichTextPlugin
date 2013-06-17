@@ -41,8 +41,8 @@ class RichTextPlugin extends StudIPPlugin implements StandardPlugin
      * Loads stylesheets and scripts needed for executing the plugin.
      */
     public function initialize () {
-        PageLayout::addStylesheet($this->assets . 'editor.css');
         PageLayout::addStylesheet($this->assets . 'styles.css');
+        PageLayout::addStylesheet($this->assets . 'wysihtml5-colors.css');
         $this->addScript('advanced.js');
         $this->addScript('formdata.js');
         $this->addScript('script.js');
@@ -112,6 +112,7 @@ class RichTextPlugin extends StudIPPlugin implements StandardPlugin
      * Initialize edit_wysihtml5.php template for editing the page.
      */
     public function edit_wysihtml5_action() {
+        PageLayout::addStylesheet($this->assets . 'wysihtml5.css');
         $this->initializeEditor('wysihtml5-0.3.0.js', 'edit_wysihtml5');
     }
 
