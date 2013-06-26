@@ -196,6 +196,30 @@ class RichTextPluginUtils {
         return $string;
     }
 
+    public static function testMediaUrl($a, $b) {
+        $c = RichTextPluginUtils::getMediaUrl($a);
+        assert($c == $b, "getMediaUrl($a)\n== $c\n!= $b\n");
+    }
+
+    public static function testGetMediaUrl() {
+        header('Content-type: text/plain; charset=utf-8');
+
+        // studip must be at localhost:8080/studip for tests to work
+        // LOAD_EXTERNAL_MEDIA must be set to 'proxy'
+        $studip_document = 'http://localhost:8080/studip/sendfile.php?type=0&file_id=abc123&file_name=test.jpg';
+        $studip_document_ip = 'http://127.0.0.1:8080/studip/sendfile.php?type=0&file_id=abc123&file_name=test.jpg';
+        $external_document = 'http://pflanzen-enzyklopaedie.eu/wp-content/uploads/2012/11/Sumpfdotterblume-multiplex-120x120.jpg';
+        $proxy_document = 'http://localhost:8080/studip/dispatch.php/media_proxy?url=http%3A%2F%2Fpflanzen-enzyklopaedie.eu%2Fwp-content%2Fuploads%2F2012%2F11%2FSumpfdotterblume-multiplex-120x120.jpg';
+        $studip_document_no_domain = '/studip/sendfile.php?type=0&file_id=abc123&file_name=test.jpg';
+
+        RichTextPluginUtils::testMediaUrl($studip_document, $studip_document);
+        RichTextPluginUtils::testMediaUrl('invalid url', NULL);
+        RichTextPluginUtils::testMediaUrl($studip_document_ip, $studip_document);
+        RichTextPluginUtils::testMediaUrl($external_document, $proxy_document);
+        RichTextPluginUtils::testMediaUrl($proxy_document, $proxy_document);
+        RichTextPluginUtils::testMediaUrl($studip_document_no_domain, $studip_document);
+    }
+
     /**
      * Check if media proxy should be used and if so return the respective URL.
      *
@@ -206,49 +230,101 @@ class RichTextPluginUtils {
     public static function getMediaUrl($url) {
         error_log('getMediaUrl ' . $url);
 
-        // some values we need later
-        $base_url = $GLOBALS['ABSOLUTE_URI_STUDIP'];
-        $media_proxy = $base_url . 'dispatch.php/media_proxy?url=';
-        $LOAD_EXTERNAL_MEDIA = Config::GetInstance()->getValue('LOAD_EXTERNAL_MEDIA');
-
-        error_log('studip base: ' . $base_url);
-        error_log('media proxy: ' . $media_proxy);
-        error_log('load extern: ' . $LOAD_EXTERNAL_MEDIA);
-
-        // clean up URLs that already access the media proxy
-        if (RichTextPluginUtils::startsWith($url, $media_proxy)) {
-            $url = urldecode(RichTextPluginUtils::removePrefix($url, $media_proxy));
+        // handle internal media links
+        $url = RichTextPluginUtils::decodeMediaProxyUrl($url);
+        if (RichTextPluginUtils::isStudipMediaUrl($url)) {
+            error_log('isStudipMediaUrl');
+            // TODO remove scheme+host from internal Stud.IP URLs?
+            return RichTextPluginUtils::tranformInternalIdnaLink($url);
         }
-
         if (RichTextPluginUtils::isStudipUrl($url)) {
-            error_log('isStudipUrl');
-
-            $url_path = @parse_url($url, PHP_URL_PATH);
-            $studip_path = @parse_url($GLOBALS['ABSOLUTE_URI_STUDIP'], PHP_URL_PATH);
-
-            $path = RichTextPluginUtils::removePrefix($url_path, $studip_path);
-
-            error_log('url path: ' . $path);
-
-            if (RichTextPluginUtils::isStudipMediaUrlPath($path)) {
-                // TODO remove scheme+host from internal Stud.IP URLs
-                return idna_link(TransformInternalLinks($url));
-            }
+            error_log('invalid internal link');
             $GLOBALS['msg'][] = 'Invalid internal link removed: ' . htmlentities($url);
             return NULL; // invalid internal link ==> remove <img src> attribute
         }
-        if ($LOAD_EXTERNAL_MEDIA === 'proxy' && Seminar_Session::is_current_session_authenticated()) {
+
+        // handle external media links
+        $external_media = Config::GetInstance()->getValue('LOAD_EXTERNAL_MEDIA');
+        if ($external_media === 'proxy' && Seminar_Session::is_current_session_authenticated()) {
             error_log('load proxy');
             // TODO remove scheme+host from internal media proxy
-            // TODO can media proxy be external at all?
-            return $media_proxy . urlencode(idna_link($url));
+            // TODO can media proxy be external?
+            return RichTextPluginUtils::encodeMediaProxyUrl($url);
         }
-        if ($LOAD_EXTERNAL_MEDIA === 'allow') {
+        if ($external_media === 'allow') {
             error_log('load external');
             return $url;
         }
+        error_log('External media denied: ' . $url);
         $GLOBALS['msg'][] = 'External media denied: ' . htmlentities($url);
         return NULL; // deny external media ==> remove <img src> attribute
+    }
+
+    public static function tranformInternalIdnaLink($url) {
+        return idna_link(TransformInternalLinks($url));
+    }
+
+    public static function encodeMediaProxyUrl($url) {
+        $base_url = $GLOBALS['ABSOLUTE_URI_STUDIP'];
+        $media_proxy = $base_url . 'dispatch.php/media_proxy?url=';
+        return RichTextPluginUtils::tranformInternalIdnaLink(
+            $media_proxy . urlencode(idna_link($url)));
+    }
+
+    /**
+     * Test if an URL points to a valid internal Stud.IP media path.
+     *
+     * @param string $url Internal Stud.IP URL.
+     * @returns boolean TRUE for internal media link URLs.
+     *                  FALSE otherwise.
+     */
+    public static function isStudipMediaUrl($url) {
+        if (!RichTextPluginUtils::isStudipUrl($url)) {
+            return FALSE; # external link
+        }
+        return RichTextPluginUtils::isStudipMediaUrlPath(
+            RichTextPluginUtils::getStudipRelativePath($url));
+    }
+
+    /**
+     * Returns a URL's path component with the absolute Stud.IP path removed.
+     *
+     * NOTE: If the URL is not an internal Stud.IP URL, the path component will
+     * nevertheless be returned without issuing an error message.
+     *
+     * Example:
+     * >>> getStudipRelativePath('http://localhost:8080'
+     *      . '/studip/sendfile.php?type=0&file_id=ABC123&file_name=nice.jpg')
+     * 'sendfile.php'
+     *
+     * @param string $url   The URL from which to return the Stud.IP-relative 
+     *                      path component.
+     * returns string Stud.IP-relative path component of $url.
+     */
+    public static function getStudipRelativePath($url) {
+        return RichTextPluginUtils::removePrefix(
+            @parse_url(RichTextPluginUtils::tranformInternalIdnaLink($url))['path'],
+            RichTextPluginUtils::getParsedStudipUrl()['path']);
+    }
+
+    /**
+     * Extracts the original URL from a media proxy URL.
+     * @param string $url The media proxy URL.
+     * return string The original URL. If $url does not point to the media 
+     *               proxy then this is the exact same value given by $url.
+     */
+    public static function decodeMediaProxyUrl($url) {
+        $base_url = $GLOBALS['ABSOLUTE_URI_STUDIP'];
+        $media_proxy = $base_url . 'dispatch.php/media_proxy?url=';
+
+        error_log('studip base: ' . $base_url);
+        error_log('media proxy: ' . $media_proxy);
+
+        $transformed_url = RichTextPluginUtils::tranformInternalIdnaLink($url);
+        if (RichTextPluginUtils::startsWith($transformed_url, $media_proxy)) {
+            return urldecode(RichTextPluginUtils::removePrefix($transformed_url, $media_proxy));
+        }
+        return $url;
     }
 
     /**
@@ -258,7 +334,7 @@ class RichTextPluginUtils {
      *                      otherwise FALSE.
      */
     public static function isStudipUrl($url) {
-        $studip_url = @parse_url($GLOBALS['ABSOLUTE_URI_STUDIP']);
+        $studip_url = RichTextPluginUtils::getParsedStudipUrl();
         assert(is_array($studip_url)); // otherwise something's wrong with studip
 
         error_log('studip url: ' . print_r($studip_url, 1));
@@ -275,7 +351,7 @@ class RichTextPluginUtils {
 
         $studip_schemes = array($studip_url['scheme'], 'http', 'https', NULL);
         $studip_hosts = array($studip_url['host'], NULL);
-        $studip_ports = array($studip_url['host'], NULL);
+        $studip_ports = array($studip_url['port'], NULL);
 
         $is_scheme = in_array($parsed_url['scheme'], $studip_schemes);
         $is_host = in_array($parsed_url['host'], $studip_hosts);
@@ -292,6 +368,15 @@ class RichTextPluginUtils {
         // TODO what about studip's that are accessible from multiple urls? 
         // (like: uos.de, uni-osnabrueck.de)
         return $is_studip;
+    }
+
+    /**
+     * Return an associative array containing the Stud.IP URL elements.
+     * see also: http://php.net/manual/en/function.parse-url.php
+     * @returns mixed The exact same values that PHP's parse_url() returns.
+     */
+    public static function getParsedStudipUrl() {
+        return @parse_url($GLOBALS['ABSOLUTE_URI_STUDIP']);
     }
 
     /**

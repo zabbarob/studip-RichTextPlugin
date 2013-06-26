@@ -87,6 +87,10 @@ class RichTextPlugin extends StudIPPlugin implements StandardPlugin
     public function getNotificationObjects($course_id, $since, $user_id) {
     }
 
+    public function test_action() {
+        RichTextPluginUtils::testGetMediaUrl();
+    }
+
     /**
      * Sets the fields in the plugin's show.php template to correct values.
      */
