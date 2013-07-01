@@ -119,7 +119,7 @@ class RichTextPlugin extends StudIPPlugin implements StandardPlugin
      */
     public function edit_wysihtml5_action() {
         PageLayout::addStylesheet($this->assets . 'wysihtml5.css');
-        $this->initializeEditor('wysihtml5-0.3.0.js', 'edit_wysihtml5');
+        $this->initializeEditor('wysihtml5-0.4.0pre.js', 'edit_wysihtml5');
     }
 
     /**
