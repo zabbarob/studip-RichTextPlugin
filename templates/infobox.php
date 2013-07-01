@@ -12,10 +12,10 @@ $infobox_content[] = array(
             'icon' => 'icons/16/black/info.png',
             'text' => _('Dateien k&ouml;nnen per Drag\'n\'Drop hochgeladen werden')),
         array(
-            'text' => _('<small>'
+            'text' => _('<small id="sources">'
             . '<a href="https://github.com/zabbarob/studip-RichTextPlugin" target="_blank">RichText plugin source on GitHub.</a>'
             . '<a href="https://github.com/zabbarob/studip-RichTextPlugin" target="_blank">'
-            . '<img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_green_007200.png" alt="Fork me on GitHub">'
+            . '<img id="github-fork" src="https://s3.amazonaws.com/github/ribbons/forkme_right_green_007200.png" alt="Fork me on GitHub">'
             . '</a>'
             . '<br>Powered by '
             . '<a href="https://github.com/xing/wysihtml5" target="_blank">WysiHTML5</a>'

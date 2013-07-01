@@ -11,11 +11,11 @@
  * @category    Stud.IP
  */
 
-small, small a {
+#sources {
   color: #666;
 }
 
-a.fork {
+#github-fork {
   position: absolute;
   top: 0;
   right: 0;
