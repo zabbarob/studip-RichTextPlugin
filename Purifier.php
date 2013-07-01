@@ -12,7 +12,7 @@
  * @category    Stud.IP
  */
 require_once 'HTMLPurifier/HTMLPurifier.auto.php';
-require_once 'RichTextPluginUtils.php';
+require_once 'Utils.php';
 use RichTextPlugin\Utils as Utils;
 
 /**

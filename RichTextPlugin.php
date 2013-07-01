@@ -13,8 +13,8 @@
  * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
  * @category    Stud.IP
  */
-require_once 'RichTextPluginPurifier.php';
-require_once 'RichTextPluginUtils.php';
+require_once 'Purifier.php';
+require_once 'Utils.php';
 use RichTextPlugin\Purifier as Purifier;
 use RichTextPlugin\Utils as Utils;
 
