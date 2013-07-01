@@ -234,8 +234,7 @@ class RichTextPluginUtils {
         $url = RichTextPluginUtils::decodeMediaProxyUrl($url);
         if (RichTextPluginUtils::isStudipMediaUrl($url)) {
             error_log('isStudipMediaUrl');
-            // TODO remove scheme+host from internal Stud.IP URLs?
-            return RichTextPluginUtils::tranformInternalIdnaLink($url);
+            return RichTextPluginUtils::removeStudipDomain($url);
         }
         if (RichTextPluginUtils::isStudipUrl($url)) {
             error_log('invalid internal link');
@@ -247,9 +246,9 @@ class RichTextPluginUtils {
         $external_media = Config::GetInstance()->getValue('LOAD_EXTERNAL_MEDIA');
         if ($external_media === 'proxy' && Seminar_Session::is_current_session_authenticated()) {
             error_log('load proxy');
-            // TODO remove scheme+host from internal media proxy
-            // TODO can media proxy be external?
-            return RichTextPluginUtils::encodeMediaProxyUrl($url);
+            // NOTE will fail if media proxy has external link
+            return  RichTextPluginUtils::removeStudipDomain(
+                RichTextPluginUtils::encodeMediaProxyUrl($url));
         }
         if ($external_media === 'allow') {
             error_log('load external');
@@ -258,6 +257,24 @@ class RichTextPluginUtils {
         error_log('External media denied: ' . $url);
         $GLOBALS['msg'][] = 'External media denied: ' . htmlentities($url);
         return NULL; // deny external media ==> remove <img src> attribute
+    }
+
+    /**
+     * Removes scheme, domain and authentication information from internal
+     * Stud.IP URLs. Leaves external URLs untouched.
+     * @param string $url   The URL from which to remove internal domain.
+     * @returns string      URL without internal domain or the exact same
+     *                      value as $url for external URLs.
+     */
+    public static function removeStudipDomain($url) {
+        if (!RichTextPluginUtils::isStudipUrl($url)) {
+            return $url;
+        }
+        $parsed_url = @parse_url(RichTextPluginUtils::tranformInternalIdnaLink($url));
+        $path = isset($parsed_url['path']) ? $parsed_url['path'] : '';
+        $query = isset($parsed_url['query']) ? '?' . $parsed_url['query'] : '';
+        $fragment = isset($parsed_url['fragment']) ? '#' . $parsed_url['fragment'] : '';
+        return $path . $query . $fragment;
     }
 
     public static function tranformInternalIdnaLink($url) {
@@ -339,7 +356,7 @@ class RichTextPluginUtils {
 
         error_log('studip url: ' . print_r($studip_url, 1));
 
-        $parsed_url = @parse_url($url);
+        $parsed_url = @parse_url(RichTextPluginUtils::tranformInternalIdnaLink($url));
         if ($parsed_url === FALSE) {
 
             error_log('url is seriously malformed');
@@ -365,8 +382,6 @@ class RichTextPluginUtils {
         error_log('is path: ' . $is_path);
         error_log('is studip:' . $is_studip);
 
-        // TODO what about studip's that are accessible from multiple urls? 
-        // (like: uos.de, uni-osnabrueck.de)
         return $is_studip;
     }
 
