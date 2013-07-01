@@ -22,9 +22,9 @@ a.fork {
   border: 0;
 }
 
-#body > img {
-    max-width: 33%;
-    max-height: 33%;
+#body img {
+    max-width: 66%;
+    max-height: 66%;
 }
 
 #edit_box > textarea {
