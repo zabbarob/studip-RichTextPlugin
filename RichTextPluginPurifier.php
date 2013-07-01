@@ -1,4 +1,4 @@
-<?php namespace RichTextPluginPurifier;
+<?php namespace RichTextPlugin\Purifier;
 /**
  * RichTextPluginPurifier.php - Auxilliary function for using HTML Purifier.
  *
@@ -12,6 +12,8 @@
  * @category    Stud.IP
  */
 require_once 'HTMLPurifier/HTMLPurifier.auto.php';
+require_once 'RichTextPluginUtils.php';
+use RichTextPlugin\Utils as Utils;
 
 /**
  * Remove invalid <img src> attributes.
@@ -22,7 +24,7 @@ class AttrTransform_Image_Source extends \HTMLPurifier_AttrTransform
      * Implements abstract method of base class.
      */
     function transform($attr, $config, $context) {
-        $attr['src'] = \RichTextPluginUtils::getMediaUrl($attr['src']);
+        $attr['src'] = Utils\getMediaUrl($attr['src']);
         return $attr;
     }
 }

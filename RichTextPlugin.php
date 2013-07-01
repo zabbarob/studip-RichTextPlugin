@@ -15,6 +15,8 @@
  */
 require_once 'RichTextPluginPurifier.php';
 require_once 'RichTextPluginUtils.php';
+use RichTextPlugin\Purifier as Purifier;
+use RichTextPlugin\Utils as Utils;
 
 /**
  * Initializes and displays the plugin.
@@ -88,7 +90,7 @@ class RichTextPlugin extends StudIPPlugin implements StandardPlugin
     }
 
     public function test_action() {
-        RichTextPluginUtils::testGetMediaUrl();
+        Utils\testGetMediaUrl();
     }
 
     /**
@@ -156,18 +158,18 @@ class RichTextPlugin extends StudIPPlugin implements StandardPlugin
      * Handle file upload requests.
      */
     public function post_file_action() {
-        RichTextPluginUtils::verifyPostRequest();
+        Utils\verifyPostRequest();
         $this->verifyUnsafeRequest();
 
         // store uploaded files as StudIP documents
         $output = array(); // data for HTTP response
-        $folder_id = RichTextPluginUtils::getFolderId(
+        $folder_id = Utils\getFolderId(
             'RichText',
             studip_utf8decode(_('Enthält vom RichText-Plugin hochgeladene Dateien.')));
 
         foreach ($_FILES as $file) {
             try {
-                $newfile = RichTextPluginUtils::uploadFile($file, $folder_id);
+                $newfile = Utils\uploadFile($file, $folder_id);
                 $output['inserts'][] = Array(
                     'name' => $newfile['filename'],
                     'type' => $file['type'],
@@ -189,8 +191,8 @@ class RichTextPlugin extends StudIPPlugin implements StandardPlugin
     protected function getBody() {
         $db = DBManager::get();
         $stmt = $db->prepare('SELECT body FROM plugin_rich_text WHERE range_id = ?');
-        $stmt->execute(array(RichTextPluginUtils::getSeminarId()));
-        return \RichTextPluginPurifier\purify($stmt->fetchColumn());
+        $stmt->execute(array(Utils\getSeminarId()));
+        return Purifier\purify($stmt->fetchColumn());
     }
 
     /**
@@ -198,10 +200,10 @@ class RichTextPlugin extends StudIPPlugin implements StandardPlugin
      * @param string $body  Text that is stored in the database.
      */
     protected function setBody($body) {
-        $clean_body = \RichTextPluginPurifier\purify($body);
+        $clean_body = Purifier\purify($body);
         $db = DBManager::get();
         $stmt = $db->prepare("REPLACE INTO plugin_rich_text VALUES(?, ?)");
-        $stmt->execute(array(RichTextPluginUtils::getSeminarId(), $clean_body));
+        $stmt->execute(array(Utils\getSeminarId(), $clean_body));
     }
 
     /**
@@ -250,7 +252,7 @@ class RichTextPlugin extends StudIPPlugin implements StandardPlugin
      * Verify that user has edit permission and correct security token.
      */
     public function verifyUnsafeRequest() {
-        RichTextPluginUtils::verifyPermission($this->edit_permission);
+        Utils\verifyPermission($this->edit_permission);
         CSRFProtection::verifyUnsafeRequest();
     }
 }
