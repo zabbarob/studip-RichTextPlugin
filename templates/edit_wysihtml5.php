@@ -19,7 +19,7 @@ include 'errors.php'; // show errors
 
 <!-- the toolbar -->
 
-<div id="wysihtml5-editor-toolbar" style="padding:10px">
+<div id="wysihtml5-toolbar" style="padding:10px">
   <header>
     <ul class="commands">
       <li data-wysihtml5-command="bold" title="Make text bold (CTRL + B)" class="command"></li>
@@ -68,7 +68,7 @@ include 'errors.php'; // show errors
 
 <form enctype="multipart/form-data" style="padding:10px" id="edit_box" action="<?=PluginEngine::getLink('richtextplugin/show')?>" method="POST">
     <?= CSRFProtection::tokenTag() ?>
-    <textarea id="wysihtml5-editor" spellcheck="false" wrap="off" autofocus placeholder="Enter text..." name="body"><?=htmlReady($body);?></textarea>
+    <textarea id="richtext-editor" spellcheck="false" wrap="off" autofocus placeholder="Enter text..." name="body"><?=htmlReady($body);?></textarea>
     <br>
     <p style="margin:10px">
         <?= makeButton('uebernehmen', 'input', false, 'save') ?>
@@ -81,8 +81,8 @@ include 'errors.php'; // show errors
 // make sure code is only called after DOM structure is fully loaded
 jQuery(function() {
     // initialize and configure editor
-    var editor = new wysihtml5.Editor('wysihtml5-editor', {
-        toolbar:     'wysihtml5-editor-toolbar',
+    var editor = new wysihtml5.Editor('richtext-editor', {
+        toolbar:     'wysihtml5-toolbar',
         stylesheets: [
             'http://yui.yahooapis.com/2.9.0/build/reset/reset-min.css',
             richTextPlugin.dir + 'editor.css',
@@ -102,6 +102,7 @@ jQuery(function() {
     });
 
     // call-backs for drag'n'drop event handler
+    var textarea = $('#richtext-editor'); 
     var callback = {
         startUpload: function() {
             textarea.addClass('uploading');
@@ -155,7 +156,7 @@ jQuery(function() {
     var editor_body = $(".wysihtml5-sandbox")[0].contentWindow.document.body;
     $(editor_body).on('drop', dropHandler);
 
-    var textarea = $('#wysihtml5-editor'); // in HTML view mode editor_body doesn't get drop event
+    // in HTML view mode editor_body doesn't get drop event
     //textarea.on('dragover', ignoreEvent);
     //textarea.on('dragenter', ignoreEvent);
     textarea.on('drop', dropHandler);
