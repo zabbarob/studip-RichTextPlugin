@@ -114,8 +114,8 @@ jQuery(function() {
         insertImage: function(that, file) {
             var image = {
                 src: file.url,
-                    alt: file.name,
-                    title: file.name
+                alt: file.name,
+                title: file.name
             };
 
             editor.composer.commands.exec('insertImage', image);
@@ -130,10 +130,10 @@ jQuery(function() {
         insertLink: function(that, file) {
             var html = $('<div>').append($('<a>', {
                 target: '_blank',
-                    rel: 'nofollow',
-                    text: file.name,
-                    type: file.type,
-                    href: file.url
+                rel: 'nofollow',
+                text: file.name,
+                type: file.type,
+                href: file.url
             })).html();
 
             editor.focus();
