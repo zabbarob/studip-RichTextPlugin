@@ -107,11 +107,11 @@ function getFolderId($name, $description=null) {
  * @throws AccessDeniedException if file is forbidden or upload failed.
  */
 function uploadFile($file, $folder_id) {
-    \verifyUpload($file); // throw exception if file forbidden
+    verifyUpload($file); // throw exception if file forbidden
 
     $newfile = \StudipDocument::createWithFile(
         $file['tmp_name'],
-        \getStudipDocumentData($folder_id, $file));
+        getStudipDocumentData($folder_id, $file));
 
     if (!$newfile) { // file creation failed
         throw new \AccessDeniedException(
