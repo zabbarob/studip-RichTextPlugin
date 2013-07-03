@@ -100,6 +100,8 @@ var nicSaveOptions = {
 
 var nicEditorSaveButton=nicEditorButton.extend({init:function(){if(!this.ne.options.onSave){this.margin.setStyle({display:"none"})}},mouseClick:function(){var B=this.ne.options.onSave;var A=this.ne.selectedInstance;B(A.getContent(),A.elm.id,A)}});nicEditors.registerPlugin(nicPlugin,nicSaveOptions);
 
+nicEditor=nicEditor.extend({floatingPanel:function(){this.floating=new bkElement("DIV").setStyle({position:"absolute",top:"-1000px"}).appendTo(document.body);this.addEvent("focus",this.reposition.closure(this)).addEvent("blur",this.hide.closure(this));this.setPanel(this.floating)},reposition:function(){var B=this.selectedInstance.e;this.floating.setStyle({width:(parseInt(B.getStyle("width"))||B.clientWidth)+"px"});var A=B.offsetTop-this.floating.offsetHeight;if(A<0){A=B.offsetTop+B.offsetHeight}this.floating.setStyle({top:A+"px",left:B.offsetLeft+"px",display:"block"})},hide:function(){this.floating.setStyle({top:"-1000px"})}});
+
 
 var nicCodeOptions = {
 	buttons : {
