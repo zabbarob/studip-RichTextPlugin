@@ -222,16 +222,13 @@ function testGetMediaUrl() {
  *                      or NULL if URL is invalid.
  */
 function getMediaUrl($url) {
-    \error_log('getMediaUrl ' . $url);
 
     // handle internal media links
     $url = decodeMediaProxyUrl($url);
     if (isStudipMediaUrl($url)) {
-        \error_log('isStudipMediaUrl');
         return removeStudipDomain($url);
     }
     if (isStudipUrl($url)) {
-        \error_log('invalid internal link');
         $GLOBALS['msg'][] = 'Invalid internal link removed: ' . \htmlentities($url);
         return NULL; // invalid internal link ==> remove <img src> attribute
     }
@@ -239,15 +236,12 @@ function getMediaUrl($url) {
     // handle external media links
     $external_media = \Config::GetInstance()->getValue('LOAD_EXTERNAL_MEDIA');
     if ($external_media === 'proxy' && \Seminar_Session::is_current_session_authenticated()) {
-        \error_log('load proxy');
         // NOTE will fail if media proxy has external link
         return removeStudipDomain(encodeMediaProxyUrl($url));
     }
     if ($external_media === 'allow') {
-        \error_log('load external');
         return $url;
     }
-    \error_log('External media denied: ' . $url);
     $GLOBALS['msg'][] = 'External media denied: ' . \htmlentities($url);
     return NULL; // deny external media ==> remove <img src> attribute
 }
@@ -326,9 +320,6 @@ function decodeMediaProxyUrl($url) {
     $base_url = $GLOBALS['ABSOLUTE_URI_STUDIP'];
     $media_proxy = $base_url . 'dispatch.php/media_proxy?url=';
 
-    \error_log('studip base: ' . $base_url);
-    \error_log('media proxy: ' . $media_proxy);
-
     $transformed_url = tranformInternalIdnaLink($url);
     if (startsWith($transformed_url, $media_proxy)) {
         return \urldecode(removePrefix($transformed_url, $media_proxy));
@@ -346,17 +337,11 @@ function isStudipUrl($url) {
     $studip_url = getParsedStudipUrl();
     \assert(\is_array($studip_url)); // otherwise something's wrong with studip
 
-    \error_log('studip url: ' . \print_r($studip_url, 1));
-
     $parsed_url = \parse_url(tranformInternalIdnaLink($url));
     if ($parsed_url === FALSE) {
 
-        \error_log('url is seriously malformed');
-
         return FALSE; // url is seriously malformed
     }
-
-    \error_log('parsed url: ' . print_r($parsed_url, 1));
 
     $studip_schemes = array($studip_url['scheme'], 'http', 'https', \NULL);
     $studip_hosts = array($studip_url['host'], \NULL);
@@ -367,12 +352,6 @@ function isStudipUrl($url) {
     $is_port = \in_array($parsed_url['port'], $studip_ports);
     $is_path = startsWith($parsed_url['path'], $studip_url['path']);
     $is_studip = $is_scheme && $is_host && $is_port && $is_path;
-
-    \error_log('is scheme: ' . $is_scheme);
-    \error_log('is host: ' . $is_host);
-    \error_log('is port: ' . $is_port);
-    \error_log('is path: ' . $is_path);
-    \error_log('is studip:' . $is_studip);
 
     return $is_studip;
 }
