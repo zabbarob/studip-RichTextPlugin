@@ -137,6 +137,14 @@ class RichTextPlugin extends StudIPPlugin implements StandardPlugin
     }
 
     /**
+     * Initialize edit_aloha.php template for editing the page.
+     */
+    public function edit_aloha_action() {
+        PageLayout::addStylesheet('http://cdn.aloha-editor.org/latest/css/aloha.css');
+        $this->initializeEditor('', 'edit_aloha');
+    }
+
+    /**
      * Initializes the editor given by its script and template.
      * @param string $script Path to the editor's main JavaScript file.
      * @param string $template Path to the editor's PHP template file.
@@ -144,7 +152,9 @@ class RichTextPlugin extends StudIPPlugin implements StandardPlugin
     public function initializeEditor($script, $template) {
         $this->verifyUnsafeRequest();
         $this->actionHeader();
-        $this->addScript($script);
+        if ($script != '') {
+            $this->addScript($script);
+        }
 
         $template = $this->template_factory->open($template);
         $template->set_layout($GLOBALS['template_factory']->open('layouts/base'));

@@ -14,7 +14,7 @@
 include 'infobox.php'; // show infobox
 include 'errors.php'; // show errors
 
-// show the current text from the database
+// show current text from database and buttons to open editor
 ?>
 <div id="body"><?=$body?></div>
 <br>
@@ -33,6 +33,11 @@ include 'errors.php'; // show errors
     <?= CSRFProtection::tokenTag() ?>
     <?= makeButton('bearbeiten', 'input', false, 'edit') ?>
     <span style="vertical-align:top">with NicEdit</span>
+</form>
+<form action="<?= PluginEngine::getLink('richtextplugin/edit_aloha') ?>" method="POST">
+    <?= CSRFProtection::tokenTag() ?>
+    <?= makeButton('bearbeiten', 'input', false, 'edit') ?>
+    <span style="vertical-align:top">with Aloha</span>
 </form>
 <div><?=
 htmlReady($nothing) // contains message if there is no text in database
