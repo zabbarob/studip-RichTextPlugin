@@ -102,16 +102,7 @@ class RichTextPlugin extends StudIPPlugin implements StandardPlugin
             $this->setBody(Request::get('body'));
         }
         $this->actionHeader();
-
-        $template = $this->template_factory->open('show');
-        $template->set_layout($GLOBALS['template_factory']->open('layouts/base'));
-
-        $template->body = $this->getBody();
-        if (!$template->body) {
-            $template->nothing = _('Bisher wurde noch kein Text eingetragen.');
-        }
-
-        echo $template->render();
+        $this->renderBodyTemplate('show');
     }
 
     /**
@@ -147,7 +138,7 @@ class RichTextPlugin extends StudIPPlugin implements StandardPlugin
     /**
      * Initializes the editor given by its script and template.
      * @param string $script Path to the editor's main JavaScript file.
-     * @param string $template Path to the editor's PHP template file.
+     * @param string $template File name of the editor's PHP template file.
      */
     public function initializeEditor($script, $template) {
         $this->verifyUnsafeRequest();
@@ -155,12 +146,17 @@ class RichTextPlugin extends StudIPPlugin implements StandardPlugin
         if ($script != '') {
             $this->addScript($script);
         }
+        $this->renderBodyTemplate($template);
+    }
 
-        $template = $this->template_factory->open($template);
+    /**
+     * Opens, initializes and renders a template that gets the DB's text.
+     * @params string $file Template file name, ommitting path.
+     */
+    protected function renderBodyTemplate($file) {
+        $template = $this->template_factory->open($file);
         $template->set_layout($GLOBALS['template_factory']->open('layouts/base'));
-
         $template->body = $this->getBody();
-
         echo $template->render();
     }
 
