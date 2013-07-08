@@ -11,11 +11,10 @@
  * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
  * @category    Stud.IP
  */
-include 'common_edit.php';
 ?>
 <!-- the toolbar -->
 
-<div id="wysihtml5-toolbar" style="padding:10px">
+<div id="wysihtml5-toolbar" style="padding-left:10px; position:fixed; z-index:10000; display:none;">
   <header>
     <ul class="commands">
       <li data-wysihtml5-command="bold" title="Make text bold (CTRL + B)" class="command"></li>
@@ -60,6 +59,11 @@ include 'common_edit.php';
   </div>
 </div>
 
+<div id="editor_position"></div>
+<?
+include 'common_edit.php';
+?>
+
 <!-- initialize WysiHTML5 -->
 
 <script type="text/javascript">
@@ -74,6 +78,29 @@ jQuery(function() {
             richTextPlugin.dir + 'wysihtml5-colors.css'],
         parserRules: wysihtml5ParserRules
     });
+
+    // only show toolbar when editor gets focused
+    var toolbar = $("#wysihtml5-toolbar"); // TODO figure out how to get toolbar directly from wysihtml5.editor
+    editor.on('focus', function() {
+        toolbar.show();
+    });
+    editor.on('blur', function() {
+        toolbar.hide();
+    });
+
+    // update the toolbar position to always keep the toolbar on screen
+    var jq_window = $(window);
+    var editor_position = $("#editor_position"); // this is a hack since getting position of #richtext-editor returns values relative to the iframe
+    function updateToolbarPosition() {
+        var editor_top = editor_position.offset().top;
+        var window_top = jq_window.scrollTop();
+        toolbar.offset({
+            top: Math.max(0, editor_top - window_top - toolbar.height())
+        });
+    }
+    updateToolbarPosition();
+    jq_window.scroll(updateToolbarPosition);
+    jq_window.on('resize', updateToolbarPosition);
 
     // insert newlines after <br>, <h1> (<h2>, <h3>, ...), <ol>, <ul>, <li>
     editor.on('change_view', function() {
