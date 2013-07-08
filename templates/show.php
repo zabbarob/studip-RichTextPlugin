@@ -14,32 +14,30 @@
 include 'infobox.php'; // show infobox
 include 'errors.php'; // show errors
 
-// show current text from database and buttons to open editor
-?>
-<div id="body"><?=$body?></div>
-<br>
-<hr>
-<form id="edit_box" action="<?= PluginEngine::getLink('richtextplugin/edit_wysihtml5') ?>" method="POST">
-    <?= CSRFProtection::tokenTag() ?>
-    <?= makeButton('bearbeiten', 'input', false, 'edit') ?>
-    <span style="vertical-align:top">with WysiHTML5</span>
-</form>
-<form action="<?= PluginEngine::getLink('richtextplugin/edit_tinymce') ?>" method="POST">
-    <?= CSRFProtection::tokenTag() ?>
-    <?= makeButton('bearbeiten', 'input', false, 'edit') ?>
-    <span style="vertical-align:top">with TinyMCE</span>
-</form>
-<form action="<?= PluginEngine::getLink('richtextplugin/edit_nicedit') ?>" method="POST">
-    <?= CSRFProtection::tokenTag() ?>
-    <?= makeButton('bearbeiten', 'input', false, 'edit') ?>
-    <span style="vertical-align:top">with NicEdit</span>
-</form>
-<form action="<?= PluginEngine::getLink('richtextplugin/edit_aloha') ?>" method="POST">
-    <?= CSRFProtection::tokenTag() ?>
-    <?= makeButton('bearbeiten', 'input', false, 'edit') ?>
-    <span style="vertical-align:top">with Aloha</span>
-</form>
-<div><?=
-htmlReady($nothing) // contains message if there is no text in database
-?></div>
+// show current text from database
+?><div id="body"><?=$body?></div><br><hr><?
+
+// show buttons to open one of the editors
+function addEditorButton($title) {
+    ?><form action="<?
+    echo PluginEngine::getLink('richtextplugin/edit_' . strtolower($title));
+    ?>" method="POST"><?
+    echo CSRFProtection::tokenTag();
+    echo makeButton('bearbeiten', 'input', false, 'edit');
+    ?><span style="vertical-align:top">with <?
+    echo $title;
+    ?></span></form><?
+}
+
+addEditorButton('WysiHTML5');
+addEditorButton('TinyMCE');
+addEditorButton('NicEdit');
+addEditorButton('Aloha');
+
+// show message if no text is in database
+if (!$body) {
+    ?><div><?
+    echo htmlReady(_('Bisher wurde noch kein Text eingetragen.'));
+    ?></div><?
+}
 
