@@ -33,6 +33,7 @@ addEditorButton('WysiHTML5');
 addEditorButton('TinyMCE');
 addEditorButton('NicEdit');
 addEditorButton('Aloha');
+addEditorButton('CKEditor');
 
 // show message if no text is in database
 if (!$body) {

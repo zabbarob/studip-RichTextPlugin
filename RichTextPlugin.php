@@ -136,6 +136,13 @@ class RichTextPlugin extends StudIPPlugin implements StandardPlugin
     }
 
     /**
+     * Initialize edit_ckeditor.php template for editing the page.
+     */
+    public function edit_ckeditor_action() {
+        $this->initializeEditor('ckeditor/ckeditor.js', 'edit_ckeditor');
+    }
+
+    /**
      * Initializes the editor given by its script and template.
      * @param string $script Path to the editor's main JavaScript file.
      * @param string $template File name of the editor's PHP template file.
