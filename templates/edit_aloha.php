@@ -15,8 +15,9 @@ include 'common_edit.php';
 ?>
 <!-- load jQuery and require.js libraries -->
 <script type="text/javascript" src="http://cdn.aloha-editor.org/latest/lib/require.js"></script>
+<!-- 
 <script type="text/javascript" src="http://cdn.aloha-editor.org/latest/lib/vendor/jquery-1.7.2.js"></script>
-
+-->
 <!-- load Aloha Editor core and some plugins -->
 <script src="http://cdn.aloha-editor.org/latest/lib/aloha.js"
     data-aloha-plugins="common/ui,
@@ -37,4 +38,3 @@ Aloha.ready(function() {
     $('#richtext-editor').aloha();
 });
 </script>
-

@@ -14,7 +14,10 @@
 include 'infobox.php'; // show infobox
 include 'errors.php'; // show errors
 ?>
+<!-- turn off MathJax in edit mode -->
+<script>MathJax.Hub.queue.pending = 1;</script>
 
+<!-- store url to which files are posted for drag'n'drop in editor -->
 <input type="hidden" id="post_files_url" value="<?=PluginEngine::getLink('richtextplugin/post_file')?>">
 
 <!-- the editor -->

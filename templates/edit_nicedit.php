@@ -15,13 +15,22 @@
 include 'common_edit.php';
 ?>
 <script type="text/javascript">
+//MathJax.Hub.config.skipStartupTypeset = true;
 bkLib.onDomLoaded(function(){
+    // setting MathJax queue to pending somehow doesn't work with NicEdit
+    // MathJax is deleted to prevent typesetting formulas in the editor
+    // this leads to error messages concerning MathJax, but editing works
+    //delete MathJax.Hub.Queue;
+    delete MathJax.Hub;
+    delete MathJax;
+
     // initialize editor
     var nic = new nicEditor({
         fullPanel: true,
         iconsPath: richTextPlugin.dir + 'nicEditorIcons.gif' // set in script.js
     });
     nic.panelInstance('richtext-editor');
+
     var editor = nic.instanceById('richtext-editor');
 
     // helpers
