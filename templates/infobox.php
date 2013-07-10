@@ -21,6 +21,8 @@ $infobox_content[] = array(
             . '<a href="https://github.com/xing/wysihtml5" target="_blank">WysiHTML5</a>'
             . ', <a href="http://www.tinymce.com/" target="_blank">TinyMCE</a>'
             . ', <a href="http://nicedit.com/" target="_blank">NicEdit</a>'
+            . ', <a href="http://www.aloha-editor.org/">Aloha</a>'
+            . ', <a href="http://ckeditor.com/">CKEditor</a>'
             . ' and <a href="http://htmlpurifier.org/" target="_blank">HTML Purifier</a>.'
             . '</small>'))));
 
