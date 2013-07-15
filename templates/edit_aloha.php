@@ -36,5 +36,53 @@ include 'common_edit.php';
 Aloha.ready(function() {
     var $ = Aloha.jQuery;
     $('#richtext-editor').aloha();
+
+    // helper for inserting a new DOM node in Aloha
+    var insertNode = function(jquery_node){
+        if (!Aloha.activeEditable) {
+            Aloha.editables[0].activate();
+            Aloha.activeEditable.obj[0].focus();
+            Aloha.Selection.updateSelection();
+        }
+
+        var range = Aloha.Selection.getRangeObject();
+        GENTICS.Utils.Dom.insertIntoDOM(
+            jquery_node,
+            range,
+            jQuery(Aloha.activeEditable.obj),
+            true
+        );
+        range.select();
+    };
+
+    // call-backs for drag'n'drop event handler
+    var callback = {
+        startUpload: function() {
+            //$('#richtext-editor').addClass('uploading');
+        },
+        stopUpload: function() {
+            //$('#richtext-editor').trigger('keydown');
+            //$('#richtext-editor').removeClass('uploading');
+        },
+        insertImage: function(that, file) {
+            insertNode($("<img />").attr({
+                src: file.url,
+                alt: file.name,
+                title: file.name
+            }));
+        },
+        insertLink: function(that, file) {
+            insertNode($("<a>").attr({
+                href: file.url,
+                type: file.type,
+                target: '_blank',
+                rel: 'nofollow'
+            }).append(file.name));
+        }
+    };
+
+    // handle drag'n'drop events
+    $('#richtext-editor-aloha').on(
+        'drop', richTextPlugin.getDropHandler(callback));
 });
 </script>
