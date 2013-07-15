@@ -16,6 +16,46 @@ include 'common_edit.php';
 <script type="text/javascript">
 jQuery(function(){
     CKEDITOR.replace("richtext-editor");
+
+    // helper for inserting a new DOM node in CKEditor
+    var insertNode = function(jq_node) {
+        CKEDITOR.instances['richtext-editor'].insertHtml(
+            jQuery("<div>").append(jq_node).html());
+    };
+
+    // call-backs for drag'n'drop event handler
+    var callback = {
+        startUpload: function() {
+            //$('#richtext-editor').addClass('uploading');
+        },
+        stopUpload: function() {
+            //$('#richtext-editor').trigger('keydown');
+            //$('#richtext-editor').removeClass('uploading');
+        },
+        insertImage: function(that, file) {
+            insertNode(jQuery('<img />').attr({
+                src: file.url,
+                alt: file.name,
+                title: file.name
+            }));
+        },
+        insertLink: function(that, file) {
+            insertNode(jQuery('<a>').attr({
+                href: file.url,
+                type: file.type,
+                target: '_blank',
+                rel: 'nofollow'
+            }).append(file.name));
+        }
+    };
+
+    // handle drag'n'drop events
+    var dropHandler = richTextPlugin.getDropHandler(callback);
+    CKEDITOR.on('instanceReady', function(readyEvent){
+        readyEvent.editor.document.on('drop', function(dropEvent){
+            dropHandler(jQuery.Event(dropEvent.data.$));
+        });
+    });
 });
 </script>
 
