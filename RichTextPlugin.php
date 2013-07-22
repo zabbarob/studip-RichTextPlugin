@@ -21,8 +21,7 @@ use RichTextPlugin\Utils as Utils;
 /**
  * Initializes and displays the plugin.
  **/
-class RichTextPlugin extends StudIPPlugin implements StandardPlugin
-{
+class RichTextPlugin extends StudIPPlugin implements SystemPlugin {
     protected $navlink = '/course/rich'; // plugin location in tab navigation bar
     protected $assets; // URL of assets folder; set in __construct()
     protected $edit_permission = 'autor'; // minimum permission level for editing
@@ -35,8 +34,19 @@ class RichTextPlugin extends StudIPPlugin implements StandardPlugin
      */
     public function __construct() {
         parent::__construct();
-        $this->template_factory = new Flexi_TemplateFactory($this->getPluginPath() . '/templates');
+
+        $this->template_factory = new Flexi_TemplateFactory(
+            $this->getPluginPath() . '/templates');
+
         $this->assets = $this->getPluginURL() . '/assets/';
+
+        # add JS for replacing textareas
+        $template = $this->template_factory->open('replace_textareas');
+        //$this->addScript('tinymce/tinymce.min.js');
+        $this->addScript('ckeditor/ckeditor.js');
+        $this->addScript('formdata.js');
+        $this->addScript('script.js');
+        PageLayout::addHeadElement('script', array(), $template->render());
     }
 
     /**
@@ -46,8 +56,8 @@ class RichTextPlugin extends StudIPPlugin implements StandardPlugin
         PageLayout::addStylesheet($this->assets . 'styles.css');
         PageLayout::addStylesheet($this->assets . 'wysihtml5-colors.css');
         $this->addScript('advanced.js');
-        $this->addScript('formdata.js');
-        $this->addScript('script.js');
+//        $this->addScript('formdata.js');
+//        $this->addScript('script.js');
     }
 
     /**
