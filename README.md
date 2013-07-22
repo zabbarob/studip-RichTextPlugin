@@ -10,3 +10,5 @@ Currently three different editor components are in use and the user can select w
 * WysiHTML5 - https://github.com/xing/wysihtml5
 * TinyMCE - http://www.tinymce.com
 * NicEdit - http://nicedit.com
+* Aloha - http://www.aloha-editor.org
+* CKEditor - http://ckeditor.com
