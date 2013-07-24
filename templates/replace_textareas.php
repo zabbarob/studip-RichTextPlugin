@@ -51,9 +51,23 @@ $('textarea.add_toolbar')
     .show();
 */
 
+    
+/*    $('textarea').each(function(){
+        var activate = $('<button>Activate Visual Editor</button>');
+        $(this).before(activate);
+    });*/
+
+//    $('<p>Activate Visual Editor</p>').insertBefore('textarea');
+
     $('textarea.add_toolbar').on('focus', function(){
         $('.editor_toolbar > .buttons').remove();
         CKEDITOR.replace(this);
+/*
+        var editor = $(this).ckeditor().editor;
+        editor.on('destroy', function(){
+            this.
+        });
+*/
     });
 
 //    editors = $('textarea.add_toolbar');
