@@ -61,7 +61,19 @@ $('textarea.add_toolbar')
 
     $('textarea.add_toolbar').on('focus', function(){
         $('.editor_toolbar > .buttons').remove();
-        CKEDITOR.replace(this);
+        if (!CKEDITOR.instances[this]) {
+            CKEDITOR.replace(this);
+        }
+
+/*
+        for (n in CKEDITOR.instances) {
+            CKEDITOR.instances[n].on('getData', function(evt){
+                var secret_key = '<input type="hidden" value="visual-editor" />';
+                evt.data.dataValue = secret_key + evt.data.dataValue;
+                console.log(evt.data.dataValue);
+            });
+        }
+*/
 /*
         var editor = $(this).ckeditor().editor;
         editor.on('destroy', function(){
