@@ -11,7 +11,9 @@
  * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
  * @category    Stud.IP
  */
-require_once 'HTMLPurifier/HTMLPurifier.auto.php';
+if (!class_exists('HTMLPurifier_Bootstrap')) {
+    require_once 'HTMLPurifier/HTMLPurifier.auto.php';
+}
 require_once 'Utils.php';
 use RichTextPlugin\Utils as Utils;
 
