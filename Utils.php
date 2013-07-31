@@ -234,7 +234,7 @@ function getMediaUrl($url) {
     }
 
     // handle external media links
-    $external_media = \Config::GetInstance()->getValue('LOAD_EXTERNAL_MEDIA');
+    $external_media = getConfigValue('LOAD_EXTERNAL_MEDIA');
     if ($external_media === 'proxy' && \Seminar_Session::is_current_session_authenticated()) {
         // NOTE will fail if media proxy has external link
         return removeStudipDomain(encodeMediaProxyUrl($url));
@@ -400,3 +400,12 @@ function verifyPostRequest() {
     }
 }
 
+/**
+ * Read the value of a global configuration entry from the database.
+ *
+ * @param string $name Identifier of the configuration entry.
+ * @returns string Value of the configuration entry.
+ */
+function getConfigValue($name) {
+    return \Config::GetInstance()->getValue($name);
+}
