@@ -305,9 +305,9 @@ function isStudipMediaUrl($url) {
  * returns string Stud.IP-relative path component of $url.
  */
 function getStudipRelativePath($url) {
-    return removePrefix(
-        \parse_url(tranformInternalIdnaLink($url))['path'],
-        getParsedStudipUrl()['path']);
+    $parsed_url = \parse_url(tranformInternalIdnaLink($url));
+    $parsed_studip_url = getParsedStudipUrl();
+    return removePrefix($parsed_url['path'], $parsed_studip_url['path']);
 }
 
 /**
