@@ -11,7 +11,9 @@
  * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
  * @category    Stud.IP
  */
-require_once 'HTMLPurifier/HTMLPurifier.auto.php';
+if (!class_exists('HTMLPurifier_Bootstrap')) {
+    require_once 'HTMLPurifier/HTMLPurifier.auto.php';
+}
 require_once 'Utils.php';
 use RichTextPlugin\Utils as Utils;
 
@@ -30,12 +32,10 @@ class AttrTransform_Image_Source extends \HTMLPurifier_AttrTransform
 }
 
 /**
- * Call HTMLPurifier to create safe HTML.
- *
- * @param   string $dirty_html  Unsafe or 'uncleaned' HTML code.
- * @return  string              Clean and safe HTML code.
+ * Create HTML purifier instance with Stud.IP-specific configuration.
+ * @return HTMLPurifier A new instance of the HTML purifier.
  */
-function purify($dirty_html) {
+function createPurifier() {
     $config = \HTMLPurifier_Config::createDefault();
     $config->set('Core.Encoding', 'ISO-8859-1');
     $config->set('Core.RemoveInvalidImg', true);
@@ -47,7 +47,21 @@ function purify($dirty_html) {
     $img = $def->addBlankElement('img');
     $img->attr_transform_post[] = new AttrTransform_Image_Source();
 
-    $purifier = new \HTMLPurifier($config);
+    return new \HTMLPurifier($config);
+}
+
+// store the created purifier so it doesn't have to be created over and over 
+// again
+$purifier = createPurifier();
+
+/**
+ * Call HTMLPurifier to create safe HTML.
+ *
+ * @param   string $dirty_html  Unsafe or 'uncleaned' HTML code.
+ * @return  string              Clean and safe HTML code.
+ */
+function purify($dirty_html) {
+    global $purifier;
     return $purifier->purify($dirty_html);
 }
 
