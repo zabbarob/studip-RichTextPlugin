@@ -20,8 +20,7 @@ use RichTextPlugin\Utils as Utils;
 /**
  * Remove invalid <img src> attributes.
  */
-class AttrTransform_Image_Source extends \HTMLPurifier_AttrTransform
-{
+class AttrTransform_Image_Source extends \HTMLPurifier_AttrTransform {
     /**
      * Implements abstract method of base class.
      */
