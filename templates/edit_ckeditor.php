@@ -17,7 +17,7 @@ include 'common_edit.php';
 jQuery(function(){
     CKEDITOR.replace('richtext-editor', {
         customConfig: '',
-        extraPlugins: 'autogrow',
+        extraPlugins: 'autogrow,divarea',
         autoGrow_onStartup: true,
         autoGrow_bottomSpace: 50,
         resize_enabled: false // let autogrow handle it
