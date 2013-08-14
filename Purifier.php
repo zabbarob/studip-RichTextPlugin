@@ -49,10 +49,6 @@ function createPurifier() {
     return new \HTMLPurifier($config);
 }
 
-// store the created purifier so it doesn't have to be created over and over 
-// again
-$purifier = createPurifier();
-
 /**
  * Call HTMLPurifier to create safe HTML.
  *
@@ -60,7 +56,10 @@ $purifier = createPurifier();
  * @return  string              Clean and safe HTML code.
  */
 function purify($dirty_html) {
-    global $purifier;
+    // remember created purifier so it doesn't have to be created again
+    static $purifier = NULL;
+    if ($purifier === NULL) {
+        $purifier = createPurifier();
+    }
     return $purifier->purify($dirty_html);
 }
-
