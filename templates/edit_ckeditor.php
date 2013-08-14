@@ -15,12 +15,14 @@ include 'common_edit.php';
 ?>
 <script type="text/javascript">
 jQuery(function(){
-    CKEDITOR.replace("richtext-editor");
+    CKEDITOR.replace('richtext-editor', {
+        customConfig: ''
+    });
 
     // helper for inserting a new DOM node in CKEditor
     var insertNode = function(jq_node) {
         CKEDITOR.instances['richtext-editor'].insertHtml(
-            jQuery("<div>").append(jq_node).html());
+            jQuery('<div>').append(jq_node).html());
     };
 
     // call-backs for drag'n'drop event handler
