@@ -16,7 +16,10 @@ include 'common_edit.php';
 <script type="text/javascript">
 jQuery(function(){
     CKEDITOR.replace('richtext-editor', {
-        customConfig: ''
+        customConfig: '',
+        extraPlugins: 'autogrow',
+        autoGrow_onStartup: true,
+        autoGrow_bottomSpace: 50
     });
 
     // helper for inserting a new DOM node in CKEditor
@@ -60,4 +63,3 @@ jQuery(function(){
     });
 });
 </script>
-
