@@ -19,7 +19,8 @@ jQuery(function(){
         customConfig: '',
         extraPlugins: 'autogrow',
         autoGrow_onStartup: true,
-        autoGrow_bottomSpace: 50
+        autoGrow_bottomSpace: 50,
+        resize_enabled: false // let autogrow handle it
     });
 
     // helper for inserting a new DOM node in CKEditor
