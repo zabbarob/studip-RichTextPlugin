@@ -51,3 +51,29 @@
   outline: 0;
 }
 
+/* CKEditor */
+
+#cktoolbar {
+    display: none;
+    position: fixed;
+    padding: 0;
+    margin: 0;
+}
+
+.cktoolbar .ui-dialog-titlebar-close {
+    display: none;
+}
+
+.cktoolbar .ui-dialog-titlebar {
+    display: none;
+}
+
+.cktoolbar .ui-dialog-content {
+    padding: 0;
+    margin: 0;
+}
+
+.cktoolbar .ui-dialog {
+    padding: 0;
+    margin: 0;
+}

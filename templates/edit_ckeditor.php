@@ -11,18 +11,21 @@
  * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
  * @category    Stud.IP
  */
-include 'common_edit.php';
 ?>
+<span id="cktoolbar"></span>
+<?include 'common_edit.php';?>
 <script type="text/javascript">
-jQuery(function(){
+jQuery(function($){
     CKEDITOR.replace('richtext-editor', {
         customConfig: '',
-        uiColor: '#7788AA',
-        removePlugins: 'elementspath',
-        extraPlugins: 'autogrow,divarea',
+        uiColor: '#7788AA',  // same as studip's tab navigation background
+        removePlugins: 'elementspath,maximize,resize',
+        extraPlugins: 'autogrow,divarea,sharedspace',
         autoGrow_onStartup: true,
         autoGrow_bottomSpace: 50,
-        resize_enabled: false // let autogrow handle it
+        sharedSpaces: {
+			top: 'cktoolbar'
+		}
     });
 
     // helper for inserting a new DOM node in CKEditor
@@ -64,5 +67,30 @@ jQuery(function(){
             dropHandler(jQuery.Event(dropEvent.data.$));
         });
     });
+
+    setTimeout(function(){
+        // let the toolbar float, make it draggable from everywhere
+        // and hide the dialog's parent window
+        $('#cktoolbar').dialog({
+            dialogClass: 'cktoolbar',
+            draggable: false,
+            resizable: false,
+            minWidth: 0,
+            minHeight: 0,
+            show: 'fade'
+        }).parent().draggable().css({
+            width: 0,
+            height: 0,
+            border: 'none',
+            margin: 0,
+            padding: 0
+        });
+
+        // make border of editor area more unobtrusive
+        // TODO why doesn't it work when set immediately?
+        $('#cke_richtext-editor').css({
+            border: '1px dotted #7788AA'  // same as CKEditor uiColor
+        });
+    }, 1500);
 });
 </script>
