@@ -38,20 +38,13 @@
             var that = this;
             ignoreEvent(event);
 
-            var files = 0;
-            var file_info = event.originalEvent.dataTransfer.files || {};
-            var data = new FormData();
-
-            $.each(file_info, function (index, file) {
-                if (file.size > 0) {
-                    data.append(index, file);
-                    files += 1;
-                }
-            });
-
-            if (files <= 0) {
+            var files = event.originalEvent.dataTransfer.files || {};
+            if (!files.length) {
                 return;
             }
+
+            var data = new FormData();
+            $.each(files, data.append.bind(data));
 
             // post dropped files to server
             callBack.startUpload();
@@ -68,7 +61,9 @@
                     // workaround for FF<4
                     // https://github.com/francois2metz/html5-formdata
                     if (data.fake) {
-                        xhr.setRequestHeader('Content-Type', 'multipart/form-data; boundary=' + data.boundary);
+                        xhr.setRequestHeader(
+                            'Content-Type',
+                            'multipart/form-data; boundary=' + data.boundary);
                         xhr.send = xhr.sendAsBinary;
                     }
                     return xhr;
@@ -85,7 +80,8 @@
                         });
                     }
                     if (typeof json.errors === 'object') {
-                        alert(json.errors.join('\n'));
+                        var message = "Es konnten nicht alle Dateien hochgeladen werden.\n\n"
+                        alert(message + json.errors.join('\n'));
                     } else if (typeof json.inserts !== 'object') {
                         alert('Das Hochladen der Datei(en) ist fehlgeschlagen.');
                     }
