@@ -46,7 +46,6 @@ class RichTextPlugin extends StudIPPlugin implements StandardPlugin
         PageLayout::addStylesheet($this->assets . 'styles.css');
         PageLayout::addStylesheet($this->assets . 'wysihtml5-colors.css');
         $this->addScript('advanced.js');
-        $this->addScript('formdata.js');
         $this->addScript('script.js');
     }
 

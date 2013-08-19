@@ -56,18 +56,6 @@
                 'contentType': false,
                 'processData': false,
                 'type': 'POST',
-                'xhr': function() {
-                    var xhr = $.ajaxSettings.xhr();
-                    // workaround for FF<4
-                    // https://github.com/francois2metz/html5-formdata
-                    if (data.fake) {
-                        xhr.setRequestHeader(
-                            'Content-Type',
-                            'multipart/form-data; boundary=' + data.boundary);
-                        xhr.send = xhr.sendAsBinary;
-                    }
-                    return xhr;
-                },
                 'success': function(json) {
                     if (typeof json.inserts === 'object') {
                         $.each(json.inserts, function(index, file) {
