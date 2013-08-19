@@ -17,6 +17,7 @@ include 'common_edit.php';
 jQuery(function(){
     CKEDITOR.replace('richtext-editor', {
         customConfig: '',
+        uiColor: '#7788AA',
         removePlugins: 'elementspath',
         extraPlugins: 'autogrow,divarea',
         autoGrow_onStartup: true,
