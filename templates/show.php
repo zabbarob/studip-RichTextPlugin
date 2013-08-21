@@ -1,6 +1,6 @@
 <?
 /**
- * show.php - Template for displaying the RichText plugin.
+ * show.php - Show the current text from the database.
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -13,32 +13,7 @@
  */
 include 'infobox.php'; // show infobox
 include 'errors.php'; // show errors
-
-// show current text from database
-?><div id="body"><?=$body?></div><br><hr><?
-
-// show buttons to open one of the editors
-function addEditorButton($title) {
-    ?><form action="<?
-    echo PluginEngine::getLink('richtextplugin/edit_' . strtolower($title));
-    ?>" method="POST"><?
-    echo CSRFProtection::tokenTag();
-    echo makeButton('bearbeiten', 'input', false, 'edit');
-    ?><span style="vertical-align:top">with <?
-    echo $title;
-    ?></span></form><?
-}
-
-addEditorButton('WysiHTML5');
-addEditorButton('TinyMCE');
-addEditorButton('NicEdit');
-addEditorButton('Aloha');
-addEditorButton('CKEditor');
-
-// show message if no text is in database
-if (!$body) {
-    ?><div><?
-    echo htmlReady(_('Bisher wurde noch kein Text eingetragen.'));
-    ?></div><?
-}
-
+?>
+<div id="body">
+<?=$body ? $body : htmlReady(_('Bisher wurde noch kein Text eingetragen.'))?>
+</div>

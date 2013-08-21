@@ -44,8 +44,6 @@ class RichTextPlugin extends StudIPPlugin implements StandardPlugin
      */
     public function initialize () {
         PageLayout::addStylesheet($this->assets . 'styles.css');
-        PageLayout::addStylesheet($this->assets . 'wysihtml5-colors.css');
-        $this->addScript('advanced.js');
         $this->addScript('script.js');
     }
 
@@ -56,9 +54,9 @@ class RichTextPlugin extends StudIPPlugin implements StandardPlugin
         if (!$this->isActivated($course_id)) {
             return;
         }
-        $icon = new AutoNavigation(_("RichText"), PluginEngine::getLink($this, array(), "show"));
+        $icon = new AutoNavigation(_('RichText'), PluginEngine::getLink($this, array(), "show"));
         $icon->setImage($this->getIcon('grey'));
-        $icon->setTitle(_("RichText-Editor"));
+        $icon->setTitle(_('RichText-Editor'));
         return $icon;
     }
 
@@ -105,54 +103,13 @@ class RichTextPlugin extends StudIPPlugin implements StandardPlugin
     }
 
     /**
-     * Initialize edit_wysihtml5.php template for editing the page.
-     */
-    public function edit_wysihtml5_action() {
-        PageLayout::addStylesheet($this->assets . 'wysihtml5.css');
-        $this->initializeEditor('wysihtml5-0.4.0pre.js', 'edit_wysihtml5');
-    }
-
-    /**
-     * Initialize edit_tinymce.php template for editing the page.
-     */
-    public function edit_tinymce_action() {
-        $this->initializeEditor('tinymce/tinymce.min.js', 'edit_tinymce');
-    }
-
-    /**
-     * Initialize edit_nicedit.php template for editing the page.
-     */
-    public function edit_nicedit_action() {
-        $this->initializeEditor('nicEdit.js', 'edit_nicedit');
-    }
-
-    /**
-     * Initialize edit_aloha.php template for editing the page.
-     */
-    public function edit_aloha_action() {
-        PageLayout::addStylesheet('http://cdn.aloha-editor.org/latest/css/aloha.css');
-        $this->initializeEditor('', 'edit_aloha');
-    }
-
-    /**
      * Initialize edit_ckeditor.php template for editing the page.
      */
-    public function edit_ckeditor_action() {
-        $this->initializeEditor('ckeditor/ckeditor.js', 'edit_ckeditor');
-    }
-
-    /**
-     * Initializes the editor given by its script and template.
-     * @param string $script Path to the editor's main JavaScript file.
-     * @param string $template File name of the editor's PHP template file.
-     */
-    public function initializeEditor($script, $template) {
-        $this->verifyUnsafeRequest();
+    public function edit_action() {
+        Utils\verifyPermission($this->edit_permission);
         $this->actionHeader();
-        if ($script != '') {
-            $this->addScript($script);
-        }
-        $this->renderBodyTemplate($template);
+        $this->addScript('ckeditor/ckeditor.js');
+        $this->renderBodyTemplate('edit');
     }
 
     /**
@@ -177,7 +134,7 @@ class RichTextPlugin extends StudIPPlugin implements StandardPlugin
         $output = array(); // data for HTTP response
         $folder_id = Utils\getFolderId(
             'RichText',
-            studip_utf8decode(_('Enthält vom RichText-Plugin hochgeladene Dateien.')));
+            studip_utf8decode(_('Durch das RichText-Plugin hochgeladene Dateien.')));
 
         foreach ($_FILES as $file) {
             try {
@@ -257,7 +214,20 @@ class RichTextPlugin extends StudIPPlugin implements StandardPlugin
     protected function actionHeader() {
         Navigation::activateItem($this->navlink);
         $this->setTabNavigationIcon('black');
-        $this->getTabNavigationItem()->addSubNavigation('show', new Navigation(_('RichText'), PluginEngine::getLink($this, array(), 'show')));
+        $this->addSubNavigation(_('Lesen'), 'show');
+        if (Utils\hasPermission($this->edit_permission)) {
+            $this->addSubNavigation(_('Bearbeiten'), 'edit');
+        }
+    }
+
+    /**
+     * Add the given item to the subnavigation of this object.
+     * @param string $title     Title displayed to user.
+     * @param string $action    Executed action when title is clicked.
+     */
+    protected function addSubNavigation($title, $action) {
+        $this->getTabNavigationItem()->addSubNavigation($action, new Navigation(
+            $title, PluginEngine::getLink($this, array(), $action)));
     }
 
     /**
@@ -268,4 +238,3 @@ class RichTextPlugin extends StudIPPlugin implements StandardPlugin
         CSRFProtection::verifyUnsafeRequest();
     }
 }
-

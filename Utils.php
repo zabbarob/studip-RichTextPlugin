@@ -376,17 +376,19 @@ function isStudipMediaUrlPath($path) {
     return \in_array($path_head, $valid_paths);
 }
 
+function hasPermission($permission) {
+    return $GLOBALS['perm']->have_studip_perm($permission, getSeminarId());
+}
+
 /**
  * Verify that user has needed permission.
  * @param string $permission Minimum requested permission level.
  * @throws AccessDeniedException if user does not have permission.
  */
 function verifyPermission($permission) {
-    $context = getSeminarId();
-    if (!$GLOBALS['perm']->have_studip_perm($permission, $context)) {
-        throw new \AccessDeniedException(\sprintf(
-            \studip_utf8decode(\_('Es werden mindestens "%s"-Zugriffsrechte benötigt.')),
-            $permission));
+    if (!hasPermission($permission)) {
+        throw new \AccessDeniedException(\studip_utf8decode(
+            \_("Es werden mindestens $permission-Zugriffsrechte benötigt.")));
     }
 }
 
@@ -396,7 +398,8 @@ function verifyPermission($permission) {
  */
 function verifyPostRequest() {
     if (!\Request::isPost()) {
-        throw new \AccessDeniedException(_('Die Anfrage muss als HTTP POST gestellt werden.'));
+        throw new \AccessDeniedException(\studip_utf8decode(
+            _('Die Anfrage muss als HTTP POST gestellt werden.')));
     }
 }
 
