@@ -19,13 +19,32 @@ jQuery(function($){
     CKEDITOR.replace('richtext-editor', {
         customConfig: '',
         uiColor: '#7788AA',  // same as studip's tab navigation background
-        removePlugins: 'elementspath,maximize,resize',
+        removePlugins: 'about,anchor,bidi,blockquote,div,elementspath,flash'
+                       + ',forms,iframe,maximize,newpage,preview,resize'
+                       + ',showblocks,stylescombo,templates',
         extraPlugins: 'autogrow,divarea,sharedspace',
         autoGrow_onStartup: true,
         autoGrow_bottomSpace: 50,
         sharedSpaces: {
 			top: 'cktoolbar'
-		}
+        },
+        toolbarGroups: [
+            {name: 'document',    groups: ['mode', 'document', 'doctools']},
+            {name: 'clipboard',   groups: ['clipboard', 'undo']},
+            {name: 'editing',     groups: ['find', 'selection', 'spellchecker']},
+            {name: 'forms'},
+            '/',
+            {name: 'basicstyles', groups: ['basicstyles', 'cleanup']},
+            {name: 'paragraph',   groups: ['list', 'indent', 'blocks', 'align']},
+            {name: 'links'},
+            '/',
+            {name: 'styles'},
+            {name: 'colors'},
+            {name: 'tools'},
+            {name: 'insert'},
+            {name: 'others'},
+            {name: 'about'}
+        ]
     });
 
     // helper for inserting a new DOM node in CKEditor
