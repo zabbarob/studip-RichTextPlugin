@@ -108,6 +108,7 @@ class RichTextPlugin extends StudIPPlugin implements StandardPlugin
     public function edit_action() {
         Utils\verifyPermission($this->edit_permission);
         $this->actionHeader();
+        $this->addScript('jquery.autosize-min.js');
         $this->addScript('ckeditor/ckeditor.js');
         $this->renderBodyTemplate('edit');
     }

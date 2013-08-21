@@ -62,26 +62,13 @@
     max-height: 66%;
 }
 
-#edit_box > textarea {
-    font-family: "Courier New", Courier, monospace;
-    width: 100%;
-    background: transparent;
-    height: 400px;
-    border: 0;
-    resize: none;
-    white-space: pre;
-    border-top-left-radius: 4px;
-    border-top-right-radius: 4px;
-    padding: 10px;
-    word-wrap: normal;
-    -ms-box-sizing: border-box;
-    -webkit-box-sizing: border-box;
-    -moz-box-sizing: border-box;
-    box-sizing: border-box;
+#richtext-editor, .cke_source {
+    min-height: 200px;
+    resize: vertical;
 }
 
-#edit_box > textarea:focus {
-    box-shadow: 0 0 4px 1px rgba(0, 0, 0, 0.3);
-    background: rgba(255, 255, 255, 0.4);
-    outline: 0;
+.animated-height-change {
+    -webkit-transition: height 0.2s;
+    -moz-transition: height 0.2s;
+    transition: height 0.2s;
 }

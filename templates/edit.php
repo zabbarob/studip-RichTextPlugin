@@ -81,9 +81,16 @@ jQuery(function($){
 
     // handle drag'n'drop events
     var dropHandler = richTextPlugin.getDropHandler(callback);
-    CKEDITOR.on('instanceReady', function(readyEvent){
-        readyEvent.editor.document.on('drop', function(dropEvent){
+    CKEDITOR.on('instanceReady', function(event){
+        event.editor.document.on('drop', function(dropEvent){
             dropHandler(jQuery.Event(dropEvent.data.$));
+        });
+        event.editor.on('mode', function(event) {
+            if (event.editor.mode === 'source') {
+                source = $(event.editor.container.$).find('.cke_source');
+                source.addClass('animated-height-change');
+                source.autosize();
+            }
         });
     });
 
