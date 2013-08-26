@@ -22,7 +22,7 @@ jQuery(function($){
         removePlugins: 'about,anchor,bidi,blockquote,div,elementspath,flash'
                        + ',forms,iframe,maximize,newpage,preview,resize'
                        + ',showblocks,stylescombo,templates',
-        extraPlugins: 'autogrow,divarea,sharedspace',
+        extraPlugins: 'autogrow,divarea,sharedspace,studip-wiki',
         autoGrow_onStartup: true,
         autoGrow_bottomSpace: 50,
         sharedSpaces: {
