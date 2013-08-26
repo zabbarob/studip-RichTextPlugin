@@ -82,19 +82,18 @@ jQuery(function($){
     // handle drag'n'drop events
     var dropHandler = richTextPlugin.getDropHandler(callback);
     CKEDITOR.on('instanceReady', function(event){
-        event.editor.document.on('drop', function(dropEvent){
+        var editor = event.editor;
+        editor.document.on('drop', function(dropEvent){
             dropHandler(jQuery.Event(dropEvent.data.$));
         });
-        event.editor.on('mode', function(event) {
+        editor.on('mode', function(event) {
             if (event.editor.mode === 'source') {
                 source = $(event.editor.container.$).find('.cke_source');
                 source.addClass('animated-height-change');
                 source.autosize();
             }
         });
-    });
 
-    setTimeout(function(){
         // let the toolbar float, make it draggable from everywhere
         // and hide the dialog's parent window
         $('#cktoolbar').dialog({
@@ -117,6 +116,9 @@ jQuery(function($){
         $('#cke_richtext-editor').css({
             border: '1px dotted #7788AA'  // same as CKEditor uiColor
         });
-    }, 1500);
+
+
+        editor.focus();
+    });
 });
 </script>
