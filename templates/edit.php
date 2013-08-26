@@ -93,30 +93,24 @@ jQuery(function($){
                 source.autosize();
             }
         });
+
+        var editor_area = $('#edit-form #cke_richtext-editor');
         editor.on('focus', function(event){
             // add shadow / glow effect (same color as CKEditor uiColor)
-            $('#cke_richtext-editor').css('box-shadow', '0 0 3px #7788AA');
+            editor_area.css('box-shadow', '0 0 3px #7788AA');
         });
         editor.on('blur', function(event){
             // remove shadow / glow effect (same color as CKEditor uiColor)
-            $('#cke_richtext-editor').css('box-shadow', '');
+            editor_area.css('box-shadow', '');
         });
 
         // let the toolbar float, make it draggable from everywhere
         // and hide the dialog's parent window
-        $('#cktoolbar').dialog({
-            dialogClass: 'cktoolbar',
-            draggable: false,
-            resizable: false,
-            minWidth: 0,
-            minHeight: 0,
-            show: 'fade'
-        }).parent().draggable().css({
-            width: 0,
-            height: 0,
-            border: 'none',
-            margin: 0,
-            padding: 0
+        var toolbar = $('#cktoolbar');
+        var toolbar_offset = 5;
+        toolbar.fadeIn(1000).draggable().offset({
+            top: editor_area.offset().top - toolbar.height() + toolbar_offset,
+            left: editor_area.offset().left + editor_area.width() - toolbar.width() +  + toolbar_offset
         });
 
         editor.focus();
