@@ -93,6 +93,14 @@ jQuery(function($){
                 source.autosize();
             }
         });
+        editor.on('focus', function(event){
+            // add shadow / glow effect (same color as CKEditor uiColor)
+            $('#cke_richtext-editor').css('box-shadow', '0 0 3px #7788AA');
+        });
+        editor.on('blur', function(event){
+            // remove shadow / glow effect (same color as CKEditor uiColor)
+            $('#cke_richtext-editor').css('box-shadow', '');
+        });
 
         // let the toolbar float, make it draggable from everywhere
         // and hide the dialog's parent window
@@ -110,13 +118,6 @@ jQuery(function($){
             margin: 0,
             padding: 0
         });
-
-        // make border of editor area more unobtrusive
-        // TODO why doesn't it work when set immediately?
-        $('#cke_richtext-editor').css({
-            border: '1px dotted #7788AA'  // same as CKEditor uiColor
-        });
-
 
         editor.focus();
     });

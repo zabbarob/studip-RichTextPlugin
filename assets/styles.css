@@ -24,6 +24,16 @@
     border: 0;
 }
 
+/* configure CKEditor content area */
+
+#layout_content #cke_richtext-editor {
+    border: 1px dotted #7788AA;  /* same as CKEditor uiColor */
+    border-radius: 5px;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+}
+
 /* configure CKEditor toolbar */
 
 #cktoolbar {
