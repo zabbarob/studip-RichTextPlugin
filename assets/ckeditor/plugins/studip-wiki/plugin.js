@@ -26,7 +26,9 @@ CKEDITOR.plugins.add('studip-wiki', {
                 group: 'studipGroup'
             });
             editor.contextMenu.addListener(function(element) {
-                if (element.getAscendant('a', true)) {
+                var link = element.getAscendant('a', true);
+                var wiki = STUDIP.URLHelper.getURL('wiki.php');
+                if (link && link.getAttribute('href').indexOf(wiki) == 0) {
                     return {
                         wikilinkItem: CKEDITOR.TRISTATE_OFF
                     };
