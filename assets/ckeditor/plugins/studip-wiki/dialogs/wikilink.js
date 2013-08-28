@@ -7,6 +7,12 @@ CKEDITOR.dialog.add('wikiDialog', function (editor) {
         return results == null ? "" : decodeURIComponent(
             results[1].replace(/\+/g, " "));
     }
+    function encode_utf8(s) {
+        return unescape(encodeURIComponent(s));
+    }
+    function decode_utf8(s) {
+        return decodeURIComponent(escape(s));
+    }
     return {
         title: "Insert Stud.IP Wiki Link",
         minWidth: 400,
@@ -18,10 +24,21 @@ CKEDITOR.dialog.add('wikiDialog', function (editor) {
                 type: 'text',
                 id: 'wikipage',
                 label: "Wiki Page Name",
-                validate: CKEDITOR.dialog.validate.notEmpty(
-                    "Page name cannot be empty"),
+                // Stud.IP Wiki Link Definition
+                // * allowed characters: a-z.-:()_§/@# äöüß
+                // * enclose in double-brackets: [[wiki link]]
+                // * test: ß
+                // extended:
+                // * add | followed by one or more characters for alt text
+                // * characters can be anything but ]
+                validate: CKEDITOR.dialog.validate.regex(
+                    /^[\w\.\-\:\(\)§\/@# ÄÖÜäöüß]+$/i, // TODO ÄÖÜäöüß not working :(
+                    "Page name must contain at least one character.\n"
+                    + "Following characters are allowed:\n"
+                    // TODO special chars §ÄÖÜäöüß are not displayed correctly
+                    + "a-z 0-9 .-:( )_/@# and space."),
                 setup: function(link) {
-                    this.setValue(link.getText());
+                    this.setValue(encodeURIComponent(link.getText()));
                 },
                 commit: function(link) {
                     link.setText(this.getValue());
