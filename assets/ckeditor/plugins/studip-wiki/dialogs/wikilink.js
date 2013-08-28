@@ -19,18 +19,41 @@ CKEDITOR.dialog.add('wikiDialog', function (editor) {
                 id: 'wikipage',
                 label: "Wiki Page Name",
                 validate: CKEDITOR.dialog.validate.notEmpty(
-                    "Page name cannot be empty")
+                    "Page name cannot be empty"),
+                setup: function(link) {
+                    this.setValue(link.getText());
+                },
+                commit: function(link) {
+                    link.setText(this.getValue());
+                    link.setAttribute('href',
+                        STUDIP.URLHelper.getURL('wiki.php', {
+                            cid: getParameterByName('cid'),
+                            keyword: this.getValue()
+                        })
+                    );
+                }
             }]
         }],
-        onOk: function() {
-            var link = editor.document.createElement('a');
-            var wikipage = this.getValueOf('tab-link', 'wikipage');
-            link.setText(wikipage);
-            link.setAttribute('href', STUDIP.URLHelper.getURL('wiki.php', {
-                cid: getParameterByName('cid'),
-                keyword: wikipage
-            }));
-            editor.insertElement(link);
+        onShow: function() {
+            var element = editor.getSelection().getStartElement();
+            if (element) {
+                element = element.getAscendant('a', true);
+            }
+
+            this.insertMode = !element || element.getName() != 'a';
+            if (this.insertMode) {
+                element = editor.document.createElement('a');
+            } else {
+                this.setupContent(element);
+            }
+
+            this.link = element;
+        },
+        onOk: function() { // this == dialog
+            this.commitContent(this.link);
+            if (this.insertMode) {
+                editor.insertElement(this.link);
+            }
         }
     };
 });
