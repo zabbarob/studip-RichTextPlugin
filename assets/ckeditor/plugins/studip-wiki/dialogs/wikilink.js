@@ -38,14 +38,14 @@ CKEDITOR.dialog.add('wikiDialog', function (editor) {
                     // TODO special chars §ÄÖÜäöüß are not displayed correctly
                     + "a-z 0-9 .-:( )_/@# and space."),
                 setup: function(link) {
-                    this.setValue(encodeURIComponent(link.getText()));
+                    this.setValue(decodeURIComponent(link.getText()));
                 },
                 commit: function(link) {
                     link.setText(this.getValue());
                     link.setAttribute('href',
                         STUDIP.URLHelper.getURL('wiki.php', {
                             cid: getParameterByName('cid'),
-                            keyword: this.getValue()
+                            keyword: encodeURIComponent(this.getValue())
                         })
                     );
                     link.setAttribute('class', 'wiki-link');
