@@ -1,6 +1,13 @@
 CKEDITOR.plugins.add('studip-wiki', {
     icons: 'wikilink',
     init: function (editor) {
+        // utilities
+        function isWikiLink(element) {
+            var link = element.getAscendant('a', true);
+            var wiki = STUDIP.URLHelper.getURL('wiki.php');
+            return link && link.getAttribute('href').indexOf(wiki) == 0;
+        }
+
         // add toolbar button and dialog for editing Stud.IP wiki links
         editor.addCommand('insertWikiLink', {
             exec: function(editor) {
@@ -26,14 +33,22 @@ CKEDITOR.plugins.add('studip-wiki', {
                 group: 'studipGroup'
             });
             editor.contextMenu.addListener(function(element) {
-                var link = element.getAscendant('a', true);
-                var wiki = STUDIP.URLHelper.getURL('wiki.php');
-                if (link && link.getAttribute('href').indexOf(wiki) == 0) {
+                if (isWikiLink(element)) {
                     return {
                         wikilinkItem: CKEDITOR.TRISTATE_OFF
                     };
                 }
             });
         }
+
+        // open dialog when double-clicking link
+        editor.on('doubleclick', function(event) {
+            var element = CKEDITOR.plugins.link.getSelectedLink(editor)
+                          || event.data.element;
+
+            if (isWikiLink(element)) {
+                event.data.dialog = 'wikiDialog';
+            }
+        });
     }
 });
