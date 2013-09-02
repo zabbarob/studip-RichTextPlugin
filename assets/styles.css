@@ -11,12 +11,10 @@
  * @category    Stud.IP
  */
 
-/* position github-fork icon in upper right corner of infobox */
-
+/* position "Fork me on GitHub" icon in upper right corner of infobox */
 #layout_infobox {
     position: relative;
 }
-
 #github-fork {
     position: absolute;
     top: 0;
@@ -24,15 +22,19 @@
     border: 0;
 }
 
-#edit-form #cke_richtext-editor {   /* CKEditor content area */
-    border: 1px dotted #7788AA; /* color == CKEditor uiColor */
+/* configure look and feel of CKEditor's content area and toolbar */
+#edit-form #cke_richtext-editor {   /* content area */
+    border: 1px dotted #7788AA;     /* color == CKEditor uiColor */
     border-radius: 5px;
     margin: 0;
     padding: 0;
     overflow: hidden;
 }
-
-#cktoolbar {                        /* CKEditor toolbar */
+#richtext-editor, .cke_source {
+    min-height: 200px;
+    resize: vertical;
+}
+#cktoolbar {                        /* toolbar */
     display: none;
     position: fixed;
     padding: 0;
@@ -42,7 +44,6 @@
     -webkit-box-shadow: 3px 3px 20px rgba(119, 136, 170, 0.8); 
     box-shadow: 3px 3px 20px rgba(119, 136, 170, 0.8);
 }
-
 #cktoolbar #cke_richtext-editor {
     border: none;
 }
@@ -58,13 +59,16 @@
     max-height: 66%;
 }
 
-#richtext-editor, .cke_source {
-    min-height: 200px;
-    resize: vertical;
-}
-
 .animated-height-change {
     -webkit-transition: height 0.2s;
     -moz-transition: height 0.2s;
     transition: height 0.2s;
+}
+
+.wiki-link {
+    background-image: url(ckeditor/plugins/studip-wiki/icons/wikilink-grey.png);
+    background-repeat: no-repeat;
+    background-position: right top;
+    background-size: 8px;
+    padding-right: 9px;
 }

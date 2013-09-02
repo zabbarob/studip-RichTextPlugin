@@ -48,6 +48,7 @@ CKEDITOR.dialog.add('wikiDialog', function (editor) {
                             keyword: this.getValue()
                         })
                     );
+                    link.setAttribute('class', 'wiki-link');
                 }
             }]
         }],
