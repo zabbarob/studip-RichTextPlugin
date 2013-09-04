@@ -50,11 +50,13 @@ CKEDITOR.dialog.add('wikiDialog', function (editor) {
                 commit: function(link) {
                     var wikipage = this.getValue();
                     link.setText(wikipage);
-                    link.setAttribute('href',
-                        STUDIP.URLHelper.getURL('wiki.php', {
-                            cid: getParameterByName('cid'),
-                        }) + '&keyword=' + windows1252(wikipage)
-                    );
+
+                    var href = STUDIP.URLHelper.getURL('wiki.php', {
+                        cid: getParameterByName('cid')
+                    }) + '&keyword=' + windows1252(wikipage);
+
+                    link.setAttribute('href', href);
+                    link.setAttribute('data-cke-saved-href', href);
                     link.setAttribute('class', 'wiki-link');
                 }
             }]
