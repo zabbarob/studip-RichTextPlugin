@@ -17,17 +17,17 @@ CKEDITOR.plugins.add('studip-wiki', {
         });
         editor.addCommand('wikiDialog', new CKEDITOR.dialogCommand('wikiDialog'));
         editor.ui.addButton('wikilink', {
-                label: 'Insert Stud.IP Wiki link',
+                label: 'Stud.IP-Wiki Link einfügen',
                 command: 'wikiDialog',
                 toolbar: 'insert'
         });
-        CKEDITOR.dialog.add('wikiDialog', this.path + 'dialogs/wikilink.js' );
+        CKEDITOR.dialog.add('wikiDialog', this.path + 'dialogs/wikilink.js.php' );
 
         // add context menu for existing Stud.IP wiki links
         if (editor.contextMenu) {
             editor.addMenuGroup('studipGroup');
             editor.addMenuItem('wikilinkItem', {
-                label: 'Edit Stud.IP Wiki Link',
+                label: 'Stud.IP-Wiki Link bearbeiten',
                 icon: this.path + 'icons/wikilink.png', // same as plugin icon
                 command: 'wikiDialog',
                 group: 'studipGroup'

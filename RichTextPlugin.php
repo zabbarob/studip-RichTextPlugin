@@ -181,7 +181,9 @@ class RichTextPlugin extends StudIPPlugin implements StandardPlugin
      * @param string $path Path to the file. 
      */
     protected function addScript($path) {
-        PageLayout::addScript($this->assets . $path);
+        PageLayout::addHeadElement('script', array(
+            'src' => $this->assets . $path,
+            'charset' => 'utf-8'), '');
     }
 
     /**

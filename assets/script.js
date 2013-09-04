@@ -92,7 +92,9 @@
         // give user the option to undo clicking 'cancel' button
         $('input[name="cancel"]').click(function(e){
             // TODO internationalize warning message
-            var warning = 'If you select "OK" your edits will not be saved! Select "Cancel" to continue editing.';
+            var warning = "Wenn Sie [OK] auswählen werden ihre Änderungen"
+                + " nicht gespeichert! Wählen sie [Abbrechen] um den Text"
+                + " weiter zu bearbeiten.";
             if (!confirm(warning)) {
                 e.preventDefault();
             }

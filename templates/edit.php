@@ -14,7 +14,7 @@
 ?>
 <span id="cktoolbar"></span>
 <?include 'common_edit.php';?>
-<script type="text/javascript">
+<script type="text/javascript" charset="utf-8">
 jQuery(function($){
     CKEDITOR.replace('richtext-editor', {
         customConfig: '',
