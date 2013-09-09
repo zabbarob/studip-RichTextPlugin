@@ -11,12 +11,16 @@
  * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
  * @category    Stud.IP
  */
+include 'common_edit.php';
 ?>
-<span id="cktoolbar"></span>
-<?include 'common_edit.php';?>
 <script type="text/javascript" charset="utf-8">
 jQuery(function($){
-    CKEDITOR.replace('richtext-editor', {
+    var textarea = $('#richtext-editor');
+    var toolbarId = 'cktoolbar';
+    var toolbar = $('<span id="' + String(toolbarId) + '"></span>');
+    toolbar.insertBefore(textarea);
+
+    CKEDITOR.replace(textarea[0], {
         customConfig: '',
         uiColor: '#7788AA',  // same as studip's tab navigation background
         removePlugins: 'about,anchor,bidi,blockquote,div,elementspath,flash'
@@ -26,7 +30,7 @@ jQuery(function($){
         autoGrow_onStartup: true,
         autoGrow_bottomSpace: 50,
         sharedSpaces: {
-			top: 'cktoolbar'
+			top: toolbarId
         },
         toolbarGroups: [
             {name: 'document',    groups: ['mode', 'document', 'doctools']},
@@ -94,23 +98,23 @@ jQuery(function($){
             }
         });
 
-        var editor_area = $('#edit-form #cke_richtext-editor');
+        var editorArea = textarea.siblings('#cke_richtext-editor');
         editor.on('focus', function(event){
             // add shadow / glow effect (same color as CKEditor uiColor)
-            editor_area.css('box-shadow', '0 0 3px #7788AA');
+            editorArea.css('box-shadow', '0 0 3px #7788AA');
         });
         editor.on('blur', function(event){
             // remove shadow / glow effect (same color as CKEditor uiColor)
-            editor_area.css('box-shadow', '');
+            editorArea.css('box-shadow', '');
         });
 
         // let the toolbar float, make it draggable from everywhere
         // and hide the dialog's parent window
-        var toolbar = $('#cktoolbar');
         var toolbar_offset = 5;
         toolbar.fadeIn(1000).draggable().offset({
-            top: editor_area.offset().top - toolbar.height() + toolbar_offset,
-            left: editor_area.offset().left + editor_area.width() - toolbar.width() +  + toolbar_offset
+            top: editorArea.offset().top - toolbar.height() + toolbar_offset,
+            left: editorArea.offset().left + toolbar_offset
+                  + editorArea.width() - toolbar.width()
         });
 
         editor.focus();
