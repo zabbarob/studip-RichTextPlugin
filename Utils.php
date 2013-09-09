@@ -403,3 +403,12 @@ function verifyPostRequest() {
     }
 }
 
+/**
+ * Read the value of a global configuration entry from the database.
+ *
+ * @param string $name Identifier of the configuration entry.
+ * @returns string Value of the configuration entry.
+ */
+function getConfigValue($name) {
+    return \Config::GetInstance()->getValue($name);
+}
