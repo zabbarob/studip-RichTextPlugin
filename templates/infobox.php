@@ -34,12 +34,14 @@ $infobox_content[] = array(
                . ' Navigationsmenü <b>Bearbeiten</b> aus. Sollte dort als einzige'
                . ' Option <b>Lesen</b> angezeigt werden, dann bitten sie ihren'
                . ' Kursleiter um Schreibrechte.'), 'info'),
-        text(_('Teilnehmer können den RichText Editor verwenden, um gemeinsam'
+        text(_('Teilnehmer können den RichText-Editor verwenden, um gemeinsam'
                . ' Informationen zum Kurs zu editieren.')),
         text(_('Dateien können per Drag\'n\'Drop hochgeladen werden.'), 'files'),
         text(_('Stud.IP-Wiki Links sind am Wiki-Icon erkennbar: <a href="'
                . URLHelper::getURL('wiki.php')
                . '" class="wiki-link">Stud.IP-Wiki</a>.'), 'wiki'),
+        text(_('Die Werkzeugleiste kann beliebig verschoben werden. Sie wird'
+               . ' automatisch ein- und ausgeblendet.'), 'hash'),
         text(_('<small id="sources">'
                . '<a href="https://github.com/zabbarob/studip-RichTextPlugin"'
                . ' target="_blank">RichText plugin source on GitHub.</a>'

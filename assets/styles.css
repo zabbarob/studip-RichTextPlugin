@@ -40,12 +40,27 @@
     padding: 0;
     margin: 0;
     z-index: 10000;
-    -moz-box-shadow: 3px 3px 20px rgba(119, 136, 170, 0.8);
+    border-radius: 5px;
     -webkit-box-shadow: 3px 3px 20px rgba(119, 136, 170, 0.8); 
+    -moz-box-shadow: 3px 3px 20px rgba(119, 136, 170, 0.8);
     box-shadow: 3px 3px 20px rgba(119, 136, 170, 0.8);
 }
 #cktoolbar #cke_richtext-editor {
     border: none;
+}
+.cke_toolbox:hover, #cktoolbar:hover {
+    cursor: -webkit-grab;
+    cursor: -moz-grab;
+    cursor: grab;
+}
+.cke_toolbox:active {
+    cursor: -webkit-grabbing;
+    cursor: -moz-grabbing;
+    cursor: grabbing;
+}
+#toolbar-handle {
+    height: 0;
+    text-align: right;
 }
 
 /* other settings */

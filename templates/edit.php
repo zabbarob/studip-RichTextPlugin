@@ -17,7 +17,11 @@ include 'common_edit.php';
 jQuery(function($){
     var textarea = $('#richtext-editor');
     var toolbarId = 'cktoolbar';
-    var toolbar = $('<span id="' + String(toolbarId) + '"></span>');
+    var toolbarHandle = $('<div>').html('&#9776;&nbsp;').attr({
+        id: 'toolbar-handle',
+        title: 'Werkzeugleiste verschieben'
+    });
+    var toolbar = $('<span>').attr('id', toolbarId).append(toolbarHandle);
     toolbar.insertBefore(textarea);
 
     CKEDITOR.replace(textarea[0], {
@@ -95,6 +99,9 @@ jQuery(function($){
                 source = $(event.editor.container.$).find('.cke_source');
                 source.addClass('animated-height-change');
                 source.autosize();
+                source.focus();
+            } else {
+                editor.focus();
             }
         });
 
@@ -108,7 +115,11 @@ jQuery(function($){
         editor.on('blur', function(event){
             // remove shadow / glow effect (same color as CKEditor uiColor)
             editorArea.css('box-shadow', '');
-            toolbar.fadeOut(fadeTime);
+            if (toolbar.has(':focus').length > 0) {
+                editor.focus();
+            } else {
+                toolbar.fadeOut(fadeTime);
+            }
         });
 
         // let the toolbar float, make it draggable from everywhere
