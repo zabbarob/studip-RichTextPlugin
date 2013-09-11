@@ -44,6 +44,7 @@
     -webkit-box-shadow: 3px 3px 20px rgba(119, 136, 170, 0.8); 
     -moz-box-shadow: 3px 3px 20px rgba(119, 136, 170, 0.8);
     box-shadow: 3px 3px 20px rgba(119, 136, 170, 0.8);
+    opacity: 0.95;
 }
 #cktoolbar #cke_richtext-editor {
     border: none;
