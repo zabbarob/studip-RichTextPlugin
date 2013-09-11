@@ -98,20 +98,23 @@ jQuery(function($){
             }
         });
 
+        var fadeTime = 300;
         var editorArea = textarea.siblings('#cke_richtext-editor');
         editor.on('focus', function(event){
             // add shadow / glow effect (same color as CKEditor uiColor)
             editorArea.css('box-shadow', '0 0 3px #7788AA');
+            toolbar.fadeIn(fadeTime);
         });
         editor.on('blur', function(event){
             // remove shadow / glow effect (same color as CKEditor uiColor)
             editorArea.css('box-shadow', '');
+            toolbar.fadeOut(fadeTime);
         });
 
         // let the toolbar float, make it draggable from everywhere
         // and hide the dialog's parent window
         var toolbar_offset = 5;
-        toolbar.fadeIn(1000).draggable().offset({
+        toolbar.draggable().offset({
             top: editorArea.offset().top - toolbar.height() + toolbar_offset,
             left: editorArea.offset().left + toolbar_offset
                   + editorArea.width() - toolbar.width()
