@@ -36,7 +36,7 @@ $infobox_content[] = array(
                . ' Kursleiter um Schreibrechte.'), 'info'),
         text(_('Teilnehmer können den RichText Editor verwenden, um gemeinsam'
                . ' Informationen zum Kurs zu editieren.')),
-        text(_('Dateien können per Drag\'n\'Drop hochgeladen werden'), 'files'),
+        text(_('Dateien können per Drag\'n\'Drop hochgeladen werden.'), 'files'),
         text(_('Stud.IP-Wiki Links sind am Wiki-Icon erkennbar: <a href="'
                . URLHelper::getURL('wiki.php')
                . '" class="wiki-link">Stud.IP-Wiki</a>.'), 'wiki'),
