@@ -205,6 +205,7 @@ function testGetMediaUrl() {
     $external_document = 'http://pflanzen-enzyklopaedie.eu/wp-content/uploads/2012/11/Sumpfdotterblume-multiplex-120x120.jpg';
     $proxy_document = 'http://localhost:8080/studip/dispatch.php/media_proxy?url=http%3A%2F%2Fpflanzen-enzyklopaedie.eu%2Fwp-content%2Fuploads%2F2012%2F11%2FSumpfdotterblume-multiplex-120x120.jpg';
     $studip_document_no_domain = '/studip/sendfile.php?type=0&file_id=abc123&file_name=test.jpg';
+    // $proxy_no_domain = '/studip/dispatch.php/media_proxy?url=http%3A%2F%2Fwww.ecult.me%2Fimages%2Flogo.png';
 
     testMediaUrl($studip_document, $studip_document);
     testMediaUrl('invalid url', NULL);
@@ -317,14 +318,21 @@ function getStudipRelativePath($url) {
  *               proxy then this is the exact same value given by $url.
  */
 function decodeMediaProxyUrl($url) {
-    $base_url = $GLOBALS['ABSOLUTE_URI_STUDIP'];
-    $media_proxy = $base_url . 'dispatch.php/media_proxy?url=';
-
-    $transformed_url = tranformInternalIdnaLink($url);
-    if (startsWith($transformed_url, $media_proxy)) {
-        return \urldecode(removePrefix($transformed_url, $media_proxy));
+    # TODO make it work for 'url=' at any position in query
+    $proxypath = getMediaProxyPath() . '?url=';
+    $urlpath = removeStudipDomain($url);
+    if (startsWith($urlpath, $proxypath)) {
+        return \urldecode(removePrefix($urlpath, $proxypath));
     }
     return $url;
+}
+
+function getMediaProxyPath() {
+    return removeStudipDomain(getMediaProxyUrl());
+}
+
+function getMediaProxyUrl() {
+    return $GLOBALS['ABSOLUTE_URI_STUDIP'] . 'dispatch.php/media_proxy';
 }
 
 /**
@@ -339,7 +347,6 @@ function isStudipUrl($url) {
 
     $parsed_url = \parse_url(tranformInternalIdnaLink($url));
     if ($parsed_url === FALSE) {
-
         return FALSE; // url is seriously malformed
     }
 
@@ -351,9 +358,7 @@ function isStudipUrl($url) {
     $is_host = \in_array($parsed_url['host'], $studip_hosts);
     $is_port = \in_array($parsed_url['port'], $studip_ports);
     $is_path = startsWith($parsed_url['path'], $studip_url['path']);
-    $is_studip = $is_scheme && $is_host && $is_port && $is_path;
-
-    return $is_studip;
+    return $is_scheme && $is_host && $is_port && $is_path;
 }
 
 /**
