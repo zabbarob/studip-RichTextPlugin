@@ -29,7 +29,7 @@ jQuery(function($){
         uiColor: '#7788AA',  // same as studip's tab navigation background
         removePlugins: 'about,anchor,bidi,blockquote,div,elementspath,flash'
                        + ',forms,iframe,maximize,newpage,preview,resize'
-                       + ',showblocks,stylescombo,templates',
+                       + ',showblocks,stylescombo,templates,smiley',
         extraPlugins: 'autogrow,divarea,sharedspace,studip-wiki',
         autoGrow_onStartup: true,
         autoGrow_bottomSpace: 50,
