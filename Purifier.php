@@ -41,6 +41,22 @@ function createPurifier() {
     $config->set('Attr.AllowedFrameTargets', array('_blank'));
     $config->set('Attr.AllowedRel', array('nofollow'));
 
+    # TODO remove this setting when Stud.IP runs with UTF-8!!!
+    #
+    # This setting is necessary since ISO-8859-1 cannot encode all
+    # characters (e.g. math symbols like ∑, ∫, are unavailable).
+    #
+    # The HTML purifier developers strongly recommend using UTF-8 and state on
+    # their homepage:
+    # "HTML Purifier, in order to protect against sophisticated escaping
+    #  schemes, normalizes all character and numeric entity references before
+    #  processing the text."
+    #  http://htmlpurifier.org/docs/enduser-utf8.html#whyutf8-htmlpurifier
+    #
+    # Also have a look at the documentation of this setting at
+    # http://htmlpurifier.org/live/configdoc/plain.html#Core.EscapeNonASCIICharacters
+    $config->set('Core.EscapeNonASCIICharacters', true);
+
     // avoid <img src="evil_CSRF_stuff">
     $def = $config->getHTMLDefinition(true);
     $img = $def->addBlankElement('img');
