@@ -52,7 +52,15 @@ jQuery(function($){
             {name: 'insert'},
             {name: 'others'},
             {name: 'about'}
-        ]
+        ],
+
+        // convert special chars to html entities
+        // NOTE use entities_additional: '#1049,...' for other chars
+        entities: true,
+        basicEntities: true,
+        entities_greek: true,
+        entities_latin: true,
+        entities_processNumerical: true
     });
 
     // helper for inserting a new DOM node in CKEditor
