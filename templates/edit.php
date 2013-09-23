@@ -15,15 +15,6 @@ include 'common_edit.php';
 ?>
 <script type="text/javascript" charset="utf-8">
 jQuery(function($){
-    // utilities
-    function fill(arr, value) {
-        for (var i = 0; i < arr.length; i++) {
-            arr[i] = value;
-        };
-        return arr;
-    }
-
-    // initialise editor
     var textarea = $('#richtext-editor');
     var toolbarId = 'cktoolbar';
     var toolbarHandle = $('<div>').html('&#9776;&nbsp;').attr({
