@@ -101,7 +101,7 @@ jQuery(function($){
             '@', "&sect;", "&para;", "&micro;",
             "[", "]", '{', '}',
             '|', "&brvbar;", "&ndash;", "&mdash;", "&macr;",
-            "&sbquo;", "&#8219;", "&bdquo;", "&hellip;",            
+            "&sbquo;", "&#8219;", "&bdquo;", "&hellip;",
 
             "&euro;", "&cent;", "&pound;", "&yen;", "&curren;",
             "&copy;", "&reg;", "&trade;",
@@ -113,55 +113,55 @@ jQuery(function($){
             "&diams;",
 
             "&#x00B1", // ±
-            "&#x2229", // ∩ INTERSECTION 
-            "&#x222A", // ∪ UNION 
-            "&#x221E", // ∞ INFINITY 
-            "&#x2107", // ℇ EULER CONSTANT 
-            "&#x2200", // ∀ FOR ALL 
-            "&#x2201", // ∁ COMPLEMENT 
-            "&#x2202", // ∂ PARTIAL DIFFERENTIAL 
-            "&#x2203", // ∃ THERE EXISTS 
-            "&#x2204", // ∄ THERE DOES NOT EXIST 
-            "&#x2205", // ∅ EMPTY SET 
-            "&#x2206", // ∆ INCREMENT 
-            "&#x2207", // ∇ NABLA 
-            "&#x2282", // ⊂ SUBSET OF 
-            "&#x2283", // ⊃ SUPERSET OF 
-            "&#x2284", // ⊄ NOT A SUBSET OF 
-            "&#x2286", // ⊆ SUBSET OF OR EQUAL TO 
-            "&#x2287", // ⊇ SUPERSET OF OR EQUAL TO 
-            "&#x2208", // ∈ ELEMENT OF 
-            "&#x2209", // ∉ NOT AN ELEMENT OF 
-            "&#x2227", // ∧ LOGICAL AND 
-            "&#x2228", // ∨ LOGICAL OR 
-            "&#x2264", // ≤ LESS-THAN OR EQUAL TO 
-            "&#x2265", // ≥ GREATER-THAN OR EQUAL TO 
-            "&#x220E", // ∎ END OF PROOF 
-            "&#x220F", // ∏ N-ARY PRODUCT 
-            "&#x2211", // ∑ N-ARY SUMMATION 
-            "&#x221A", // √ SQUARE ROOT 
-            "&#x222B", // ∫ INTEGRAL 
-            "&#x2234", // ∴ THEREFORE 
-            "&#x2235", // ∵ BECAUSE 
-            "&#x2260", // ≠ NOT EQUAL TO 
-            "&#x2262", // ≢ NOT IDENTICAL TO 
-            "&#x2263", // ≣ STRICTLY EQUIVALENT TO 
-            "&#x22A2", // ⊢ RIGHT TACK 
-            "&#x22A3", // ⊣ LEFT TACK 
-            "&#x22A4", // ⊤ DOWN TACK 
-            "&#x22A5", // ⊥ UP TACK 
-            "&#x22A7", // ⊧ MODELS 
-            "&#x22A8", // ⊨ TRUE 
-            "&#x22AC", // ⊬ DOES NOT PROVE 
-            "&#x22AD", // ⊭ NOT TRUE 
-            "&#x22EE", // ⋮ VERTICAL ELLIPSIS 
-            "&#x22EF", // ⋯ MIDLINE HORIZONTAL ELLIPSIS 
-            "&#x29FC", // ⧼ LEFT-POINTING CURVED ANGLE BRACKET 
-            "&#x29FD", // ⧽ RIGHT-POINTING CURVED ANGLE BRACKET 
-            "&#x207F", // ⁿ SUPERSCRIPT LATIN SMALL LETTER N 
-            "&#x2295", // ⊕ CIRCLED PLUS 
-            "&#x2297", // ⊗ CIRCLED TIMES 
-            "&#x2299", // ⊙ CIRCLED DOT OPERATOR 
+            "&#x2229", // ∩ INTERSECTION
+            "&#x222A", // ∪ UNION
+            "&#x221E", // ∞ INFINITY
+            "&#x2107", // ℇ EULER CONSTANT
+            "&#x2200", // ∀ FOR ALL
+            "&#x2201", // ∁ COMPLEMENT
+            "&#x2202", // ∂ PARTIAL DIFFERENTIAL
+            "&#x2203", // ∃ THERE EXISTS
+            "&#x2204", // ∄ THERE DOES NOT EXIST
+            "&#x2205", // ∅ EMPTY SET
+            "&#x2206", // ∆ INCREMENT
+            "&#x2207", // ∇ NABLA
+            "&#x2282", // ⊂ SUBSET OF
+            "&#x2283", // ⊃ SUPERSET OF
+            "&#x2284", // ⊄ NOT A SUBSET OF
+            "&#x2286", // ⊆ SUBSET OF OR EQUAL TO
+            "&#x2287", // ⊇ SUPERSET OF OR EQUAL TO
+            "&#x2208", // ∈ ELEMENT OF
+            "&#x2209", // ∉ NOT AN ELEMENT OF
+            "&#x2227", // ∧ LOGICAL AND
+            "&#x2228", // ∨ LOGICAL OR
+            "&#x2264", // ≤ LESS-THAN OR EQUAL TO
+            "&#x2265", // ≥ GREATER-THAN OR EQUAL TO
+            "&#x220E", // ∎ END OF PROOF
+            "&#x220F", // ∏ N-ARY PRODUCT
+            "&#x2211", // ∑ N-ARY SUMMATION
+            "&#x221A", // √ SQUARE ROOT
+            "&#x222B", // ∫ INTEGRAL
+            "&#x2234", // ∴ THEREFORE
+            "&#x2235", // ∵ BECAUSE
+            "&#x2260", // ≠ NOT EQUAL TO
+            "&#x2262", // ≢ NOT IDENTICAL TO
+            "&#x2263", // ≣ STRICTLY EQUIVALENT TO
+            "&#x22A2", // ⊢ RIGHT TACK
+            "&#x22A3", // ⊣ LEFT TACK
+            "&#x22A4", // ⊤ DOWN TACK
+            "&#x22A5", // ⊥ UP TACK
+            "&#x22A7", // ⊧ MODELS
+            "&#x22A8", // ⊨ TRUE
+            "&#x22AC", // ⊬ DOES NOT PROVE
+            "&#x22AD", // ⊭ NOT TRUE
+            "&#x22EE", // ⋮ VERTICAL ELLIPSIS
+            "&#x22EF", // ⋯ MIDLINE HORIZONTAL ELLIPSIS
+            "&#x29FC", // ⧼ LEFT-POINTING CURVED ANGLE BRACKET
+            "&#x29FD", // ⧽ RIGHT-POINTING CURVED ANGLE BRACKET
+            "&#x207F", // ⁿ SUPERSCRIPT LATIN SMALL LETTER N
+            "&#x2295", // ⊕ CIRCLED PLUS
+            "&#x2297", // ⊗ CIRCLED TIMES
+            "&#x2299", // ⊙ CIRCLED DOT OPERATOR
         ]
     });
 
