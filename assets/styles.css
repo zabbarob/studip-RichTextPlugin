@@ -24,11 +24,10 @@
 
 /* configure look and feel of CKEditor's content area and toolbar */
 #edit-form #cke_richtext-editor {   /* content area */
+    /* NOTE edited <div>s will not have a margin to the border, but <p>s will. */
     border: 1px dotted #7788AA;     /* color == CKEditor uiColor */
     border-radius: 5px;
-    margin: 0;
-    padding: 0;
-    overflow: hidden;
+    overflow: hidden;               /* cut child element corners off */
 }
 #richtext-editor, .cke_source {
     min-height: 200px;

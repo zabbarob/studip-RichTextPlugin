@@ -86,19 +86,4 @@
         dir: getScriptDir(),
         getDropHandler: getDropHandler
     }
-
-    // make sure code is only called after DOM structure is fully loaded
-    $(function() {
-        // give user the option to undo clicking 'cancel' button
-        $('input[name="cancel"]').click(function(e){
-            // TODO internationalize warning message
-            var warning = "Wenn Sie [OK] auswählen werden ihre Änderungen"
-                + " nicht gespeichert! Wählen sie [Abbrechen] um den Text"
-                + " weiter zu bearbeiten.";
-            if (!confirm(warning)) {
-                e.preventDefault();
-            }
-        });
-    }); // $(function() {
 }(jQuery));
-

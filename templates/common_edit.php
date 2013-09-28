@@ -18,16 +18,31 @@ include 'errors.php'; // show errors
 <script>MathJax.Hub.queue.pending = 1;</script>
 
 <!-- store url to which files are posted for drag'n'drop in editor -->
-<input type="hidden" id="post_files_url" value="<?=PluginEngine::getLink('richtextplugin/post_file')?>">
+<input type="hidden" id="post_files_url"
+    value="<?=PluginEngine::getLink('richtextplugin/post_file')?>">
 
 <!-- the editor -->
-<form enctype="multipart/form-data" style="padding:10px" id="edit-form" action="<?=PluginEngine::getLink('richtextplugin/show')?>" method="POST" accept-charset="utf-8">
-    <?= CSRFProtection::tokenTag() ?>
-    <textarea id="richtext-editor" spellcheck="false" wrap="off" autofocus placeholder="Enter text..." name="body"><?=htmlReady($body);?></textarea>
-    <br>
-    <p style="margin:10px">
-        <?= makeButton('uebernehmen', 'input', false, 'save') ?>
-        <?= makeButton('abbrechen', 'input', false, 'cancel') ?>
-    </p>
-</form>
+<form enctype="multipart/form-data" id="edit-form"
+    action="<?= PluginEngine::getLink('richtextplugin/show') ?>"
+    method="POST" accept-charset="utf-8">
 
+    <?= CSRFProtection::tokenTag() ?>
+    <textarea id="richtext-editor" spellcheck="false" wrap="off" autofocus
+        placeholder="Enter text..." name="body"><?= htmlReady($body) ?></textarea>
+
+    <button class="button" type="submit" name="save">
+        <?= \utf8_decode(_('Übernehmen')) ?></button>
+
+    <button id="cancel-button" class="button" type="submit" name="cancel">
+        <?= \utf8_decode(_('Abbrechen')) ?></button>
+</form>
+<script type="text/javascript" charset="utf-8">
+jQuery(function($){
+    $('#cancel-button').click(function(event) {
+        var warning = "<?= \utf8_decode(_(
+            'Wenn Sie [OK] auswählen werden ihre Änderungen nicht gespeichert!'
+            . '\nWählen Sie [Abbrechen] um den Text weiter zu bearbeiten.')) ?>";
+        confirm(warning) || event.preventDefault();
+    });
+});
+</script>

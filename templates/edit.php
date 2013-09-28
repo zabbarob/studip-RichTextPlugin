@@ -32,7 +32,6 @@ jQuery(function($){
                        + ',showblocks,stylescombo,templates,smiley',
         extraPlugins: 'autogrow,divarea,sharedspace,studip-wiki',
         autoGrow_onStartup: true,
-        autoGrow_bottomSpace: 50,
         sharedSpaces: {
 			top: toolbarId
         },
