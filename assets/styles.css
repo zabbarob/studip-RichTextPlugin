@@ -22,6 +22,11 @@
     border: 0;
 }
 
+/* "no javascript" warning message */
+.nojs {
+    color: #BD272E; /* same as studip error message color */
+}
+
 /* textarea of richtext-editor */
 #richtext-editor {
     display: block;

@@ -22,6 +22,10 @@ include 'errors.php'; // show errors
     value="<?=PluginEngine::getLink('richtextplugin/post_file')?>">
 
 <!-- the editor -->
+<p class="nojs"><?= \utf8_decode(_('JavaScript is not activated in your browser. Without it, the RichText editor can only provide HTML source editing. We are sorry for the inconveniences. Please ask your system administrator to activate JavaScript.')) ?></p>
+
+<p class="nojs"><?= \utf8_decode(_('JavaScript ist deaktiviert. Daher kann der RichText-Editor nur das Editieren des HTML-Quellcodes anbieten. Wir entschuldigen uns für die Umstände. Bitten Sie ihren Systemadministrator, JavaScript zu aktivieren.')) ?></p>
+
 <form enctype="multipart/form-data" id="edit-form"
     action="<?= PluginEngine::getLink('richtextplugin/show') ?>"
     method="POST" accept-charset="utf-8">
@@ -38,6 +42,7 @@ include 'errors.php'; // show errors
 </form>
 <script type="text/javascript" charset="utf-8">
 jQuery(function($){
+    $('.nojs').remove();
     $('#cancel-button').click(function(event) {
         var warning = "<?= \utf8_decode(_(
             'Wenn Sie [OK] auswählen werden ihre Änderungen nicht gespeichert!'
