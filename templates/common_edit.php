@@ -21,11 +21,10 @@ include 'errors.php'; // show errors
 <input type="hidden" id="post_files_url"
     value="<?=PluginEngine::getLink('richtextplugin/post_file')?>">
 
-<!-- the editor -->
-<p class="nojs"><?= \utf8_decode(_('JavaScript is not activated in your browser. Without it, the RichText editor can only provide HTML source editing. We are sorry for the inconveniences. Please ask your system administrator to activate JavaScript.')) ?></p>
-
+<!-- warning message if javascript is deactivated -->
 <p class="nojs"><?= \utf8_decode(_('JavaScript ist deaktiviert. Daher kann der RichText-Editor nur das Editieren des HTML-Quellcodes anbieten. Wir entschuldigen uns für die Umstände. Bitten Sie ihren Systemadministrator, JavaScript zu aktivieren.')) ?></p>
 
+<!-- the editor -->
 <form enctype="multipart/form-data" id="edit-form"
     action="<?= PluginEngine::getLink('richtextplugin/show') ?>"
     method="POST" accept-charset="utf-8">
