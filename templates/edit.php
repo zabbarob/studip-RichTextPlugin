@@ -16,6 +16,7 @@ include 'common_edit.php';
 <script type="text/javascript" charset="utf-8">
 jQuery(function($){
     var textarea = $('#richtext-editor');
+    var uiColor = '#7788AA';  // same as studip's tab navigation background
     var toolbarId = 'cktoolbar';
     var toolbarHandle = $('<div>').html('&#9776;&nbsp;').attr({
         id: 'toolbar-handle',
@@ -26,7 +27,7 @@ jQuery(function($){
 
     CKEDITOR.replace(textarea[0], {
         customConfig: '',
-        uiColor: '#7788AA',  // same as studip's tab navigation background
+        uiColor: uiColor,
         removePlugins: 'about,anchor,bidi,blockquote,div,elementspath,flash'
                        + ',forms,iframe,maximize,newpage,preview,resize'
                        + ',showblocks,stylescombo,templates,smiley',
@@ -208,12 +209,12 @@ jQuery(function($){
         var fadeTime = 300;
         var editorArea = textarea.siblings('#cke_richtext-editor');
         editor.on('focus', function(event){
-            // add shadow / glow effect (same color as CKEditor uiColor)
-            editorArea.css('box-shadow', '0 0 3px #7788AA');
+            // add editor area shadow
+            editorArea.css('box-shadow', '0 0 3px ' + uiColor);
             toolbar.fadeIn(fadeTime);
         });
         editor.on('blur', function(event){
-            // remove shadow / glow effect (same color as CKEditor uiColor)
+            // remove editor area shadow
             editorArea.css('box-shadow', '');
             if (toolbar.has(':focus').length > 0) {
                 editor.focus();
