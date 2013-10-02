@@ -36,9 +36,16 @@
 }
 
 /* configure look and feel of CKEditor's content area and toolbar */
+textarea + .cke_chrome:hover {
+    -moz-box-shadow: 0 0 15px #7788AA !important;
+    -webkit-box-shadow: 0 0 15px #7788AA !important;
+    box-shadow: 0 0 15px #7788AA !important;
+    overflow: hidden;               /* cut child element corners off */
+}
 .cke_chrome {                       /* content area and toolbar */
     border: 0 !important;
-    border-radius: 5px;
+/*    border-radius: 5px;*/
+/*    box-shadow: 0 0 15px #7788AA !important;
     overflow: hidden;               /* cut child element corners off */
 }
 .cke_wysiwyg_div, .cke_source {     /* content area */
@@ -50,12 +57,17 @@
     transition: height 0.2s;
 }
 #cktoolbar {                        /* toolbar */
-    display: none;
-    position: fixed;
+/*    display: none;
+    position: fixed;*/
     padding: 0;
     margin: 0;
     z-index: 10000;
     opacity: 0.95;
+}
+#cke_1_top {
+    background-image: none !important;
+    background: transparent !important;
+    border: none;
 }
 .cke_toolbox:hover, .cke_top:hover {
     cursor: -webkit-grab;
@@ -67,7 +79,7 @@
     cursor: -moz-grabbing;
     cursor: grabbing;
 }
-#toolbar-handle {
+/*#toolbar-handle {
     height: 0;
     text-align: right;
     cursor: -webkit-grab;
@@ -78,7 +90,7 @@
     cursor: -webkit-grabbing;
     cursor: -moz-grabbing;
     cursor: grabbing;
-}
+}*/
 
 /* other settings */
 

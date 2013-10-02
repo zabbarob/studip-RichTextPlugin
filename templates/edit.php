@@ -18,11 +18,12 @@ jQuery(function($){
     var textarea = $('#richtext-editor');
     var uiColor = '#7788AA';  // same as studip's tab navigation background
     var toolbarId = 'cktoolbar';
-    var toolbarHandle = $('<div>').html('&#9776;&nbsp;').attr({
+    var toolbar = $('<div>').attr('id', toolbarId);
+    /*var toolbarHandle = $('<div>').html('&#9776;&nbsp;').attr({
         id: 'toolbar-handle',
         title: 'Werkzeugleiste verschieben'
     });
-    var toolbar = $('<span>').attr('id', toolbarId).append(toolbarHandle);
+    toolbar.append(toolbarHandle);*/
     toolbar.insertBefore(textarea);
 
     CKEDITOR.replace(textarea[0], {
@@ -210,8 +211,8 @@ jQuery(function($){
         var editorArea = textarea.siblings('#cke_richtext-editor');
         editor.on('focus', function(event){
             // add editor area shadow
-            editorArea.css('box-shadow', '0 0 3px ' + uiColor);
-            toolbar.fadeIn(fadeTime);
+            editorArea.css('box-shadow', '0 0 15px ' + uiColor);
+//            toolbar.fadeIn(fadeTime);
         });
         editor.on('blur', function(event){
             // remove editor area shadow
@@ -219,19 +220,19 @@ jQuery(function($){
             if (toolbar.has(':focus').length > 0) {
                 editor.focus();
             } else {
-                toolbar.fadeOut(fadeTime);
+//                toolbar.fadeOut(fadeTime);
             }
         });
 
         // let the toolbar float, make it draggable from everywhere
         // and hide the dialog's parent window
-        var toolbar_offset = 5;
+/*        var toolbar_offset = 5;
         toolbar.draggable().offset({
             top: editorArea.offset().top - toolbar.height() + toolbar_offset,
             left: editorArea.offset().left + toolbar_offset
                   + editorArea.width() - toolbar.width()
         });
-
+ */
         editor.focus();
     });
 });
