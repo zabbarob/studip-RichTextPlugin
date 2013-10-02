@@ -23,7 +23,9 @@ jQuery(function($){
         id: 'toolbar-handle',
         title: 'Werkzeugleiste verschieben'
     });
-    toolbar.append(toolbarHandle);*/
+toolbar.append(toolbarHandle);*/
+    var anchor = $('<div></div>');
+    anchor.insertBefore(textarea);
     toolbar.insertBefore(textarea);
 
     CKEDITOR.replace(textarea[0], {
@@ -233,6 +235,25 @@ jQuery(function($){
                   + editorArea.width() - toolbar.width()
         });
  */
+        // do not scroll toolbar out of viewport
+        var stickyTools = function() {
+            var MARGIN = 30;
+            if($(window).scrollTop() + MARGIN > anchor.offset().top) {
+                toolbar.css({
+                    position: 'fixed',
+                    top: MARGIN
+                });
+            } else {
+                toolbar.css({
+                    position: 'relative',
+                    top: ''
+                });
+            }
+        };
+        $(window).scroll(stickyTools);
+        stickyTools();
+
+        // focus the editor so the user can immediately hack away...
         editor.focus();
     });
 });
