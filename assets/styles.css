@@ -37,9 +37,9 @@
 
 /* configure look and feel of CKEditor's content area and toolbar */
 textarea + .cke_chrome:hover {
-    -moz-box-shadow: 0 0 15px #7788AA !important;
-    -webkit-box-shadow: 0 0 15px #7788AA !important;
-    box-shadow: 0 0 15px #7788AA !important;
+    -moz-box-shadow: 0 3px 15px #7788AA !important;
+    -webkit-box-shadow: 0 3px 15px #7788AA !important;
+    box-shadow: 0 3px 15px #7788AA !important;
     overflow: hidden;               /* cut child element corners off */
 }
 .cke_chrome {                       /* content area and toolbar */
@@ -61,13 +61,17 @@ textarea + .cke_chrome:hover {
     position: fixed;*/
     padding: 0;
     margin: 0;
+    margin-bottom: 5px;
     z-index: 10000;
     opacity: 0.95;
+    -webkit-box-shadow: 0 1px 2px -1px #7788AA;
+    -moz-box-shadow: 0 1px 2px -1px #7788AA;
+    box-shadow: 0 1px 2px -1px #7788AA;
 }
-#cke_1_top {
+#cke_1_top, .cke_combo_button, .cke_toolgroup {
     background-image: none !important;
     background: transparent !important;
-    border: none;
+    border: none !important;
 }
 /*
 .cke_toolbox:hover, .cke_top:hover {

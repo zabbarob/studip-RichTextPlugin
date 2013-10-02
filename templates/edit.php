@@ -234,7 +234,7 @@ toolbar.append(toolbarHandle);*/
         var editorArea = textarea.siblings('#cke_richtext-editor');
         editor.on('focus', function(event){
             // add editor area shadow
-            editorArea.css('box-shadow', '0 0 15px ' + uiColor);
+            editorArea.css('box-shadow', '0 3px 15px ' + uiColor);
 //            toolbar.fadeIn(fadeTime);
         });
         editor.on('blur', function(event){
