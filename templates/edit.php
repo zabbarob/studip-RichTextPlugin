@@ -33,7 +33,7 @@ toolbar.append(toolbarHandle);*/
         uiColor: uiColor,
         removePlugins: 'about,anchor,bidi,blockquote,div,elementspath,flash'
                        + ',forms,iframe,maximize,newpage,preview,resize'
-                       + ',showblocks,stylescombo,templates,smiley',
+                       + ',showblocks,stylescombo,templates,save,smiley',
         extraPlugins: 'autogrow,divarea,sharedspace,studip-wiki',
         autoGrow_onStartup: true,
         sharedSpaces: {
