@@ -69,6 +69,7 @@ textarea + .cke_chrome:hover {
     background: transparent !important;
     border: none;
 }
+/*
 .cke_toolbox:hover, .cke_top:hover {
     cursor: -webkit-grab;
     cursor: -moz-grab;
