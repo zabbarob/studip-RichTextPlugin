@@ -51,7 +51,9 @@ $infobox_content[] = array(
                . 'forkme_right_green_007200.png" alt="Fork me on GitHub"></a>'
                . '<br>Powered by <a href="http://ckeditor.com/">CKEditor</a>'
                . ' and <a href="http://htmlpurifier.org/" target="_blank">'
-               . 'HTML Purifier</a>.</small>'))));
+               . 'HTML Purifier</a>. Source view autoresize by'
+               . ' <a href="http://www.jacklmoore.com/autosize/"'
+               . ' target="_blank">jQuery Autosize</a></small>'))));
 
 // initialize infobox
 $infobox = array('picture' => 'infobox/board1.jpg',
