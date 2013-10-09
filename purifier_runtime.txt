@@ -1,0 +1,83 @@
+measurements of formatReady versus htmlPurifier performance
+
+tested with following code:
+    while (($column = $stmt->fetchColumn()) !== FALSE) {
+        $count += 1;
+        $start = microtime(TRUE);
+        $html = formatReady($column);
+        $formatReady = microtime(TRUE) - $start;
+        $start = microtime(TRUE);
+        $clean_html = Purifier\purify($html);
+        $purifier = microtime(TRUE) - $start;
+        ...
+
+meaning of documented values (see further below):
+- count X formatReady X purifier X
+  this line contains the total number of entries (count) and the total runtime
+  formatReady or htmlPurifier, respectively, needed for converting those
+  entries
+- {"100":[X,X,X],"1000":[X,X,X],"10000":[X,X,X],"100000":[X,X,X],"greater":[X,X,X]}
+  this line contains histogram bins for columns with a length "len" of:
+  0<=len<100, 0<=len<1000, 0<=len<10000, 0<=len<100000, len>100000
+  the [X,X,X] values are: [count, formatReady, htmlPurifier]
+  where count is the total number of columns counted in that bin and
+  formatReady and htmlPurifier are the respective total (cummulative) runtimes
+- the tests where usually run until the server responded with "maximum
+  execution time of 300 seconds exceeded" except where they ran into an
+  "maximum function nesting level reached" error. which was due to a bug in
+  formatReady's markupIndent()
+
+Results
+- the results seem to indicate that on average html purifier takes twice as
+  long as formatReady
+- furthermore, for longer strings the difference between html purifier and
+  formatReady becomes smaller, in some cases both approaches need roughly the
+  same amount of time
+
+Discussion ;-)
+- it was not tested if running the $clean_html (see excerpt of programm code
+  above) through htmlPurifier again, results in a different runtime
+  performance. the first run through html purifier might take longer (or
+  shorter) due to html purifier outputting the HTML in a canonical format that
+  will likely be different from the HTML code returned by formatReady.
+
+
+SELECT body FROM wiki WHERE range_id like "1%"
+count 950 formatReady 110.74727272987 purifier 206.17361736298
+{"100":[118,0.41439914703369,3.0151269435883],"1000":[381,5.5091409683228,26.737769365311],"10000":[422,49.276585102081,123.67183327675],"100000":[29,55.547147512436,52.748887777328],"greater":[0,0,0]}
+
+SELECT body FROM wiki WHERE range_id like "2%"
+count 290 formatReady 111.28524827957 purifier 210.74700379372
+{"100":[1,0.0052280426025391,0.031919002532959],"1000":[24,0.27416038513184,2.0014300346375],"10000":[265,111.00585985184,208.71365475655],"100000":[0,0,0],"greater":[0,0,0]}
+
+SELECT body FROM wiki WHERE range_id like "3%"
+count 950 formatReady 93.012528657913 purifier 237.34240055084
+{"100":[103,0.32333421707153,2.9690968990326],"1000":[313,5.1566574573517,21.3972260952],"10000":[497,50.118354082108,161.66910243034],"100000":[37,37.414182901382,51.306975126266],"greater":[0,0,0]}
+
+SELECT body FROM wiki WHERE range_id like "4%"
+count 540 formatReady 72.368224382401 purifier 204.21691656113
+{"100":[26,0.079786062240601,0.86377310752869],"1000":[151,3.1839497089386,14.89562702179],"10000":[293,23.814445257187,96.27342247963],"100000":[70,45.290043354034,92.184093952179],"greater":[0,0,0]}
+==> Fatal error: Maximum function nesting level of '100' reached
+    StudipFormat::markupIndent()
+
+SELECT body FROM wiki WHERE range_id like "5%"
+count 500 formatReady 74.501052618027 purifier 251.07053375244
+{"100":[24,0.049042224884033,0.6550145149231],"1000":[145,1.9373970031738,10.251198291779],"10000":[239,31.777729988098,84.521119117737],"100000":[92,40.736883401871,155.643201828],"greater":[0,0,0]}
+
+
+SELECT body FROM wiki WHERE range_id like "6%"
+count 230 formatReady 85.660861968994 purifier 139.53077697754
+{"100":[28,0.068623304367065,0.61924386024475],"1000":[82,0.7481107711792,4.5882942676544],"10000":[96,5.6013050079346,30.719685554504],"100000":[24,79.242822885513,103.60355329514],"greater":[0,0,0]}
+==> Fatal error: Maximum function nesting level of '100' reached
+    StudipFormat::markupIndent()
+
+SELECT body FROM wiki WHERE range_id like "7%"
+count 760 formatReady 85.553836345673 purifier 192.12600040436
+{"100":[101,0.27756357192993,2.4556248188019],"1000":[319,3.6453125476837,21.797545671463],"10000":[313,74.670112371445,142.64140176773],"100000":[27,6.9608478546143,25.231428146362],"greater":[0,0,0]}
+==> Fatal error: Maximum function nesting level of '100' reached
+    StudipFormat::markupIndent()
+
+SELECT body FROM wiki WHERE range_id like "8%"
+count 250 formatReady 32.050509214401 purifier 84.463562965393
+{"100":[54,0.10089635848999,1.1524760723114],"1000":[100,0.82494831085205,5.9591903686523],"10000":[96,31.124664545059,77.351896524429],"100000":[0,0,0],"greater":[0,0,0]}
+
