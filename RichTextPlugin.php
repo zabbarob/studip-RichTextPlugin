@@ -113,6 +113,67 @@ class RichTextPlugin extends StudIPPlugin implements StandardPlugin
         $this->renderBodyTemplate('edit');
     }
 
+    public function benchmark_action() {
+        $db = DBManager::get();
+        $stmt = $db->prepare('SELECT body FROM wiki WHERE range_id like "8%"');
+        $stmt->execute();
+        $time_formatReady = 0;
+        $time_purifier = 0;
+        $count = 0;
+
+        $hist = Array(
+            100 => [0, 0, 0],
+            1000 => [0, 0, 0],
+            10000 => [0, 0, 0],
+            100000 => [0, 0, 0],
+            'greater' => [0, 0, 0]);
+
+        function p($count, $time_formatReady, $time_purifier, $hist) {
+            echo '<p>';
+            echo "count $count formatReady $time_formatReady purifier $time_purifier";
+            echo '<br>';
+            echo json_encode($hist);
+            echo '</p>';
+        }
+
+        while (($column = $stmt->fetchColumn()) !== FALSE) {
+            //echo "<p>$column</p>"; flush(); ob_flush();
+            $count += 1;
+            $start = microtime(TRUE);
+            $html = formatReady($column);
+            $formatReady = microtime(TRUE) - $start;
+            $start = microtime(TRUE);
+            $clean_html = Purifier\purify($html);
+            $purifier = microtime(TRUE) - $start;
+
+            $time_formatReady += $formatReady;
+            $time_purifier += $purifier;
+    
+            $len = strlen($column);
+            $hist_len = &$hist['greater'];
+            if ($len < 100) {
+                $hist_len = &$hist[100];
+            } else if ($len < 1000) {
+                $hist_len = &$hist[1000];
+            } else if ($len < 10000) {
+                $hist_len = &$hist[10000];
+            } else if ($len < 100000) {
+                $hist_len = &$hist[100000];
+            }
+            $hist_len[0] += 1;
+            $hist_len[1] += $formatReady;
+            $hist_len[2] += $purifier;
+    
+            if (($count % 10) == 0) {
+                p($count, $time_formatReady, $time_purifier, $hist);
+                flush();
+                ob_flush();
+            }
+        }
+        p($count, $time_formatReady, $time_purifier, $hist);
+    }
+
+
     /**
      * Opens, initializes and renders a template that gets the DB's text.
      * @params string $file Template file name, ommitting path.
