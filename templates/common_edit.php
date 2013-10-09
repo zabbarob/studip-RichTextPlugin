@@ -21,6 +21,21 @@ include 'errors.php'; // show errors
 <input type="hidden" id="post_files_url"
     value="<?=PluginEngine::getLink('richtextplugin/post_file')?>">
 
+<input id="fileupload" type="file" name="files" data-url="<?=PluginEngine::getLink('richtextplugin/post_file')?>" multiple>
+<script>
+                $('#fileupload').fileupload({
+                    dataType: 'json',
+                    done: function(e, data) {
+                        console.log('done')
+                        $.each(data.result.files, function(index, file) {
+                            console.log('each file');
+                            console.log(file.name);
+                            //$('<p/>').text(file.name).appendTo(document.body);
+                        });
+                    }
+                });
+
+</script>
 <!-- warning message if javascript is deactivated -->
 <p class="nojs"><?= \utf8_decode(_('JavaScript ist deaktiviert. Daher kann der RichText-Editor nur das Editieren des HTML-Quellcodes anbieten. Wir entschuldigen uns für die Umstände. Bitten Sie ihren Systemadministrator, JavaScript zu aktivieren.')) ?></p>
 

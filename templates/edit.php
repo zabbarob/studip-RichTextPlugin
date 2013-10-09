@@ -34,7 +34,7 @@ toolbar.append(toolbarHandle);*/
         removePlugins: 'about,anchor,bidi,blockquote,div,elementspath,flash'
                        + ',forms,iframe,maximize,newpage,preview,resize'
                        + ',showblocks,stylescombo,templates,save,smiley',
-        extraPlugins: 'autogrow,divarea,sharedspace,studip-wiki',
+        extraPlugins: 'autogrow,divarea,sharedspace,studip-wiki,studip-upload',
         autoGrow_onStartup: true,
         sharedSpaces: {
 			top: toolbarId
@@ -56,6 +56,10 @@ toolbar.append(toolbarHandle);*/
             {name: 'others'},
             {name: 'about'}
         ],
+
+        // file upload (url must be set in edit template)
+        //filebrowserBrowseUrl: 'i/do/not/exist/',
+        //filebrowserUploadUrl: $('#post_files_url').val(),
 
         // convert special chars to html entities
         // NOTE use entities_additional: '#1049,...' for other chars

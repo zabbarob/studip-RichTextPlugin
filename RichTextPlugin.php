@@ -109,6 +109,9 @@ class RichTextPlugin extends StudIPPlugin implements StandardPlugin
         Utils\verifyPermission($this->edit_permission);
         $this->actionHeader();
         $this->addScript('jquery.autosize-min.js');
+        $this->addScript('vendor/jquery.ui.widget.js');
+        $this->addScript('jquery.iframe-transport.js');
+        $this->addScript('jquery.fileupload.js');
         $this->addScript('ckeditor/ckeditor.js');
         $this->renderBodyTemplate('edit');
     }
@@ -198,8 +201,11 @@ class RichTextPlugin extends StudIPPlugin implements StandardPlugin
             'RichText',
             studip_utf8decode(_('Durch das RichText-Plugin hochgeladene Dateien.')));
 
+        error_log('$_FILES: ' . json_encode($_FILES));
+
         foreach ($_FILES as $file) {
             try {
+                error_log('$file: ' . json_encode($file));
                 $newfile = Utils\uploadFile($file, $folder_id);
                 $output['inserts'][] = Array(
                     'name' => $newfile['filename'],

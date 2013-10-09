@@ -17,9 +17,9 @@ CKEDITOR.plugins.add('studip-wiki', {
         });
         editor.addCommand('wikiDialog', new CKEDITOR.dialogCommand('wikiDialog'));
         editor.ui.addButton('wikilink', {
-                label: 'Stud.IP-Wiki Link einfügen',
-                command: 'wikiDialog',
-                toolbar: 'insert'
+            label: 'Stud.IP-Wiki Link einfügen',
+            command: 'wikiDialog',
+            toolbar: 'insert,70'
         });
         CKEDITOR.dialog.add('wikiDialog', this.path + 'dialogs/wikilink.js.php' );
 

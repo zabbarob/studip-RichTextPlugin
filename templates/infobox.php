@@ -31,12 +31,13 @@ $infobox_content[] = array(
     'kategorie' => \utf8_decode(_('Über den Rich Text Editor:')),
     'eintrag'   => array(
         text(_('Um den angezeigten Text zu bearbeiten, wählen Sie aus dem'
-               . ' Navigationsmenü <b>Bearbeiten</b> aus. Sollte dort als einzige'
-               . ' Option <b>Lesen</b> angezeigt werden, dann bitten sie ihren'
-               . ' Kursleiter um Schreibrechte.'), 'info'),
+               . ' Navigationsmenü <b>Bearbeiten</b> aus. Sollte dort als'
+               . ' einzige Option <b>Lesen</b> angezeigt werden, dann bitten'
+               . ' sie ihren Kursleiter um Schreibrechte.'), 'info'),
         text(_('Teilnehmer können den RichText-Editor verwenden, um gemeinsam'
                . ' Informationen zum Kurs zu editieren.')),
-        text(_('Dateien können per Drag\'n\'Drop hochgeladen werden.'), 'files'),
+        text(_('Dateien können auch per Drag\'n\'Drop hochgeladen werden.'),
+             'upload'),
         text(_('Stud.IP-Wiki Links sind am Wiki-Icon erkennbar: <a href="'
                . URLHelper::getURL('wiki.php')
                . '" class="wiki-link">Stud.IP-Wiki</a>.'), 'wiki'),
