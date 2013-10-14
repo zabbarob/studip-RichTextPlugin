@@ -201,14 +201,11 @@ class RichTextPlugin extends StudIPPlugin implements StandardPlugin
             'RichText',
             studip_utf8decode(_('Durch das RichText-Plugin hochgeladene Dateien.')));
 
-        error_log('$_FILES: ' . json_encode($_FILES));
-
         foreach ($_FILES as $file) {
             try {
-                error_log('$file: ' . json_encode($file));
                 $newfile = Utils\uploadFile($file, $folder_id);
                 $output['inserts'][] = Array(
-                    'name' => $newfile['filename'],
+                    'name' => utf8_encode($newfile['filename']),
                     'type' => $file['type'],
                     'url' => GetDownloadLink($newfile->getId(), $newfile['filename']));
             } catch (AccessDeniedException $e) { // creation of Stud.IP doc failed
