@@ -1,15 +1,14 @@
 CKEDITOR.plugins.add('studip-upload', {
     icons: 'upload',
     init: function (editor) {
-
         editor.addCommand('upload', { // command for uploading files
             exec: function(editor) {
-                var input = $('<input type="file" name="files" data-url="'
-                            + $('#post_files_url').val() + '" multiple />')
+                var input = $('<input type="file" name="files" multiple />')
                         .css('display', 'none')
                         .appendTo(document.body);
 
                 input.fileupload({
+                    url: editor.config.studipUpload_url,
                     dataType: 'json',
                     done: function(e, data) {
                         console.log('input done');

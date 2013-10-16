@@ -35,6 +35,7 @@ toolbar.append(toolbarHandle);*/
                        + ',forms,iframe,maximize,newpage,preview,resize'
                        + ',showblocks,stylescombo,templates,save,smiley',
         extraPlugins: 'autogrow,divarea,sharedspace,studip-wiki,studip-upload',
+        studipUpload_url: $('#post_files_url').val(),
         autoGrow_onStartup: true,
         sharedSpaces: {
 			top: toolbarId
