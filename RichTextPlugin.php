@@ -196,7 +196,7 @@ class RichTextPlugin extends StudIPPlugin implements StandardPlugin
         $this->verifyUnsafeRequest();
 
         // store uploaded files as StudIP documents
-        $output = array(); // data for HTTP response
+        $response = array(); // data for HTTP response
         $folder_id = Utils\getFolderId(
             'RichText',
             studip_utf8decode(_('Durch das RichText-Plugin hochgeladene Dateien.')));
@@ -204,18 +204,18 @@ class RichTextPlugin extends StudIPPlugin implements StandardPlugin
         foreach ($_FILES as $file) {
             try {
                 $newfile = Utils\uploadFile($file, $folder_id);
-                $output['inserts'][] = Array(
+                $response['files'][] = Array(
                     'name' => utf8_encode($newfile['filename']),
                     'type' => $file['type'],
                     'url' => GetDownloadLink($newfile->getId(), $newfile['filename']));
             } catch (AccessDeniedException $e) { // creation of Stud.IP doc failed
-                // TODO output format for errors should be similar to inserts
-                $output['errors'][] = $file['name'] . ': ' . $e->getMessage();
+                $response['files'][] = Array(
+                    'name' => $file['name'],
+                    'type' => $file['type'],
+                    'error' => $e->getMessage());
             }
         }
-
-        header('Content-type: application/json; charset=utf-8');
-        echo json_encode($output);
+        Utils\sendAsJson($response);
     }
 
     /**

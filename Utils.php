@@ -417,3 +417,36 @@ function verifyPostRequest() {
 function getConfigValue($name) {
     return \Config::GetInstance()->getValue($name);
 }
+
+/**
+ * Send the HTTP response as a JSON-encoded string.
+ * @param mixed $response The value that should be sent as response.
+ */
+function sendAsJson($response) {
+    negotiateJsonContent();
+    echo json_encode($response);
+}
+
+/**
+ * Set content-type to application/json if client accepts it.
+ *
+ * If client doesn't accept JSON then set text/plain.
+ * Also tell proxies/caches that content depends on what client accepts.
+ */
+function negotiateJsonContent() {
+    header('Vary: Accept');
+    if (httpAcceptsJson()) {
+        header('Content-type: application/json; charset=utf-8');
+    } else {
+        header('Content-type: text/plain; charset=utf-8');
+    }
+}
+
+/**
+ * Checks if application/json is set in HTTP_ACCEPT.
+ * @returns boolean TRUE if JSON response is accepted, FALSE otherwise.
+ */
+function httpAcceptsJson() {
+    return isset($_SERVER['HTTP_ACCEPT'])
+        && (strpos($_SERVER['HTTP_ACCEPT'], 'application/json') !== false);
+}

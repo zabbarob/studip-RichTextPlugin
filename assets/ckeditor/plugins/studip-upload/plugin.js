@@ -1,6 +1,27 @@
 CKEDITOR.plugins.add('studip-upload', {
     icons: 'upload',
     init: function (editor) {
+        var handleUploads = function(fileList){
+            if (!fileList) {
+                alert('Das Hochladen der Datei(en) ist fehlgeschlagen.');
+                return;
+            }
+            var errors = [];
+            $.each(fileList, function(index, file){
+                console.log(file);
+                if (file.error) {
+                    errors.push(file.name + ': ' + file.error);
+                } else {
+                    // NOTE StudIP sends SVGs as application/octet-stream
+                }
+            });
+            if (errors.length) {
+                var message = 'Es konnten nicht alle Dateien'
+                    + ' hochgeladen werden.\n\n';
+                alert(message + errors.join('\n'));
+            }
+        }
+
         editor.addCommand('upload', { // command for uploading files
             exec: function(editor) {
                 var input = $('<input type="file" name="files" multiple />')
@@ -11,32 +32,10 @@ CKEDITOR.plugins.add('studip-upload', {
                     url: editor.config.studipUpload_url,
                     dataType: 'json',
                     done: function(e, data) {
-                        console.log('input done');
-                        json = data.result;
-                        if (typeof json.inserts === 'object') {
-                            $.each(json.inserts, function(index, file) {
-                                // NOTE StudIP sends SVGs as application/octet-stream
-                                console.log(file);
-                            });
-                        }
-                        if (typeof json.errors === 'object') {
-                            var message = 'Es konnten nicht alle Dateien'
-                                + ' hochgeladen werden.\n\n';
-                            alert(message + json.errors.join('\n'));
-                        } else if (typeof json.inserts !== 'object') {
-                            alert('Das Hochladen der Datei(en) ist fehlgeschlagen.');
-                        }
-
-                        /*$.each(data.result.files, function(index, file) {
-                            console.log('each file');
-                            console.log(file.name);
-                            //$('<p/>').text(file.name).appendTo(document.body);
-                        });*/
-                        console.log('input.remove()');
+                        handleUploads(data.result.files);
                         input.remove();
                     }
-                });                
-                console.log('input.click()');
+                });
                 input.click();
             }
         });
