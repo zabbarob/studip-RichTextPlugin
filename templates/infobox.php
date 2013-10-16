@@ -26,6 +26,10 @@ function text($text, $icon=null) {
     return array('text' => \utf8_decode($text), 'icon' => $icon);
 }
 
+function url($url, $html) {
+    return '<a href="' . $url . '" target="_blank">' . $html . '</a>';
+}
+
 // initialize content of infobox
 $infobox_content[] = array(
     'kategorie' => \utf8_decode(_('Über den Rich Text Editor:')),
@@ -44,17 +48,19 @@ $infobox_content[] = array(
         text(_('Die Werkzeugleiste kann beliebig verschoben werden. Sie wird'
                . ' automatisch ein- und ausgeblendet.'), 'hash'),
         text(_('<small id="sources">'
-               . '<a href="https://github.com/zabbarob/studip-RichTextPlugin"'
-               . ' target="_blank">RichText plugin source on GitHub.</a>'
-               . '<a href="https://github.com/zabbarob/studip-RichTextPlugin"'
-               . ' target="_blank"><img id="github-fork"'
-               . ' src="https://s3.amazonaws.com/github/ribbons/'
-               . 'forkme_right_green_007200.png" alt="Fork me on GitHub"></a>'
-               . '<br>Powered by <a href="http://ckeditor.com/">CKEditor</a>'
-               . ' and <a href="http://htmlpurifier.org/" target="_blank">'
-               . 'HTML Purifier</a>. Source view autoresize by'
-               . ' <a href="http://www.jacklmoore.com/autosize/"'
-               . ' target="_blank">jQuery Autosize</a></small>'))));
+               . url('https://github.com/zabbarob/studip-RichTextPlugin',
+                     'RichText plugin source on GitHub. <img id="github-fork" '
+                     . 'src="https://s3.amazonaws.com/github/ribbons/'
+                     . 'forkme_right_green_007200.png" alt="Fork me on GitHub">')
+               . '<br>'
+               . 'Powered by ' . url('http://ckeditor.com', 'CKEditor')
+               . ' and ' . url('http://htmlpurifier.org', 'HTML Purifier')
+               . '. Source view autoresize by '
+               . url('http://www.jacklmoore.com/autosize/', 'jQuery Autosize')
+               . '. File upload by '
+               . url('http://blueimp.github.io/jQuery-File-Upload',
+                     'jQuery File Upload')
+               . '.</small>'))));
 
 // initialize infobox
 $infobox = array('picture' => 'infobox/board1.jpg',
