@@ -201,7 +201,7 @@ class RichTextPlugin extends StudIPPlugin implements StandardPlugin
             'RichText',
             studip_utf8decode(_('Durch das RichText-Plugin hochgeladene Dateien.')));
 
-        foreach ($_FILES as $file) {
+        foreach (Utils\FILES() as $file) {
             try {
                 $newfile = Utils\uploadFile($file, $folder_id);
                 $response['files'][] = Array(

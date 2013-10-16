@@ -98,6 +98,20 @@ function getFolderId($name, $description=null) {
 }
 
 /**
+ * Normalizes $_FILES for multiple files.
+ * @return array Each entry contains an associative array for a single file
+ *               with name, type, tmp_name, error, and size keys set.
+ */
+function FILES(){
+    foreach($_FILES['files'] as $key => $fileList){
+        foreach($fileList as $fileIndex => $value){
+            $files[$fileIndex][$key] = $value;
+        }
+    }
+    return $files;
+}
+
+/**
  * Create a new Stud.IP document from an uploaded file.
  *
  * @param array  $file      Metadata of uploaded file.
