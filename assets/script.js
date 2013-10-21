@@ -21,69 +21,8 @@
         return path.split('/').slice(0, -1).join('/') + '/'; // remove filename
     };
 
-    // drop files
-    var isImage = function(mime_type) {
-        return (typeof mime_type) === 'string' && mime_type.match('^image');
-    };
-    var isSVG = function(mime_type) {
-        return (typeof mime_type) === 'string' && mime_type === 'image/svg+xml';
-    };
-    var ignoreEvent = function(e) {
-        e.preventDefault();
-        e.stopPropagation();
-    };
-
-    var getDropHandler = function(callBack) {
-        return function(event) {
-            var that = this;
-            ignoreEvent(event);
-
-            var files = event.originalEvent.dataTransfer.files || {};
-            if (!files.length) {
-                return;
-            }
-
-            var data = new FormData();
-            $.each(files, data.append.bind(data));
-
-            // post dropped files to server
-            callBack.startUpload();
-
-            $.ajax({
-                'url': $('#post_files_url').val(), // must be set in edit template
-                'data': data,
-                'cache': false,
-                'contentType': false,
-                'processData': false,
-                'type': 'POST',
-                'success': function(json) {
-                    if (typeof json.inserts === 'object') {
-                        $.each(json.inserts, function(index, file) {
-                            // NOTE StudIP sends SVGs as application/octet-stream
-                            if (isImage(file.type) && !isSVG(file.type)) {
-                                callBack.insertImage(that, file);
-                            } else {
-                                callBack.insertLink(that, file);
-                            }
-                        });
-                    }
-                    if (typeof json.errors === 'object') {
-                        var message = "Es konnten nicht alle Dateien hochgeladen werden.\n\n"
-                        alert(message + json.errors.join('\n'));
-                    } else if (typeof json.inserts !== 'object') {
-                        alert('Das Hochladen der Datei(en) ist fehlgeschlagen.');
-                    }
-                },
-                'complete': function() {
-                    callBack.stopUpload();
-                }
-            }); // $.ajax
-        }; // dropHandler
-    }; // getDropHandler
-
     // needs to be executed when script is loaded to get the script's own dir
     window.richTextPlugin = {
         dir: getScriptDir(),
-        getDropHandler: getDropHandler
     }
 }(jQuery));

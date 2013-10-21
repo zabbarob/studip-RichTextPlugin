@@ -54,6 +54,28 @@ CKEDITOR.plugins.add('studip-upload', {
                 }
             };
 
+        // handle drag'n'drop and display drop zone to user
+        $('#fileupload').fileupload({
+            url: editor.config.studipUpload_url,
+            singleFileUploads: false,
+            autoUpload: true,
+            dataType: 'json',
+            done: function(e, data){
+                handleUploads(data.result.files);
+            }
+        });
+
+        var textarea = $('#richtext-editor');
+        var editorArea = textarea.siblings('#cke_richtext-editor');
+        editorArea.bind("drop", function (e) {
+            e.preventDefault();
+            editorArea.removeClass('drag');
+            var list = $.makeArray(e.originalEvent.dataTransfer.files);
+            $('#fileupload').fileupload('add', { files: list });
+            return false;
+        });
+
+
         editor.addCommand('upload', { // command for uploading files
             exec: function(editor) {
                 var input = $('<input type="file" name="files[]" multiple />')
