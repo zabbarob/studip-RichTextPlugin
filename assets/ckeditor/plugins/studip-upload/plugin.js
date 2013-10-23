@@ -35,7 +35,6 @@ CKEDITOR.plugins.add('studip-upload', {
                 }
             },
             handleUploads = function(fileList){
-                console.log('handleuploads');
                 if (!fileList) {
                     alert('Das Hochladen der Datei(en) ist fehlgeschlagen.');
                     return;
@@ -59,15 +58,21 @@ CKEDITOR.plugins.add('studip-upload', {
         // actual file upload handler
         // NOTE depends on jQuery File Upload plugin being loaded beforehand!
         // TODO integrate jQuery File Upload plugin into studip-upload
-        $('<input id="fileupload" type="file" name="files[]" multiple style="display: none" />').appendTo(document.body);
+        var input = $('<input>')
+            .attr({
+                id: 'fileupload',
+                type: 'file',
+                name: 'files[]',
+                multiple: true
+            })
+            .css('display', 'none')
+            .appendTo(document.body);
 
-        var input = $('#fileupload');
         input.fileupload({
             url: editor.config.studipUpload_url,
             singleFileUploads: false,
             dataType: 'json',
             done: function(e, data){
-                console.log('upload done');
                 handleUploads(data.result.files);
             }
         });
