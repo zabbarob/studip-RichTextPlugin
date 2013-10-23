@@ -1,6 +1,7 @@
 CKEDITOR.plugins.add('studip-upload', {
     icons: 'upload',
     init: function(editor){
+        // utilities
         var isImage = function(mime_type){
                 return (typeof mime_type) === 'string' && mime_type.match('^image');
             },
@@ -34,6 +35,7 @@ CKEDITOR.plugins.add('studip-upload', {
                 }
             },
             handleUploads = function(fileList){
+                console.log('handleuploads');
                 if (!fileList) {
                     alert('Das Hochladen der Datei(en) ist fehlgeschlagen.');
                     return;
@@ -54,48 +56,43 @@ CKEDITOR.plugins.add('studip-upload', {
                 }
             };
 
-        // handle drag'n'drop and display drop zone to user
-        $('#fileupload').fileupload({
+        // actual file upload handler
+        // NOTE depends on jQuery File Upload plugin being loaded beforehand!
+        // TODO integrate jQuery File Upload plugin into studip-upload
+        $('<input id="fileupload" type="file" name="files[]" multiple style="display: none" />').appendTo(document.body);
+
+        var input = $('#fileupload');
+        input.fileupload({
             url: editor.config.studipUpload_url,
             singleFileUploads: false,
-            autoUpload: true,
             dataType: 'json',
             done: function(e, data){
+                console.log('upload done');
                 handleUploads(data.result.files);
             }
         });
 
-        var textarea = $('#richtext-editor');
-        var editorArea = textarea.siblings('#cke_richtext-editor');
-        editorArea.bind("drop", function (e) {
-            e.preventDefault();
-            editorArea.removeClass('drag');
-            var list = $.makeArray(e.originalEvent.dataTransfer.files);
-            $('#fileupload').fileupload('add', { files: list });
+        // drag'n'drop handler
+        var textarea = $('#richtext-editor'),
+            editorArea = textarea.siblings('#cke_richtext-editor');
+
+        editorArea.bind('drop', function(event){
+            event.preventDefault();
+            input.fileupload('add', {
+                files: $.makeArray(event.originalEvent.dataTransfer.files)
+            });
             return false;
         });
 
-
-        editor.addCommand('upload', { // command for uploading files
-            exec: function(editor) {
-                var input = $('<input type="file" name="files[]" multiple />')
-                        .css('display', 'none')
-                        .appendTo(document.body);
-
-                input.fileupload({
-                    url: editor.config.studipUpload_url,
-                    singleFileUploads: false,
-                    dataType: 'json',
-                    done: function(e, data) {
-                        handleUploads(data.result.files);
-                        input.remove();
-                    }
-                });
-                input.click();
+        // ckeditor
+        editor.addCommand('upload', {    // command handler
+            exec: function(editor){
+                // NOTE if input variable is used instead selector upload works
+                // only the first time
+                $('#fileupload').click();
             }
         });
-
-        editor.ui.addButton('upload', { // add toolbar button
+        editor.ui.addButton('upload', {  // toolbar button
             label: 'Datei hochladen',
             command: 'upload',
             toolbar: 'insert,80'

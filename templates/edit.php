@@ -13,7 +13,6 @@
  */
 include 'common_edit.php';
 ?>
-<input id="fileupload" type="file" name="files[]" multiple style="display: none" />
 <script type="text/javascript" charset="utf-8">
 jQuery(function($){
     var textarea = $('#richtext-editor');
