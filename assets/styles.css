@@ -97,6 +97,31 @@ textarea + .cke_chrome:hover {
     cursor: grabbing;
 }*/
 
+/* drop zone effects */
+
+.drag .dropzone {
+    display: block;
+}
+.dropzone {
+    pointer-events: none;
+    display: none;
+    position:absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+
+    border: 2px dashed lightgrey;
+    background-color: white;
+    z-index:9999;
+    opacity: 0.7;
+
+    text-align: center;
+    vertical-align: middle;
+    font-size: 20px;
+    font-weight: bold;
+}
+
 /* other settings */
 
 #sources {

@@ -82,6 +82,18 @@ CKEDITOR.plugins.add('studip-upload', {
                         handleUploads(data.result.files);
                     }
                 });
+
+            // drop zone effects
+            $('<div class="dropzone">drop your files</div>')
+                .appendTo(container);
+
+            $(container)
+                .css('position', 'relative')
+                .bind('dragover', function(){
+                    $(container).addClass('drag');
+                }).bind('dragleave drop', function(){
+                    $(container).removeClass('drag');
+                });
         });
 
         // disable default browser drop action
