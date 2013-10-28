@@ -74,6 +74,17 @@ function getFolder($folder_id) {
 }
 
 /**
+ * Return a string for a single column value of an INSERT query.
+ * @param object $db    Reference to the DB connector object.
+ * @param string $name  Name of the column.
+ * @param string $value Value of the column.
+ * return string Part of SQL query that sets the column value.
+ */
+function insertColumn($name, $value) {
+    return "`$name`=" . \DBManager::get()->quote($value);
+}
+
+/**
  * Get ID of a Stud.IP folder, create the folder if it doesn't exist.
  * @param string $name        Name of the folder.
  * @param string $description Description of the folder (optional and only 
@@ -81,19 +92,21 @@ function getFolder($folder_id) {
  * @return string The ID of the Stud.IP folder.
  */
 function getFolderId($name, $description=null) {
-    $seminar_id = getSeminarId();
     $folder_id = \md5($name . '_' . $seminar_id);
-    $db = \DBManager::get();
-    $db->exec('INSERT IGNORE INTO folder SET '
-        . 'folder_id = ' . $db->quote($folder_id)
-        . ', range_id = ' . $db->quote($seminar_id)
-        . ', user_id = ' . $db->quote($GLOBALS['user']->id)
-        . ', name = ' . $db->quote($folder_name)
-        . ', permission = ' . $db->quote(7)
-        . ', mkdate = ' . $db->quote(time())
-        . ', chdate = ' . $db->quote(time())
-        . ', description = ' . $db->quote($description) 
-    );
+    $time = time();
+    \DBManager::get()->exec('INSERT IGNORE INTO folder SET '
+       . implode(',', array_map(function($column){
+            return insertColumn($column[0], $column[1]);
+        }, [
+            ['folder_id', $folder_id],
+            ['range_id', getSeminarId()],
+            ['user_id', $GLOBALS['user']->id],
+            ['name', $name],
+            ['permission', 7],
+            ['mkdate', $time],
+            ['chdate', $time],
+            ['description', $description]
+        ])));
     return $folder_id;
 }
 
