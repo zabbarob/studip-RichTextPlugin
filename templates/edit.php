@@ -188,6 +188,8 @@ toolbar.append(toolbarHandle);*/
     // handle drag'n'drop events
     CKEDITOR.on('instanceReady', function(event){
         var editor = event.editor;
+
+        // auto-resize editor area in source view mode, and keep focus!
         editor.on('mode', function(event) {
             if (event.editor.mode === 'source') {
                 source = $(event.editor.container.$).find('.cke_source');
@@ -199,6 +201,19 @@ toolbar.append(toolbarHandle);*/
             }
         });
 
+        // make CKEditor clean up HTML edited in source mode before submit
+        var form = textarea.closest('form');
+        form.submit(function(event){
+            if (editor.mode != 'wysiwyg') {
+                event.preventDefault();
+                editor.setMode('wysiwyg', function(){
+                    form.submit();
+                });
+                return false;
+            }
+        });
+
+        // display shadow when editor area is focused
         var fadeTime = 300;
         var editorArea = textarea.siblings('#cke_richtext-editor');
         editor.on('focus', function(event){
