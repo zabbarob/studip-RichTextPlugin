@@ -9,12 +9,6 @@ CKEDITOR.plugins.add('studip-wiki', {
         }
 
         // add toolbar button and dialog for editing Stud.IP wiki links
-        editor.addCommand('insertWikiLink', {
-            exec: function(editor) {
-                var now = new Date();
-                editor.insertHtml('Date: ' + now.toString());
-            }
-        });
         editor.addCommand('wikiDialog', new CKEDITOR.dialogCommand('wikiDialog'));
         editor.ui.addButton('wikilink', {
             label: 'Stud.IP-Wiki Link einfügen',
