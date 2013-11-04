@@ -142,6 +142,10 @@ CKEDITOR.dialog.add('wikiDialog', function (editor) {
             this.insertMode = !element || element.getName() != 'a';
             if (this.insertMode) {
                 element = editor.document.createElement('a');
+                var text = editor.getSelection().getSelectedText();
+                if (text) {
+                    this.setValueOf('tab-link', 'wikipage', text);
+                }
             } else {
                 this.setupContent(element);
             }
