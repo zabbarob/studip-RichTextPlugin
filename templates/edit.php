@@ -241,6 +241,7 @@ toolbar.append(toolbarHandle);*/
         });
  */
         // do not scroll toolbar out of viewport
+        var placeholder = $('<div>');
         var stickyTools = function() {
             var MARGIN = 30;
             if($(window).scrollTop() + MARGIN > anchor.offset().top) {
@@ -248,11 +249,15 @@ toolbar.append(toolbarHandle);*/
                     position: 'fixed',
                     top: MARGIN
                 });
+                placeholder
+                    .css('height', toolbar.height())
+                    .insertAfter(toolbar);
             } else {
                 toolbar.css({
                     position: 'relative',
                     top: ''
                 });
+                placeholder.remove();
             }
         };
         $(window).scroll(stickyTools);
